@@ -1,12 +1,8 @@
 # PHOTO SCANNER V2
 
----
-
 Next version of the old photo scanner software, but now with several upgrades.
 
 ## How to run
-
----
 
 1. Create a virtual environment as a hidden folder.
 
@@ -33,8 +29,6 @@ $ python src/main.py
 ```
 
 ## Project Structure
-
----
 
 ```text
 snaptics
