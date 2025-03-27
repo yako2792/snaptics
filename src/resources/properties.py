@@ -1,0 +1,4 @@
+PAGE_TITLE: str = "Snaptics"
+PAGE_PADDING: int = 10
+PAGE_BGCOLOR: str = "#2C323D"
+CONTAINER_BGCOLOR: str = "#2E3541"
