@@ -48,4 +48,3 @@ snaptics
       ├─ data
       └─ temp
 ```
-Hola
