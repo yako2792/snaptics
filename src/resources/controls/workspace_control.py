@@ -1,5 +1,8 @@
 import flet as ft
-from .header_control import HeaderControl
+from .tabs.preview_tab_control import PreviewTab
+from .tabs.properties_tab_control import PropertiesTab
+from .tabs.save_tab_control import SaveTab
+from .tabs.scan_tab_control import ScabTab
 from ..properties import *
 
 class WorkspaceControl(ft.Container):
@@ -27,6 +30,16 @@ class WorkspaceControl(ft.Container):
 
         self.content = ft.Column(
             [
-                HeaderControl(self.title)
+                ft.Tabs(
+                    selected_index=1,
+                    animation_duration=ANIMATIONS_DURATION,
+                    tabs=[
+                        PreviewTab(PREVIEW_TAB_TITLE),
+                        ScabTab(SCAN_TAB_TITLE),
+                        SaveTab(SAVE_TAB_TITLE),
+                        PropertiesTab(PROPERTIES_TAB_TITLE)
+                    ],
+                    expand=True
+                )
             ]
         )
