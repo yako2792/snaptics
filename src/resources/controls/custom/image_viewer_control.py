@@ -1,3 +1,5 @@
+from tkinter.ttk import Label
+
 import flet as ft
 
 from src.resources.properties import *
@@ -35,15 +37,13 @@ class ImageViewer(ft.Container):
                     ),
                     ft.Row(
                         [
-                            ft.Text(
-                                value="Camera: "
-                            ),
                             ft.Dropdown(
                                 options=[
                                     ft.DropdownOption(text="Camera 1"),
                                     ft.DropdownOption(text="Camera 2"),
                                     ft.DropdownOption(text="Camera 3")
                                 ],
+                                label="Camera",
                                 width=350
                             ),
                             ft.ElevatedButton(
