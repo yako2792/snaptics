@@ -1,5 +1,5 @@
 import flet as ft
-from ...properties import *
+from src.resources.properties import *
 
 
 class PropertiesTab(ft.Tab):

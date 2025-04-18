@@ -1,9 +1,9 @@
 import flet as ft
-from .tabs.preview_tab_control import PreviewTab
-from .tabs.properties_tab_control import PropertiesTab
-from .tabs.save_tab_control import SaveTab
-from .tabs.scan_tab_control import ScabTab
-from ..properties import *
+from src.resources.controls.tabs.preview_tab_control import PreviewTab
+from src.resources.controls.tabs.properties_tab_control import PropertiesTab
+from src.resources.controls.tabs.save_tab_control import SaveTab
+from src.resources.controls.tabs.scan_tab_control import ScabTab
+from src.resources.properties import *
 
 class WorkspaceControl(ft.Container):
     """

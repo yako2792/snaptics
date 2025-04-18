@@ -17,12 +17,7 @@ class HeaderControl(ft.Container):
             text (str): The text to be displayed in the header.
         """
         super().__init__()
-        self.content = ft.Text(value=text, weight=ft.FontWeight.BOLD)
-        # self.border = ft.border.only(
-        #     bottom = (
-        #         ft.BorderSide(
-        #             color = "white",
-        #             width = 1
-        #         )
-        #     )
-        # )
+        self.content = ft.Text(
+            value=text,
+            weight=ft.FontWeight.BOLD
+        )

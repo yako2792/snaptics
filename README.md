@@ -2,7 +2,7 @@
 
 Next version of the old photo scanner software, but now with several upgrades.
 
-## How to run
+## 1. How to run
 
 1. Create a virtual environment as a hidden folder.
 
@@ -25,10 +25,22 @@ $ source .venv/bin/activate
 4. Run the project.
 
 ```bash
-$ python src/main.py
+(.env) $ python -m src.main
 ```
 
-## Project Structure
+### 1.1 Run As Desktop
+
+```bash
+(.env) $ flet run -m src.main
+```
+
+### 1.2 Run As Web
+
+```bash
+(.env) $ flet run --web -m src.main
+```
+
+## 2. Project Structure
 
 ```text
 snaptics

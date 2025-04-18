@@ -1,6 +1,6 @@
 import flet as ft
-from resources.properties import *
-from resources.utils.layout import Layout
+from src.resources.properties import *
+from src.resources.utils.layout import Layout
 
 def main(page: ft.Page) -> None:
 
@@ -17,4 +17,7 @@ def main(page: ft.Page) -> None:
         page.update()
 
 if __name__=="__main__":
-    ft.app(main)
+    ft.app(
+            target=main,
+            view=ft.WEB_BROWSER
+    )

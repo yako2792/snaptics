@@ -1,6 +1,6 @@
 import flet as ft
-from .custom.header_control import HeaderControl
-from ..properties import *
+from src.resources.controls.custom.header_control import HeaderControl
+from src.resources.properties import *
 
 class ExplorerControl(ft.Container):
     """
