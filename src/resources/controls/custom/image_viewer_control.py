@@ -44,12 +44,13 @@ class ImageViewer(ft.Container):
                                     ft.DropdownOption(text="Camera 3")
                                 ],
                                 label="Camera",
-                                width=350
+                                width=DROPDOWN_WIDTH,
+                                border_radius=BORDER_RADIUS
                             ),
                             ft.ElevatedButton(
                                 text="Test",
-                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=0)),
-                                height=49
+                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=BORDER_RADIUS)),
+                                height=BUTTON_HEIGHT
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER

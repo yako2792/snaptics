@@ -4,6 +4,8 @@ import flet as ft
 
 from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.controls.custom.image_viewer_control import ImageViewer
+from src.resources.controls.custom.options_control import OptionsControl
+from src.resources.controls.custom.use_control import UseControl
 from src.resources.properties import *
 
 
@@ -23,9 +25,37 @@ class ScabTab(ft.Tab):
             padding=TAB_PADDING,
             content=ft.Column(
                 [
+                    # TOP
                     HeaderControl("View"),
                     ImageViewer(self.image_source),
-                    HeaderControl("Options")
+
+                    # BOTTOM
+                    ft.Row(
+                        [
+                            ft.Container(
+                                ft.Column(
+                                    [
+                                        HeaderControl("Options"),
+                                        OptionsControl()
+                                    ],
+                                    alignment=ft.alignment.top_left
+                                ),
+                                alignment=ft.alignment.top_left,
+                                expand=1
+                            ),
+                            ft.Container(
+                                ft.Column(
+                                    [
+                                        HeaderControl("Use"),
+                                        UseControl()
+                                    ],
+                                    alignment=ft.alignment.top_left
+                                ),
+                                alignment=ft.alignment.top_left,
+                                expand=1
+                            )
+                        ]
+                    )
                 ],
                 scroll=ft.ScrollMode.AUTO
             )

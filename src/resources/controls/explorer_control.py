@@ -22,8 +22,8 @@ class ExplorerControl(ft.Container):
         self.title = "Explorer"
         self.bgcolor = CONTAINER_BGCOLOR
         self.alignment = ft.alignment.top_left
-        self.width = page.width*0.3
-        self.padding = 3
+        self.width = page.width*EXPLORER_SIZE
+        self.padding = FRAME_PADDING
 
         self.content = ft.Column(
             [

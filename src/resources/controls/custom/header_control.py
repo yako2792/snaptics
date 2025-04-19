@@ -21,3 +21,4 @@ class HeaderControl(ft.Container):
             value=text,
             weight=ft.FontWeight.BOLD
         )
+        self.alignment = ft.alignment.top_left

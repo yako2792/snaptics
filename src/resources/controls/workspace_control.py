@@ -26,7 +26,7 @@ class WorkspaceControl(ft.Container):
         self.bgcolor = CONTAINER_BGCOLOR
         self.alignment = ft.alignment.top_left
         self.expand = 1
-        self.padding = 3
+        self.padding = FRAME_PADDING
 
         self.content = ft.Column(
             [
