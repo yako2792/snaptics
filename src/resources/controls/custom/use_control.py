@@ -1,6 +1,6 @@
 import flet as ft
 
-from src.resources.properties import *
+from src.resources.properties import Properties as Props
 
 
 class UseControl(ft.Container):
@@ -31,24 +31,24 @@ class UseControl(ft.Container):
                 label="Camera 1",
                 value=False
             ),
-            height=CHECKBOX_HEIGHT,
-            width=CHECKBOX_WIDTH
+            height=Props.CHECKBOX_HEIGHT,
+            width=Props.CHECKBOX_WIDTH
         )
         self.camera2_checkbox = ft.Container(
             content=ft.Checkbox(
                 label="Camera 2",
                 value=False
             ),
-            height=CHECKBOX_HEIGHT,
-            width=CHECKBOX_WIDTH
+            height=Props.CHECKBOX_HEIGHT,
+            width=Props.CHECKBOX_WIDTH
         )
         self.camera3_checkbox = ft.Container(
             content=ft.Checkbox(
                 label="Camera 3",
                 value=False
             ),
-            height=CHECKBOX_HEIGHT,
-            width=CHECKBOX_WIDTH
+            height=Props.CHECKBOX_HEIGHT,
+            width=Props.CHECKBOX_WIDTH
         )
 
         self.content = ft.Container(
@@ -65,25 +65,25 @@ class UseControl(ft.Container):
                         [
                             ft.ElevatedButton(
                                 text="Start",
-                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=BORDER_RADIUS)),
-                                height=BUTTON_HEIGHT,
-                                width=BUTTON_WIDTH
+                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+                                height=Props.BUTTON_HEIGHT,
+                                width=Props.BUTTON_WIDTH
                             ),
                             ft.ElevatedButton(
                                 text="Reset",
-                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=BORDER_RADIUS)),
-                                height=BUTTON_HEIGHT,
-                                width=BUTTON_WIDTH
+                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+                                height=Props.BUTTON_HEIGHT,
+                                width=Props.BUTTON_WIDTH
                             ),
                             ft.ElevatedButton(
                                 text="Stop",
-                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=BORDER_RADIUS)),
-                                height=BUTTON_HEIGHT,
-                                width=BUTTON_WIDTH
+                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+                                height=Props.BUTTON_HEIGHT,
+                                width=Props.BUTTON_WIDTH
                             )
                         ]
                     )
                 ]
             ),
-            padding=PAGE_PADDING
+            padding=Props.PAGE_PADDING
         )

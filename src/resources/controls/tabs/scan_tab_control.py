@@ -6,7 +6,7 @@ from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.controls.custom.image_viewer_control import ImageViewer
 from src.resources.controls.custom.options_control import OptionsControl
 from src.resources.controls.custom.use_control import UseControl
-from src.resources.properties import *
+from src.resources.properties import Properties as Props
 
 
 class ScabTab(ft.Tab):
@@ -19,10 +19,10 @@ class ScabTab(ft.Tab):
     def __init__(self, title: str):
         super().__init__()
         self.text = title
-        self.icon = ft.Icon(ft.Icons.CAMERA, size=TAB_ICON_SIZE, visible=TAB_ICON_ENABLED)
+        self.icon = ft.Icon(ft.Icons.CAMERA, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED)
         self.image_source = "some/path/image.jpg"
         self.content=ft.Container(
-            padding=TAB_PADDING,
+            padding=Props.TAB_PADDING,
             content=ft.Column(
                 [
                     # TOP

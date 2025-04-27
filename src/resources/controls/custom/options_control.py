@@ -1,6 +1,6 @@
 import flet as ft
 
-from src.resources.properties import PAGE_PADDING, CHECKBOX_WIDTH, BORDER_RADIUS
+from src.resources.properties import Properties as Props
 
 
 class OptionsControl(ft.Container):
@@ -38,8 +38,8 @@ class OptionsControl(ft.Container):
                 ft.DropdownOption(text="90 [DEG/SHOT]")
             ],
             label="Frequency",
-            width=CHECKBOX_WIDTH,
-            border_radius=BORDER_RADIUS
+            width = Props.CHECKBOX_WIDTH,
+            border_radius = Props.BORDER_RADIUS
         )
 
         self.format_dropdown = ft.Dropdown(
@@ -47,9 +47,9 @@ class OptionsControl(ft.Container):
                 ft.DropdownOption(text="RAW"),
                 ft.DropdownOption(text="JPG")
             ],
-            label="Format",
-            width=CHECKBOX_WIDTH,
-            border_radius=BORDER_RADIUS
+            label = "Format",
+            width = Props.CHECKBOX_WIDTH,
+            border_radius = Props.BORDER_RADIUS
         )
 
         self.resolution_dropdown = ft.Dropdown(
@@ -58,8 +58,8 @@ class OptionsControl(ft.Container):
                 ft.DropdownOption(text="FHD (1920x1080)")
             ],
             label="Resolution",
-            width=CHECKBOX_WIDTH,
-            border_radius=BORDER_RADIUS
+            width = Props.CHECKBOX_WIDTH,
+            border_radius = Props.BORDER_RADIUS
         )
 
         self.content = ft.Container(
@@ -70,5 +70,5 @@ class OptionsControl(ft.Container):
                     self.resolution_dropdown
                 ]
             ),
-            padding=PAGE_PADDING
+            padding = Props.PAGE_PADDING
         )

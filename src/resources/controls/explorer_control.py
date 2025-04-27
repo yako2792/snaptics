@@ -1,6 +1,6 @@
 import flet as ft
 from src.resources.controls.custom.header_control import HeaderControl
-from src.resources.properties import *
+from src.resources.properties import Properties as Props
 
 class ExplorerControl(ft.Container):
     """
@@ -20,10 +20,10 @@ class ExplorerControl(ft.Container):
         """
         super().__init__()
         self.title = "Explorer"
-        self.bgcolor = CONTAINER_BGCOLOR
+        self.bgcolor = Props.CONTAINER_BGCOLOR
         self.alignment = ft.alignment.top_left
-        self.width = page.width*EXPLORER_SIZE
-        self.padding = FRAME_PADDING
+        self.width = page.width * Props.EXPLORER_SIZE
+        self.padding = Props.FRAME_PADDING
 
         self.content = ft.Column(
             [

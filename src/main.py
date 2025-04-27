@@ -1,17 +1,17 @@
 import flet as ft
-from src.resources.properties import *
+from src.resources.properties import Properties as Props
 from src.resources.utils.layout import Layout
 
 def main(page: ft.Page) -> None:
 
         # PAGE: Properties
-        page.title = PAGE_TITLE
-        page.padding = PAGE_PADDING
-        page.bgcolor = PAGE_BGCOLOR
-        page.window.width=MIN_WINDOW_SIZE[0]
-        page.window.height=MIN_WINDOW_SIZE[1]
-        page.window.min_width=MIN_WINDOW_SIZE[0]
-        page.window.min_height=MIN_WINDOW_SIZE[1]
+        page.title = Props.PAGE_TITLE
+        page.padding = Props.PAGE_PADDING
+        page.bgcolor = Props.PAGE_BGCOLOR
+        page.window.width = Props.MIN_WINDOW_SIZE[0]
+        page.window.height = Props.MIN_WINDOW_SIZE[1]
+        page.window.min_width = Props.MIN_WINDOW_SIZE[0]
+        page.window.min_height = Props.MIN_WINDOW_SIZE[1]
 
         # PAGE: Application
         app: ft.Control = Layout(page)

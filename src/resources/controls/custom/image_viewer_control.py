@@ -1,8 +1,7 @@
 from tkinter.ttk import Label
 
 import flet as ft
-
-from src.resources.properties import *
+from src.resources.properties import Properties as Props
 
 
 class ImageViewer(ft.Container):
@@ -32,8 +31,8 @@ class ImageViewer(ft.Container):
                         alignment=ft.alignment.center,
                         width=640,
                         height=360,
-                        bgcolor=PAGE_BGCOLOR,
-                        content=ft.Text(value=NO_IMAGE)
+                        bgcolor=Props.PAGE_BGCOLOR,
+                        content=ft.Text(value=Props.NO_IMAGE)
                     ),
                     ft.Row(
                         [
@@ -44,13 +43,13 @@ class ImageViewer(ft.Container):
                                     ft.DropdownOption(text="Camera 3")
                                 ],
                                 label="Camera",
-                                width=DROPDOWN_WIDTH,
-                                border_radius=BORDER_RADIUS
+                                width=Props.DROPDOWN_WIDTH,
+                                border_radius=Props.BORDER_RADIUS
                             ),
                             ft.ElevatedButton(
                                 text="Test",
-                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=BORDER_RADIUS)),
-                                height=BUTTON_HEIGHT
+                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+                                height=Props.BUTTON_HEIGHT
                             )
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
