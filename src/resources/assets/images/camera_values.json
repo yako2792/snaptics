@@ -1,0 +1,44 @@
+{
+  "cameras": [
+    {
+      "id": "Canon_EOS_5D",
+      "model": "Canon EOS 5D",
+      "serial": "1234567890",
+      "status": "connected",
+      "photos": [
+        {
+          "filename": "IMG_001.jpg",
+          "file_size": "2.5 MB",
+          "capture_date": "2025-04-06T14:23:00",
+          "file_path": "/store_00010001/IMG_001.jpg"
+        },
+        {
+          "filename": "IMG_002.jpg",
+          "file_size": "3.1 MB",
+          "capture_date": "2025-04-06T14:25:30",
+          "file_path": "/store_00010001/IMG_002.jpg"
+        }
+      ]
+    },
+    {
+      "id": "Nikon_D750",
+      "model": "Nikon D750",
+      "serial": "9876543210",
+      "status": "connected",
+      "photos": [
+        {
+          "filename": "DSC_001.jpg",
+          "file_size": "4.2 MB",
+          "capture_date": "2025-04-06T15:00:00",
+          "file_path": "/store_00010002/DSC_001.jpg"
+        },
+        {
+          "filename": "DSC_002.jpg",
+          "file_size": "3.8 MB",
+          "capture_date": "2025-04-06T15:02:30",
+          "file_path": "/store_00010002/DSC_002.jpg"
+        }
+      ]
+    }
+  ]
+}
