@@ -49,5 +49,6 @@ class PropertiesTab(ft.Tab):
             [
                 self.explorer_settings,
                 self.scan_settings
-            ]
+            ],
+            scroll=ft.ScrollMode.AUTO
         )
