@@ -35,5 +35,12 @@ class Properties:
     BUTTON_HEIGHT: int = 49
     BORDER_RADIUS: int = 0
 
+    # PROPERTIES TAB
+    EXPLORER_SETTINGS_TITLE: str = "Properties: Explorer"
+    EXPLORER_SETTINGS_SUBTITLE: str = "Customize some values from the Explorer frame."
+    SCAN_SETTINGS_TITLE: str = "Properties: Scan Tab"
+    SCAN_SETTINGS_SUBTITLE: str = "Customize some values from the Scan tab."
+
     # GENERAL PORPOISE TEXTS
     NO_IMAGE: str = "No image"
+    DEFAULT_HINT: str = "Empty"

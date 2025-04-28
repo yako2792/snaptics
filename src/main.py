@@ -12,6 +12,7 @@ def main(page: ft.Page) -> None:
         page.window.height = Props.MIN_WINDOW_SIZE[1]
         page.window.min_width = Props.MIN_WINDOW_SIZE[0]
         page.window.min_height = Props.MIN_WINDOW_SIZE[1]
+        page.theme = ft.Theme(divider_color=ft.Colors.TRANSPARENT)
 
         # PAGE: Application
         app: ft.Control = Layout(page)
