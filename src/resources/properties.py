@@ -11,6 +11,7 @@ class Properties:
     CONTAINER_BGCOLOR: str = "#2E3541"
     ANIMATIONS_DURATION: int = 0
     MIN_WINDOW_SIZE: tuple[int,int] = (1280,720)
+    CUSTOM_HEADER_TEXT_SIZE: int = 18
 
     # FRAMES
     EXPLORER_SIZE: float = 0.3

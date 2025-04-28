@@ -4,6 +4,60 @@ from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.properties import Properties as Props
 
 
+def get_cameras():
+
+    # Get json file
+    with open("src/resources/assets/camera_values.json","r") as file:
+        data = json.load(file)
+
+    # Create container
+    cameras = ft.Column()
+
+    for camera in data['cameras']:
+        #print(f"Camera: {camera['model']} ({camera['id']})")
+
+        this_camera = ft.ExpansionTile(
+            title=ft.Row(
+                [
+                    ft.Icon(ft.Icons.CAMERA_ALT_OUTLINED, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED),
+                    ft.Text(value=camera['model'])
+                ]
+            ),
+            #subtitle=ft.Text(value=camera['id']),
+            #show_trailing_icon=False,
+            #affinity=ft.TileAffinity.LEADING,
+            initially_expanded=False,
+            controls_padding=Props.TAB_PADDING,
+        )
+
+
+        # Extraer fotos de cada cámara
+        for photo in camera['photos']:
+            filename = photo['filename']
+            file_path = photo['file_path']
+            capture_date = photo['capture_date']
+
+            # Procesar la imagen (aquí solo imprimimos la información)
+            #print(f"  Filename: {filename}")
+            #print(f"  File Path: {file_path}")
+            #print(f"  Capture Date: {capture_date}")
+            #print("-" * 40)
+            this_camera.controls.append(
+                ft.ListTile(
+                    title=ft.Row(
+                        [
+                            ft.Icon(ft.Icons.IMAGE_OUTLINED, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED),
+                            ft.Text(value=filename)
+                        ]
+                    )
+                )
+            )
+
+        cameras.controls.append(this_camera)
+
+    return cameras
+
+
 class ExplorerControl(ft.Container):
     """
     Sidebar panel for file or element exploration.
@@ -26,46 +80,15 @@ class ExplorerControl(ft.Container):
         self.alignment = ft.alignment.top_left
         self.width = page.width * Props.EXPLORER_SIZE
         self.padding = Props.FRAME_PADDING
+        self.cameras_list = get_cameras()
 
-        self.content = ft.Column(
-            [
-                HeaderControl(self.title)
-            ]
+        # Cameras container
+        self.content = ft.Container(
+            content=ft.Column(
+                [
+                    HeaderControl("Cameras"),
+                    self.cameras_list
+                ]
+            ),
+            padding=Props.TAB_PADDING
         )
-
-"""
-for camera in data['cameras']:
-    print(f"Camera: {camera['model']} ({camera['id']})")
-    
-    # Extraer fotos de cada cámara
-    for photo in camera['photos']:
-        filename = photo['filename']
-        file_path = photo['file_path']
-        capture_date = photo['capture_date']
-        
-        # Procesar la imagen (aquí solo imprimimos la información)
-        print(f"  Filename: {filename}")
-        print(f"  File Path: {file_path}")
-        print(f"  Capture Date: {capture_date}")
-        print("-" * 40)
-
-        
-Camera: Canon EOS 5D (Canon_EOS_5D)
-  Filename: IMG_001.jpg
-  File Path: /store_00010001/IMG_001.jpg
-  Capture Date: 2025-04-06T14:23:00
-----------------------------------------
-  Filename: IMG_002.jpg
-  File Path: /store_00010001/IMG_002.jpg
-  Capture Date: 2025-04-06T14:25:30
-----------------------------------------
-Camera: Nikon D750 (Nikon_D750)
-  Filename: DSC_001.jpg
-  File Path: /store_00010002/DSC_001.jpg
-  Capture Date: 2025-04-06T15:00:00
-----------------------------------------
-  Filename: DSC_002.jpg
-  File Path: /store_00010002/DSC_002.jpg
-  Capture Date: 2025-04-06T15:02:30
-----------------------------------------
-"""

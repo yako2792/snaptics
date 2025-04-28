@@ -1,4 +1,5 @@
 import flet as ft
+from src.resources.properties import Properties as Props
 
 class HeaderControl(ft.Container):
     """
@@ -19,6 +20,7 @@ class HeaderControl(ft.Container):
         super().__init__()
         self.content = ft.Text(
             value=text,
+            size=Props.CUSTOM_HEADER_TEXT_SIZE,
             weight=ft.FontWeight.BOLD
         )
         self.alignment = ft.alignment.top_left

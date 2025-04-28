@@ -39,6 +39,32 @@
           "file_path": "/store_00010002/DSC_002.jpg"
         }
       ]
+    },
+    {
+      "id": "Canon_EOS_T7",
+      "model": "Canon_EOS_T7",
+      "serial": "2345234585",
+      "status": "connected",
+      "photos": [
+        {
+          "filename": "RAW_001.jpg",
+          "file_size": "3.2 MB",
+          "capture_date": "2025-04-06T15:00:00",
+          "file_path": "/store_00010002/RAW_001.jpg"
+        },
+        {
+          "filename": "RAW_003.jpg",
+          "file_size": "3.8 MB",
+          "capture_date": "2025-04-06T15:02:30",
+          "file_path": "/store_00010002/RAW_003.jpg"
+        },
+        {
+          "filename": "RAW_004.jpg",
+          "file_size": "4.1 MB",
+          "capture_date": "2025-04-06T15:02:30",
+          "file_path": "/store_00010002/RAW_004.jpg"
+        }
+      ]
     }
   ]
 }
