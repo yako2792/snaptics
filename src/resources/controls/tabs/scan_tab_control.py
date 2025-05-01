@@ -21,13 +21,19 @@ class ScabTab(ft.Tab):
         self.text = title
         self.icon = ft.Icon(ft.Icons.CAMERA, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED)
         self.image_source = "some/path/image.jpg"
+
+        # Custom controls
+        self.image_viewer = ImageViewer(self.image_source)
+        self.options_control = OptionsControl()
+        self.use_control = UseControl()
+
         self.content=ft.Container(
             padding=Props.TAB_PADDING,
             content=ft.Column(
                 [
                     # TOP
                     HeaderControl("View"),
-                    ImageViewer(self.image_source),
+                    self.image_viewer,
 
                     # BOTTOM
                     ft.Row(
@@ -36,7 +42,7 @@ class ScabTab(ft.Tab):
                                 ft.Column(
                                     [
                                         HeaderControl("Options"),
-                                        OptionsControl()
+                                        self.options_control
                                     ],
                                     alignment=ft.alignment.top_left
                                 ),
@@ -47,7 +53,7 @@ class ScabTab(ft.Tab):
                                 ft.Column(
                                     [
                                         HeaderControl("Use"),
-                                        UseControl()
+                                        self.use_control
                                     ],
                                     alignment=ft.alignment.top_left
                                 ),
@@ -60,3 +66,28 @@ class ScabTab(ft.Tab):
                 scroll=ft.ScrollMode.AUTO
             )
         )
+
+    def modify_button_radius(self, new_radius: int):
+        """
+        Modify Scan buttons border radius.
+        :param new_radius: Radius value to be applied
+        :return:
+        """
+        Props.BORDER_RADIUS = new_radius
+        self.image_viewer.update_all_radius()
+        self.options_control.update_all_radius()
+        self.use_control.update_all_radius()
+        self.update()
+
+    def modify_view_image_size(self, width: int, height: int):
+        """
+        Modify image viewer size
+        :param width: int width to be applied
+        :param height: int height to be applied
+        :return:
+        """
+        Props.IMAGE_VIEW_WIDTH = width
+        Props.IMAGE_VIEW_HEIGHT = height
+
+        self.image_viewer.update_view_image_size()
+        self.update()

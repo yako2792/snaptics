@@ -23,9 +23,8 @@ class Layout(ft.Row):
         super().__init__()
         self.page = page
         self.expand = 1
-
         self.explorer_control = ExplorerControl(self.page)
-        self.workspace_control = WorkspaceControl(self.page)
+        self.workspace_control = WorkspaceControl(self.page, self.explorer_control)
 
         self.controls = [
             self.explorer_control,

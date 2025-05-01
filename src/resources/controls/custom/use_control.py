@@ -26,6 +26,7 @@ class UseControl(ft.Container):
         """
         super().__init__()
 
+        # Other elements
         self.camera1_checkbox = ft.Container(
             content=ft.Checkbox(
                 label="Camera 1",
@@ -51,6 +52,26 @@ class UseControl(ft.Container):
             width=Props.CHECKBOX_WIDTH
         )
 
+        # BUTTONS
+        self.start_button = ft.ElevatedButton(
+            text="Start",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH
+        )
+        self.reset_button = ft.ElevatedButton(
+            text="Reset",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH
+        )
+        self.stop_button = ft.ElevatedButton(
+            text="Stop",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH
+        )
+
         self.content = ft.Container(
             ft.Row(
                 [
@@ -63,27 +84,20 @@ class UseControl(ft.Container):
                     ),
                     ft.Column(
                         [
-                            ft.ElevatedButton(
-                                text="Start",
-                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
-                                height=Props.BUTTON_HEIGHT,
-                                width=Props.BUTTON_WIDTH
-                            ),
-                            ft.ElevatedButton(
-                                text="Reset",
-                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
-                                height=Props.BUTTON_HEIGHT,
-                                width=Props.BUTTON_WIDTH
-                            ),
-                            ft.ElevatedButton(
-                                text="Stop",
-                                style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
-                                height=Props.BUTTON_HEIGHT,
-                                width=Props.BUTTON_WIDTH
-                            )
+                            self.start_button,
+                            self.reset_button,
+                            self.stop_button
                         ]
                     )
                 ]
             ),
             padding=Props.PAGE_PADDING
         )
+    def update_all_radius(self):
+        """
+        Update border radius of all objects in custom control
+        :return:
+        """
+        self.start_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
+        self.reset_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
+        self.stop_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))

@@ -22,6 +22,10 @@ class Properties:
     PREVIEW_TAB_TITLE: str = "Preview"
     SCAN_TAB_TITLE: str = "Scan"
     SAVE_TAB_TITLE: str = "Save"
+    PREVIEW_KEY: str = "Preview"
+    SCAN_KEY: str = "Scan"
+    SAVE_KEY: str = "Save"
+    EXPLORER_KEY: str = "Explorer"
     PROPERTIES_TAB_TITLE: str = "Properties"
 
     TAB_ICON_SIZE: int = 18
@@ -29,6 +33,8 @@ class Properties:
     TAB_PADDING: int = 15
 
     # CONTROLS STYLE
+    IMAGE_VIEW_WIDTH: int = 640
+    IMAGE_VIEW_HEIGHT: int = 360
     CHECKBOX_WIDTH: int = 350
     CHECKBOX_HEIGHT: int = 49
     DROPDOWN_WIDTH: int = 350
@@ -41,6 +47,7 @@ class Properties:
     EXPLORER_SETTINGS_SUBTITLE: str = "Customize some values from the Explorer frame."
     SCAN_SETTINGS_TITLE: str = "Properties: Scan Tab"
     SCAN_SETTINGS_SUBTITLE: str = "Customize some values from the Scan tab."
+    INITIALLY_EXPANDED_PROPERTIES: bool = True
 
     # GENERAL PORPOISE TEXTS
     NO_IMAGE: str = "No image"

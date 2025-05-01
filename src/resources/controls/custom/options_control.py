@@ -72,3 +72,12 @@ class OptionsControl(ft.Container):
             ),
             padding = Props.PAGE_PADDING
         )
+
+    def update_all_radius(self):
+        """
+        Update border radius of all objects in custom control
+        :return:
+        """
+        self.freq_dropdown.border_radius = Props.BORDER_RADIUS
+        self.format_dropdown.border_radius = Props.BORDER_RADIUS
+        self.resolution_dropdown.border_radius = Props.BORDER_RADIUS
