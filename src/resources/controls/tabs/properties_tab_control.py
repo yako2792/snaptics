@@ -89,17 +89,13 @@ class PropertiesTab(ft.Tab):
 
     def __explorer_width_slider_changed(self, e):
         new_width = e.control.value / 100
-        print(f"New width {new_width}")
         self.explorer_tab.modify_width(new_width)
 
     def __scan_border_radius_slider_changed(self, e):
         new_radius = e.control.value
-        print(f"New radius {new_radius}")
         self.scan_tab.modify_button_radius(new_radius)
 
     def __image_viewer_size_slider_changed(self, e):
         percentage = int(e.control.value)
         new_width, new_height = convert_percentage_to_resolution(percentage)
-        print(f"width {new_width}")
-        print(f"height {new_height}")
         self.scan_tab.modify_view_image_size(new_width, new_height)
