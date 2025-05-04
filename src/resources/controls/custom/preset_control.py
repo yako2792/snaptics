@@ -5,7 +5,26 @@ import flet as ft
 from src.resources.properties import Properties as Props
 
 class PresetControl(ft.Container):
+    """
+    A container that provides functionality for managing presets, including
+    applying, adding, updating, and deleting presets.
 
+    This class allows the user to interact with preset data, view and modify
+    preset settings, and perform actions such as applying or saving new presets
+    via the UI controls (dropdowns, text fields, buttons).
+
+    Attributes:
+        page (ft.Page): The page object that contains this container.
+        presets (dict): A dictionary of existing presets loaded from a JSON file.
+        options (ft.Container): A container holding various options for preset configurations.
+        camera_use (ft.Container): A container for camera usage settings (checkboxes).
+        preset_dropdown (ft.Dropdown): A dropdown to select existing presets.
+        preset_name_input (ft.TextField): An input field to enter a new preset name.
+        apply_button (ft.ElevatedButton): A button to apply the selected preset.
+        add_button (ft.ElevatedButton): A button to add a new preset.
+        delete_button (ft.ElevatedButton): A button to delete an existing preset.
+        update_button (ft.ElevatedButton): A button to update an existing preset.
+    """
     def __init__(self, page: ft.Page, options: ft.Container, camera_use: ft.Container):
 
         super().__init__()
@@ -104,14 +123,41 @@ class PresetControl(ft.Container):
             return json.load(file)
 
     def __write_presets(self, presets):
+        """
+        Writes the provided presets to the JSON file.
+
+        Args:
+            presets (dict): A dictionary containing the presets to save.
+
+        Side effects:
+            - Saves the given presets dictionary to the file at the path defined in Props.PRESETS_PATH.
+        """
         with open(Props.PRESETS_PATH, "w") as file:
             json.dump(presets, file, indent=2)
 
     def __reload_presets(self):
+        """
+        Reloads the presets from the JSON file and updates the preset dropdown.
+
+        Side effects:
+            - Refreshes the list of presets from the file.
+            - Updates the preset dropdown options with the new preset names.
+        """
         self.presets = self.__load_presets()
         self.preset_dropdown.options = [ft.dropdown.Option(name) for name in self.presets]
 
     def __delete_preset(self, e):
+        """
+        Deletes an existing preset based on the name provided in the input field.
+
+        Args:
+            e (ControlEvent): The event triggered when the user clicks "Delete".
+
+        Side effects:
+            - Removes the preset from the JSON file if it exists.
+            - Displays an alert for success or if the preset was not found.
+            - Reloads the preset list and updates the dropdown.
+        """
         __preset_name = self.preset_name_input.value
 
         # GET CURRENT PRESETS
@@ -133,6 +179,18 @@ class PresetControl(ft.Container):
         self.preset_dropdown.update()
 
     def __add_preset(self, e):
+        """
+        Adds a new preset using the current values from UI controls.
+
+        Args:
+            e (ControlEvent): The event triggered when the user clicks "Add".
+
+        Side effects:
+            - Reads current dropdown and checkbox values.
+            - Saves a new preset to the JSON file.
+            - Shows an alert if the preset already exists.
+            - Refreshes the preset dropdown after adding.
+        """
         __preset_name = self.preset_name_input.value
 
         # READ PRESETS
@@ -171,6 +229,18 @@ class PresetControl(ft.Container):
         self.preset_dropdown.update()
 
     def __update_preset(self, e):
+        """
+        Updates an existing preset with the current UI control values.
+
+        Args:
+            e (ControlEvent): The event triggered when the user clicks "Update".
+
+        Side effects:
+            - Reads current values from dropdowns and checkboxes.
+            - Replaces the existing preset in the JSON file.
+            - Displays a success or error snackbar.
+            - Reloads and refreshes the preset dropdown.
+        """
         __preset_name = self.preset_name_input.value
 
         # READ PRESETS
@@ -210,6 +280,17 @@ class PresetControl(ft.Container):
         self.preset_dropdown.update()
 
     def __apply_preset(self, e):
+        """
+        Applies the selected preset by updating UI controls and global properties.
+
+        Args:
+            e (ControlEvent): The event triggered by the user selecting a preset.
+
+        Side effects:
+            - Updates dropdowns and checkboxes based on the preset.
+            - Sets corresponding values in the Props class.
+            - Displays a confirmation snackbar.
+        """
         __preset_name = self.preset_dropdown.value
         # READ PRESETS
         presets = self.__load_presets()
@@ -246,6 +327,12 @@ class PresetControl(ft.Container):
         self.camera_use.update()
 
     def show_alert(self, message: str):
+        """
+        Displays a temporary snackbar alert with the given message.
+
+        Args:
+            message (str): The message to display in the snackbar.
+        """
         snackbar = ft.SnackBar(
             content=ft.Text(value=message),
             duration=2000
