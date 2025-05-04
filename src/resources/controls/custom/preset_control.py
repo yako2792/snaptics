@@ -159,6 +159,7 @@ class PresetControl(ft.Container):
             - Reloads the preset list and updates the dropdown.
         """
         __preset_name = self.preset_name_input.value
+        if not self.__validate_preset_name(__preset_name): return
 
         # GET CURRENT PRESETS
         presets = self.__load_presets()
@@ -192,6 +193,7 @@ class PresetControl(ft.Container):
             - Refreshes the preset dropdown after adding.
         """
         __preset_name = self.preset_name_input.value
+        if not self.__validate_preset_name(__preset_name): return
 
         # READ PRESETS
         presets = self.__load_presets()
@@ -242,6 +244,7 @@ class PresetControl(ft.Container):
             - Reloads and refreshes the preset dropdown.
         """
         __preset_name = self.preset_name_input.value
+        if not self.__validate_preset_name(__preset_name): return
 
         # READ PRESETS
         presets = self.__load_presets()
@@ -340,6 +343,22 @@ class PresetControl(ft.Container):
         snackbar.open = True
         self.page.open(snackbar)
         self.page.update()
+
+    def __validate_preset_name(self, name: str) -> bool:
+        """
+        Validates that a preset name is not empty or just whitespace.
+        Shows an alert if invalid.
+
+        Args:
+            name (str): The preset name to validate.
+
+        Returns:
+            bool: True if valid, False if invalid.
+        """
+        if not name or not name.strip():
+            self.show_alert("Preset name is empty.")
+            return False
+        return True
 
     def update_all_radius(self):
         """
