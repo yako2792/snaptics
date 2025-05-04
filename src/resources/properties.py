@@ -50,6 +50,8 @@ class Properties:
     EXPLORER_SETTINGS_SUBTITLE: str = "Customize some values from the Explorer frame."
     SCAN_SETTINGS_TITLE: str = "Properties: Scan Tab"
     SCAN_SETTINGS_SUBTITLE: str = "Customize some values from the Scan tab."
+    CAMERA_SETTINGS_TITLE: str = "Properties: Cameras"
+    CAMERA_SETTINGS_SUBTITLE: str = "Customize some camera properties."
     INITIALLY_EXPANDED_PROPERTIES: bool = True
 
     # SCAN TAB
