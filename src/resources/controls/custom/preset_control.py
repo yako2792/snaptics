@@ -347,4 +347,8 @@ class PresetControl(ft.Container):
         :return:
         """
         self.preset_dropdown.border_radius = Props.BORDER_RADIUS
+        self.preset_name_input.border_radius = Props.BORDER_RADIUS
         self.apply_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
+        self.add_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
+        self.delete_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
+        self.update_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
