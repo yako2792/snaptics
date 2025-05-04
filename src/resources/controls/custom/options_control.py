@@ -77,18 +77,47 @@ class OptionsControl(ft.Container):
         )
 
     def __freq_dropdown_changed(self,e):
+        """
+        Updates the current frequency setting when the user selects a new option.
+
+        Args:
+            e (ControlEvent): The event triggered when a frequency selection is made.
+
+        Side effects:
+            - Updates the `Props.CURRENT_FREQUENCY` with the selected value.
+        """
         Props.CURRENT_FREQUENCY = self.freq_dropdown.value
 
     def __format_dropdown_changed(self,e):
+        """
+        Updates the current image format setting when the user selects a new option.
+
+        Args:
+            e (ControlEvent): The event triggered when a format selection is made.
+
+        Side effects:
+            - Updates the `Props.CURRENT_FORMAT` with the selected value.
+        """
         Props.CURRENT_FORMAT = self.format_dropdown.value
 
     def __resolution_dropdown_changed(self,e):
+        """
+        Updates the current resolution setting when the user selects a new option.
+
+        Args:
+            e (ControlEvent): The event triggered when a resolution selection is made.
+
+        Side effects:
+            - Updates the `Props.CURRENT_RESOLUTION` with the selected value.
+        """
         Props.CURRENT_RESOLUTION = self.resolution_dropdown.value
 
     def update_all_radius(self):
         """
-        Update border radius of all objects in custom control
-        :return:
+        Updates the border radius of all dropdowns in the control.
+
+        Side effects:
+            - Sets the border radius of `freq_dropdown`, `format_dropdown`, and `resolution_dropdown` to the value in `Props.BORDER_RADIUS`.
         """
         self.freq_dropdown.border_radius = Props.BORDER_RADIUS
         self.format_dropdown.border_radius = Props.BORDER_RADIUS
