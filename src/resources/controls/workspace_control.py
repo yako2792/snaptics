@@ -33,7 +33,7 @@ class   WorkspaceControl(ft.Container):
         # Used tabs
         self.explorer_control = explorer_control
         self.preview_tab = PreviewTab(Props.PREVIEW_TAB_TITLE)
-        self.scan_tab = ScanTab(Props.SCAN_TAB_TITLE)
+        self.scan_tab = ScanTab(self.page,Props.SCAN_TAB_TITLE)
         self.properties_tab = PropertiesTab(
             Props.PROPERTIES_TAB_TITLE,
             self.page,

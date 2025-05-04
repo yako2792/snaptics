@@ -39,7 +39,8 @@ class OptionsControl(ft.Container):
             ],
             label="Frequency",
             width = Props.CHECKBOX_WIDTH,
-            border_radius = Props.BORDER_RADIUS
+            border_radius = Props.BORDER_RADIUS,
+            on_change=self.__freq_dropdown_changed
         )
 
         self.format_dropdown = ft.Dropdown(
@@ -49,7 +50,8 @@ class OptionsControl(ft.Container):
             ],
             label = "Format",
             width = Props.CHECKBOX_WIDTH,
-            border_radius = Props.BORDER_RADIUS
+            border_radius = Props.BORDER_RADIUS,
+            on_change=self.__format_dropdown_changed
         )
 
         self.resolution_dropdown = ft.Dropdown(
@@ -59,7 +61,8 @@ class OptionsControl(ft.Container):
             ],
             label="Resolution",
             width = Props.CHECKBOX_WIDTH,
-            border_radius = Props.BORDER_RADIUS
+            border_radius = Props.BORDER_RADIUS,
+            on_change=self.__resolution_dropdown_changed
         )
 
         self.content = ft.Container(
@@ -72,6 +75,15 @@ class OptionsControl(ft.Container):
             ),
             padding = Props.PAGE_PADDING
         )
+
+    def __freq_dropdown_changed(self,e):
+        Props.CURRENT_FREQUENCY = self.freq_dropdown.value
+
+    def __format_dropdown_changed(self,e):
+        Props.CURRENT_FORMAT = self.format_dropdown.value
+
+    def __resolution_dropdown_changed(self,e):
+        Props.CURRENT_RESOLUTION = self.resolution_dropdown.value
 
     def update_all_radius(self):
         """

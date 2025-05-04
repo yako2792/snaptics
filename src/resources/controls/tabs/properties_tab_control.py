@@ -1,9 +1,4 @@
-from asyncio import new_event_loop
-from email.header import Header
-
 import flet as ft
-
-from src.resources.controls.explorer_control import ExplorerControl
 from src.resources.properties import Properties as Props
 
 

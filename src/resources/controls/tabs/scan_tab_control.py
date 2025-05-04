@@ -1,10 +1,9 @@
-from pathlib import Path
-
 import flet as ft
 
 from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.controls.custom.image_viewer_control import ImageViewer
 from src.resources.controls.custom.options_control import OptionsControl
+from src.resources.controls.custom.preset_control import PresetControl
 from src.resources.controls.custom.use_control import UseControl
 from src.resources.properties import Properties as Props
 
@@ -16,8 +15,9 @@ class ScanTab(ft.Tab):
     This tab provides an interface for interacting with connected cameras,
     including viewing live or static previews and performing scan actions.
     """
-    def __init__(self, title: str):
+    def __init__(self, page: ft.Page, title: str):
         super().__init__()
+        self.page = page
         self.text = title
         self.icon = ft.Icon(ft.Icons.CAMERA, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED)
         self.image_source = "some/path/image.jpg"
@@ -26,6 +26,7 @@ class ScanTab(ft.Tab):
         self.image_viewer = ImageViewer(self.image_source)
         self.options_control = OptionsControl()
         self.use_control = UseControl()
+        self.presets_control = PresetControl(self.page, self.options_control, self.use_control)
 
         self.content=ft.Container(
             padding=Props.TAB_PADDING,
@@ -61,7 +62,11 @@ class ScanTab(ft.Tab):
                                 expand=1
                             )
                         ]
-                    )
+                    ),
+
+                    # PRESETS
+                    HeaderControl("Presets"),
+                    self.presets_control
                 ],
                 scroll=ft.ScrollMode.AUTO
             )
@@ -77,6 +82,7 @@ class ScanTab(ft.Tab):
         self.image_viewer.update_all_radius()
         self.options_control.update_all_radius()
         self.use_control.update_all_radius()
+        self.presets_control.update_all_radius()
         self.update()
 
     def modify_view_image_size(self, width: int, height: int):

@@ -30,7 +30,8 @@ class UseControl(ft.Container):
         self.camera1_checkbox = ft.Container(
             content=ft.Checkbox(
                 label="Camera 1",
-                value=False
+                value=False,
+                on_change=self.__camera1_checkbox_changed
             ),
             height=Props.CHECKBOX_HEIGHT,
             width=Props.CHECKBOX_WIDTH
@@ -38,7 +39,8 @@ class UseControl(ft.Container):
         self.camera2_checkbox = ft.Container(
             content=ft.Checkbox(
                 label="Camera 2",
-                value=False
+                value=False,
+                on_change=self.__camera2_checkbox_changed
             ),
             height=Props.CHECKBOX_HEIGHT,
             width=Props.CHECKBOX_WIDTH
@@ -46,7 +48,8 @@ class UseControl(ft.Container):
         self.camera3_checkbox = ft.Container(
             content=ft.Checkbox(
                 label="Camera 3",
-                value=False
+                value=False,
+                on_change=self.__camera3_checkbox_changed
             ),
             height=Props.CHECKBOX_HEIGHT,
             width=Props.CHECKBOX_WIDTH
@@ -93,6 +96,17 @@ class UseControl(ft.Container):
             ),
             padding=Props.PAGE_PADDING
         )
+
+    def __camera1_checkbox_changed(self,e):
+        Props.CURRENT_USE_CAMERA1 = self.camera1_checkbox.content.value
+
+    def __camera2_checkbox_changed(self,e):
+        Props.CURRENT_USE_CAMERA2 = self.camera2_checkbox.content.value
+
+    def __camera3_checkbox_changed(self,e):
+        Props.CURRENT_USE_CAMERA3 = self.camera3_checkbox.content.value
+
+
     def update_all_radius(self):
         """
         Update border radius of all objects in custom control

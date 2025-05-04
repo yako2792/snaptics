@@ -3,6 +3,8 @@ This module contains configurable properties for the Fleet-based web application
 It centralizes settings, ensuring easy configuration and avoiding hardcoding values in the codebase.
 """
 
+import os
+
 class Properties:
     # GENERAL PAGE
     PAGE_TITLE: str = "Snaptics"
@@ -12,11 +14,14 @@ class Properties:
     ANIMATIONS_DURATION: int = 0
     MIN_WINDOW_SIZE: tuple[int,int] = (1280,720)
     CUSTOM_HEADER_TEXT_SIZE: int = 18
+    PRESETS_PATH:str = os.path.join(
+        os.path.dirname(__file__),
+        "..", "resources", "assets", "presets", "presets.json"
+    )
 
     # FRAMES
     EXPLORER_SIZE: float = 0.3
     FRAME_PADDING: int = 3
-
 
     # TABS
     PREVIEW_TAB_TITLE: str = "Preview"
@@ -46,6 +51,14 @@ class Properties:
     SCAN_SETTINGS_TITLE: str = "Properties: Scan Tab"
     SCAN_SETTINGS_SUBTITLE: str = "Customize some values from the Scan tab."
     INITIALLY_EXPANDED_PROPERTIES: bool = True
+
+    # SCAN TAB
+    CURRENT_FREQUENCY: str = ""
+    CURRENT_FORMAT: str = ""
+    CURRENT_RESOLUTION: str = ""
+    CURRENT_USE_CAMERA1: str = False
+    CURRENT_USE_CAMERA2: str = False
+    CURRENT_USE_CAMERA3: str = False
 
     # GENERAL PORPOISE TEXTS
     NO_IMAGE: str = "No image"
