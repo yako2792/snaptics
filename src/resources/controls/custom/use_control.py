@@ -98,12 +98,33 @@ class UseControl(ft.Container):
         )
 
     def __camera1_checkbox_changed(self,e):
+        """
+        Updates the global CURRENT_USE_CAMERA1 property
+        based on the state of the Camera 1 checkbox.
+
+        Args:
+            e (ControlEvent): Checkbox change event.
+        """
         Props.CURRENT_USE_CAMERA1 = self.camera1_checkbox.content.value
 
     def __camera2_checkbox_changed(self,e):
+        """
+        Updates the global CURRENT_USE_CAMERA2 property
+        based on the state of the Camera 2 checkbox.
+
+        Args:
+            e (ControlEvent): Checkbox change event.
+        """
         Props.CURRENT_USE_CAMERA2 = self.camera2_checkbox.content.value
 
     def __camera3_checkbox_changed(self,e):
+        """
+        Updates the global CURRENT_USE_CAMERA3 property
+        based on the state of the Camera 3 checkbox.
+
+        Args:
+            e (ControlEvent): Checkbox change event.
+        """
         Props.CURRENT_USE_CAMERA3 = self.camera3_checkbox.content.value
 
 
