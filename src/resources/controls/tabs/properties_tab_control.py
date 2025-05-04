@@ -47,7 +47,6 @@ class PropertiesTab(ft.Tab):
         self.explorer_tab = tab_references[Props.EXPLORER_KEY]
         self.preview_tab = tab_references[Props.PREVIEW_KEY]
         self.scan_tab = tab_references[Props.SCAN_KEY]
-        self.save_tab = tab_references[Props.SAVE_KEY]
 
         # Explorer settings
         self.explorer_settings: ft.ExpansionTile = ft.ExpansionTile(

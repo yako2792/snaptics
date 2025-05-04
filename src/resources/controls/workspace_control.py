@@ -3,11 +3,10 @@ import flet as ft
 from src.resources.controls.explorer_control import ExplorerControl
 from src.resources.controls.tabs.preview_tab_control import PreviewTab
 from src.resources.controls.tabs.properties_tab_control import PropertiesTab
-from src.resources.controls.tabs.save_tab_control import SaveTab
-from src.resources.controls.tabs.scan_tab_control import ScabTab
+from src.resources.controls.tabs.scan_tab_control import ScanTab
 from src.resources.properties import Properties as Props
 
-class WorkspaceControl(ft.Container):
+class   WorkspaceControl(ft.Container):
     """
     The main workspace area of the application.
 
@@ -34,16 +33,14 @@ class WorkspaceControl(ft.Container):
         # Used tabs
         self.explorer_control = explorer_control
         self.preview_tab = PreviewTab(Props.PREVIEW_TAB_TITLE)
-        self.scan_tab = ScabTab(Props.SCAN_TAB_TITLE)
-        self.save_tab = SaveTab(Props.SAVE_TAB_TITLE)
+        self.scan_tab = ScanTab(Props.SCAN_TAB_TITLE)
         self.properties_tab = PropertiesTab(
             Props.PROPERTIES_TAB_TITLE,
             self.page,
             {
                 Props.EXPLORER_KEY: self.explorer_control,
                 Props.PREVIEW_KEY: self.preview_tab,
-                Props.SCAN_KEY: self.scan_tab,
-                Props.SAVE_KEY: self.save_tab
+                Props.SCAN_KEY: self.scan_tab
             }
         )
 
@@ -55,7 +52,6 @@ class WorkspaceControl(ft.Container):
                     tabs=[
                         self.preview_tab,
                         self.scan_tab,
-                        self.save_tab,
                         self.properties_tab
                     ],
                     expand=True

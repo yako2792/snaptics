@@ -9,7 +9,7 @@ from src.resources.controls.custom.use_control import UseControl
 from src.resources.properties import Properties as Props
 
 
-class ScabTab(ft.Tab):
+class ScanTab(ft.Tab):
     """
     Scan tab in Workspace frame
 

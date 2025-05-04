@@ -21,10 +21,8 @@ class Properties:
     # TABS
     PREVIEW_TAB_TITLE: str = "Preview"
     SCAN_TAB_TITLE: str = "Scan"
-    SAVE_TAB_TITLE: str = "Save"
     PREVIEW_KEY: str = "Preview"
     SCAN_KEY: str = "Scan"
-    SAVE_KEY: str = "Save"
     EXPLORER_KEY: str = "Explorer"
     PROPERTIES_TAB_TITLE: str = "Properties"
 
