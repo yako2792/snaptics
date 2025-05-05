@@ -1,5 +1,5 @@
+import time
 import flet as ft
-
 from src.resources.properties import Properties as Props
 
 
@@ -157,6 +157,10 @@ class UseControl(ft.Container):
         Props.IS_SCANNING = True
 
         # Logic here...
+        time.sleep(12)
+
+        Props.IS_SCANNING = False
+        self.show_alert("Finished capture.")
 
 
     def show_alert(self, message: str):
