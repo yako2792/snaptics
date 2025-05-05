@@ -124,6 +124,7 @@ class GPhoto2:
 
         Sets the default camera and retrieves configurations such as available image formats, ISO values, and shutter speeds.
         """
+        self.killed_initial_gphoto: bool = self.kill_initial_gphoto()
         self.cameras: dict[str, str] = self.get_models_and_ports()
         self.default_camera: str = self.cameras[next(iter(self.cameras))]
         self.download_path: str = os.getcwd() + "/src/resources/assets/images/"
@@ -146,6 +147,13 @@ class GPhoto2:
         """
         return self.default_camera if camera_port is None else camera_port
 
+    def kill_initial_gphoto(self) -> bool:
+        try:
+            subprocess.run(['killall', 'gvfsd-gphoto2'])
+            return True
+        except:
+            return False
+
     def get_models_and_ports(self) -> dict[str, str]:
         """
         Retrieves all available cameras and their corresponding ports.
@@ -153,32 +161,36 @@ class GPhoto2:
         Returns:
             dict[str, str]: A dictionary of available camera models and their ports.
         """
-        result = subprocess.run(['gphoto2', '--auto-detect'], capture_output=True, text=True)
-        lines = result.stdout.strip().split('\n')[2:]
+        try:
+            result = subprocess.run(['gphoto2', '--auto-detect'], capture_output=True, text=True)
+            lines = result.stdout.strip().split('\n')[2:]
 
-        cameras: dict[str, str] = {}
+            cameras: dict[str, str] = {}
 
-        for line in lines:
+            for line in lines:
 
-            if line.strip():
-                parts = line.strip().rsplit('  ', 1)
+                if line.strip():
+                    parts = line.strip().rsplit('  ', 1)
 
-                if len(parts) == 2:
-                    model, port = parts
-                    model = model.strip()
-                    port = port.strip()
+                    if len(parts) == 2:
+                        model, port = parts
+                        model = model.strip()
+                        port = port.strip()
 
-                    if model in cameras:
-                        count = 1
-                        new_model = f"{model}({count})"
-
-                        while new_model in cameras:
-                            count += 1
+                        if model in cameras:
+                            count = 1
                             new_model = f"{model}({count})"
-                        model = new_model
-                    cameras[model] = port
 
-        return cameras
+                            while new_model in cameras:
+                                count += 1
+                                new_model = f"{model}({count})"
+                            model = new_model
+                        cameras[model] = port
+
+            return cameras
+        
+        except:
+            return {}
 
     def get_available_shutterspeeds_for_camera(self, camera_port:str = None) -> dict[str, str]:
         """
@@ -323,10 +335,10 @@ class GPhoto2:
 
 # EXAMPLE OF USAGE
 # ----------------------
-#cameras = gphoto2()
-#cameras.list_cameras()
-#cameras.auto_detect()
-#cameras.change_image_format("Small Normal JPEG")
-#print(cameras.iso_dict)
-#print(cameras.imageformat_dict)
-#cameras.change_image_format("Small Normal JPEG")
+# cameras = GPhoto2()
+# cameras.list_cameras()
+# cameras.auto_detect()
+# cameras.change_image_format("Small Normal JPEG")
+# print(cameras.iso_dict)
+# print(cameras.imageformat_dict)
+# cameras.change_image_format("Small Normal JPEG")

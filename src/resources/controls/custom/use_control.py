@@ -3,6 +3,15 @@ import flet as ft
 from src.resources.properties import Properties as Props
 
 
+def is_scanning():
+    return Props.IS_SCANNING
+
+def no_camera_selected():
+    return not any([Props.CURRENT_USE_CAMERA1, Props.CURRENT_USE_CAMERA2, Props.CURRENT_USE_CAMERA3])
+
+def capture_options_missing():
+    return not all([Props.CURRENT_FREQUENCY, Props.CURRENT_FORMAT, Props.CURRENT_RESOLUTION])
+
 class UseControl(ft.Container):
     """
     A container control that provides camera toggles and scan control buttons.
@@ -60,7 +69,8 @@ class UseControl(ft.Container):
             text="Start",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
-            width=Props.BUTTON_WIDTH
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__start_button_clicked
         )
         self.reset_button = ft.ElevatedButton(
             text="Reset",
@@ -127,6 +137,42 @@ class UseControl(ft.Container):
         """
         Props.CURRENT_USE_CAMERA3 = self.camera3_checkbox.content.value
 
+    def __start_button_clicked(self, e):
+        # VALIDATIONS
+        # Check if there is a scan runnign
+        if is_scanning():
+            self.show_alert("Wait, a scan is being performed.")
+            return
+        # Check at least one camera is selected
+        if no_camera_selected():
+            self.show_alert("At least one camera should be selected.")
+            return
+        # Check all capture options are selected
+        if capture_options_missing():
+            self.show_alert("Some capture options are missing.")
+            return
+        
+        # START CAPTURE
+        self.show_alert("Started capture.")
+        Props.IS_SCANNING = True
+
+        # Logic here...
+
+
+    def show_alert(self, message: str):
+        """
+        Displays a temporary snackbar alert with the given message.
+
+        Args:
+            message (str): The message to display in the snackbar.
+        """
+        snackbar = ft.SnackBar(
+            content=ft.Text(value=message),
+            duration=2000
+        )
+        snackbar.open = True
+        self.page.open(snackbar)
+        self.page.update()
 
     def update_all_radius(self):
         """

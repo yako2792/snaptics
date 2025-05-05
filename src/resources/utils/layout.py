@@ -1,6 +1,7 @@
 import flet as ft
-from ..controls.explorer_control import ExplorerControl
-from ..controls.workspace_control import WorkspaceControl
+from src.resources.controls.explorer_control import ExplorerControl
+from src.resources.controls.workspace_control import WorkspaceControl
+
 
 class Layout(ft.Row):
     """

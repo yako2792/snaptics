@@ -61,6 +61,10 @@ class Properties:
     CURRENT_USE_CAMERA1: str = False
     CURRENT_USE_CAMERA2: str = False
     CURRENT_USE_CAMERA3: str = False
+    CURRENT_TEST_CAMERA: str = ""
+
+    # SCAN STATUS
+    IS_SCANNING: bool = False
 
     # GENERAL PORPOISE TEXTS
     NO_IMAGE: str = "No image"

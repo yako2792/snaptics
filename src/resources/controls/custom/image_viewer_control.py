@@ -1,8 +1,8 @@
-from tkinter.ttk import Label
-
 import flet as ft
 from src.resources.properties import Properties as Props
 
+def test_camera_is_not_selected():
+    return not all([Props.CURRENT_TEST_CAMERA])
 
 class ImageViewer(ft.Container):
     """
@@ -12,7 +12,7 @@ class ImageViewer(ft.Container):
     a camera source and performing actions like triggering a quick scan.
     """
 
-    def __init__(self, source: str):
+    def __init__(self, page: ft.Page):
         """
         Initializes the image viewer.
 
@@ -20,7 +20,7 @@ class ImageViewer(ft.Container):
             source (str): The image source path or URL to be displayed.
         """
         super().__init__()
-        self.image_path = source
+        self.page = page
 
         # CONTROLS
         self.camera_dropdown = ft.Dropdown(
@@ -31,13 +31,15 @@ class ImageViewer(ft.Container):
             ],
             label="Camera",
             width=Props.DROPDOWN_WIDTH,
-            border_radius=Props.BORDER_RADIUS
+            border_radius=Props.BORDER_RADIUS,
+            on_change=self.__camera_dropdown_changed
         )
 
         self.test_button = ft.ElevatedButton(
             text="Test",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
-            height=Props.BUTTON_HEIGHT
+            height=Props.BUTTON_HEIGHT, 
+            on_click=self.__test_button_clicked
         )
 
         self.view_image = ft.Container(
@@ -65,6 +67,41 @@ class ImageViewer(ft.Container):
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER
             )
         )
+
+    def __camera_dropdown_changed(self, e):
+        """
+        Update camera selection for testing.
+        :return:
+        """
+        Props.CURRENT_TEST_CAMERA = self.camera_dropdown.value
+
+    def __test_button_clicked(self, e):
+        """
+        Action for test button
+        :return:
+        """
+
+        # VALIDATIONS
+        if test_camera_is_not_selected():
+            self.show_alert("Please, select a camera to test")
+            return
+        
+        self.show_alert(f"Testing camera {Props.CURRENT_TEST_CAMERA}")
+    
+    def show_alert(self, message: str):
+        """
+        Displays a temporary snackbar alert with the given message.
+
+        Args:
+            message (str): The message to display in the snackbar.
+        """
+        snackbar = ft.SnackBar(
+            content=ft.Text(value=message),
+            duration=2000
+        )
+        snackbar.open = True
+        self.page.open(snackbar)
+        self.page.update()
 
     def update_all_radius(self):
         """

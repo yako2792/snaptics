@@ -1,57 +1,48 @@
 import flet as ft
-import json
+from src.cameras_test import GPhoto2
 from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.properties import Properties as Props
 
 
 def get_cameras():
+    gphoto2 = GPhoto2()
 
-    # Get json file
-    with open("src/resources/assets/camera_values.json", "r") as file:
-        data = json.load(file)
+    # Get cameras and ports file
+    cameras_and_ports = gphoto2.get_models_and_ports()
 
     # Create container
     cameras = ft.Column()
 
-    for camera in data['cameras']:
-        # print(f"Camera: {camera['model']} ({camera['id']})")
+    for camera in cameras_and_ports.keys():
 
         this_camera = ft.ExpansionTile(
             title=ft.Row(
                 [
                     ft.Icon(ft.Icons.CAMERA_ALT_OUTLINED, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED),
-                    ft.Text(value=camera['model'])
+                    ft.Text(value=camera)
                 ]
             ),
-            # subtitle=ft.Text(value=camera['id']),
-            # show_trailing_icon=False,
-            # affinity=ft.TileAffinity.LEADING,
             initially_expanded=False,
             controls_padding=Props.TAB_PADDING,
         )
 
         # Extraer fotos de cada cámara
-        for photo in camera['photos']:
-            filename = photo['filename']
-            file_path = photo['file_path']
-            capture_date = photo['capture_date']
-
-            # Procesar la imagen (aquí solo imprimimos la información)
-            # print(f"  Filename: {filename}")
-            # print(f"  File Path: {file_path}")
-            # print(f"  Capture Date: {capture_date}")
-            # print("-" * 40)
-            this_camera.controls.append(
-                ft.ListTile(
-                    title=ft.Row(
-                        [
-                            ft.Icon(ft.Icons.IMAGE_OUTLINED, size=Props.TAB_ICON_SIZE,
-                                    visible=Props.TAB_ICON_ENABLED),
-                            ft.Text(value=filename)
-                        ]
-                    )
-                )
-            )
+        # for photo in camera['photos']:
+        #     filename = photo['filename']
+        #     file_path = photo['file_path']
+        #     capture_date = photo['capture_date']
+        #
+        #     this_camera.controls.append(
+        #         ft.ListTile(
+        #             title=ft.Row(
+        #                 [
+        #                     ft.Icon(ft.Icons.IMAGE_OUTLINED, size=Props.TAB_ICON_SIZE,
+        #                             visible=Props.TAB_ICON_ENABLED),
+        #                     ft.Text(value=filename)
+        #                 ]
+        #             )
+        #         )
+        #     )
 
         cameras.controls.append(this_camera)
 

@@ -23,7 +23,7 @@ class ScanTab(ft.Tab):
         self.image_source = "some/path/image.jpg"
 
         # Custom controls
-        self.image_viewer = ImageViewer(self.image_source)
+        self.image_viewer = ImageViewer(self.page)
         self.options_control = OptionsControl()
         self.use_control = UseControl()
         self.presets_control = PresetControl(self.page, self.options_control, self.use_control)

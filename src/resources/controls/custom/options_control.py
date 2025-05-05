@@ -37,6 +37,7 @@ class OptionsControl(ft.Container):
                 ft.DropdownOption(text="45 [DEG/SHOT]"),
                 ft.DropdownOption(text="90 [DEG/SHOT]")
             ],
+            value=None,
             label="Frequency",
             width = Props.CHECKBOX_WIDTH,
             border_radius = Props.BORDER_RADIUS,
@@ -48,6 +49,7 @@ class OptionsControl(ft.Container):
                 ft.DropdownOption(text="RAW"),
                 ft.DropdownOption(text="JPG")
             ],
+            value=None,
             label = "Format",
             width = Props.CHECKBOX_WIDTH,
             border_radius = Props.BORDER_RADIUS,
@@ -59,6 +61,7 @@ class OptionsControl(ft.Container):
                 ft.DropdownOption(text="24MP (4000x6000)"),
                 ft.DropdownOption(text="FHD (1920x1080)")
             ],
+            value=None,
             label="Resolution",
             width = Props.CHECKBOX_WIDTH,
             border_radius = Props.BORDER_RADIUS,
