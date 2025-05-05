@@ -65,6 +65,7 @@ class Properties:
 
     # SCAN STATUS
     IS_SCANNING: bool = False
+    IS_TESTING: bool = False
 
     # GENERAL PORPOISE TEXTS
     NO_IMAGE: str = "No image"

@@ -237,21 +237,24 @@ class GPhoto2:
 
         return get_config(__camera, "imageformat")
 
-    def trigger_capture(self, camera_port:str = None) -> None:
+    def trigger_capture(self, camera_port: str = None, file_name: str = None) -> None:
         """
         Captures an image and saves it to the specified download path.
 
         Args:
             camera_port (str): The camera port (optional).
+            file_name (str): The file path (optional).
 
         Returns:
             None
         """
-
         __camera: str = self._get_camera(camera_port)
-        __file_name: str = f"{__camera}_{datetime.datetime.now().strftime('%H-%M-%S')}{self.file_extension}"
+        if file_name:
+            __file_name: str = file_name
+        else:
+            __file_name: str = f"{self.download_path}{__camera}_{datetime.datetime.now().strftime('%H-%M-%S')}{self.file_extension}"
 
-        result = subprocess.run(['gphoto2', '--port', __camera, '--capture-image-and-download', f'--filename={self.download_path}{__file_name}'], capture_output=True, text=True)
+        result = subprocess.run(['gphoto2', '--port', __camera, '--capture-image-and-download', f'--filename={__file_name}'], capture_output=True, text=True)
         lines = result.stdout.strip().split('\n')[:]
 
         for line in lines:
