@@ -3,6 +3,8 @@ import os
 import datetime
 import time
 
+from src.resources.properties import Properties as Props
+
 
 def get_config(camera: str, config: str) -> dict[str, str]:
     """
@@ -127,7 +129,7 @@ class GPhoto2:
         self.killed_initial_gphoto: bool = self.kill_initial_gphoto()
         self.cameras: dict[str, str] = self.get_models_and_ports()
         self.default_camera: str = self.cameras[next(iter(self.cameras))]
-        self.download_path: str = os.getcwd() + "/src/resources/assets/images/"
+        self.test_image_download_path: str = os.getcwd() + "/src/resources/assets/images/"
 
         self.file_extension: str = ".jpg"
 
@@ -205,7 +207,7 @@ class GPhoto2:
 
         __camera: str = self._get_camera(camera_port)
 
-        return get_config(__camera, "shutterspeed")
+        return get_config(__camera, Props.SHUTTERSPEED_CAMERA_CONFIG)
 
     def get_available_isos_for_camera(self, camera_port:str = None) -> dict[str, str]:
         """
@@ -220,7 +222,7 @@ class GPhoto2:
 
         __camera: str = self._get_camera(camera_port)
 
-        return get_config(__camera, "iso")
+        return get_config(__camera, Props.ISO_CAMERA_CONFIG)
 
     def get_available_formats_for_camera(self, camera_port: str = None) -> dict[str, str]:
         """
@@ -235,7 +237,7 @@ class GPhoto2:
 
         __camera: str = self._get_camera(camera_port)
 
-        return get_config(__camera, "imageformat")
+        return get_config(__camera, Props.FORMAT_CAMERA_CONFIG)
 
     def trigger_capture(self, camera_port: str = None, file_name: str = None) -> None:
         """
@@ -252,7 +254,7 @@ class GPhoto2:
         if file_name:
             __file_name: str = file_name
         else:
-            __file_name: str = f"{self.download_path}{__camera}_{datetime.datetime.now().strftime('%H-%M-%S')}{self.file_extension}"
+            __file_name: str = f"{self.test_image_download_path}{__camera}_{datetime.datetime.now().strftime('%H-%M-%S')}{self.file_extension}"
 
         result = subprocess.run(['gphoto2', '--port', __camera, '--capture-image-and-download', f'--filename={__file_name}'], capture_output=True, text=True)
         lines = result.stdout.strip().split('\n')[:]
@@ -276,11 +278,11 @@ class GPhoto2:
 
         match format:
             case "RAW":
-                self.file_extension = ".CR2"
+                self.file_extension = Props.RAW_EXTENSION
             case _:
-                self.file_extension = ".jpg"
+                self.file_extension = Props.JPEG_EXTENSION
 
-        set_config(__camera, "imageformat", self.imageformat_dict[format])
+        set_config(__camera, Props.FORMAT_CAMERA_CONFIG, self.imageformat_dict[format])
 
     def change_iso(self, iso:str = "AUTO", camera_port:str = None) -> None:
         """
@@ -296,7 +298,7 @@ class GPhoto2:
 
         __camera:str = self._get_camera(camera_port)
 
-        set_config(__camera, "iso", self.iso_dict[iso])
+        set_config(__camera, Props.ISO_CAMERA_CONFIG, self.iso_dict[iso])
 
     def change_shutterspeed(self, speed:str = "AUTO", camera_port:str = None) -> None:
         """
@@ -312,7 +314,7 @@ class GPhoto2:
 
         __camera: str = self._get_camera(camera_port)
 
-        set_config(__camera, "shutterspeed", self.shutterspeed_dict[speed])
+        set_config(__camera, Props.SHUTTERSPEED_CAMERA_CONFIG, self.shutterspeed_dict[speed])
 
     def auto_detect(self) -> None:
         """

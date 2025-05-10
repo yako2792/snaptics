@@ -1,5 +1,6 @@
 import flet as ft
 from src.resources.properties import Properties as Props
+from src.cameras_test import GPhoto2
 
 
 def convert_percentage_to_width_height(width: int, height: int):
@@ -75,6 +76,20 @@ class PropertiesTab(ft.Tab):
         self.preview_tab = tab_references[Props.PREVIEW_KEY]
         self.scan_tab = tab_references[Props.SCAN_KEY]
 
+        self.iso_dropdown = ft.Dropdown(
+            options=self.__get_available_isos(),
+            label="ISO",
+            width=Props.DROPDOWN_WIDTH, 
+            on_change=self.__iso_dropdown_changed
+        )
+
+        self.shutterspeed_dropdown = ft.Dropdown(
+            options=self.__get_available_shutterspeeds(),
+            label="SHUTTERSPEED",
+            width=Props.DROPDOWN_WIDTH, 
+            on_change=self.__shutterspeed_dropdown_changed
+        )
+
         # Explorer settings
         self.explorer_settings: ft.ExpansionTile = ft.ExpansionTile(
             title=ft.Text(value=Props.EXPLORER_SETTINGS_TITLE),
@@ -124,29 +139,11 @@ class PropertiesTab(ft.Tab):
             controls=[
                 ft.ListTile(
                     title=ft.Text("Camera ISO: "),
-                    subtitle=ft.Dropdown(
-                        options=[
-                            ft.DropdownOption(text="AUTO"),
-                            ft.DropdownOption(text="100"),
-                            ft.DropdownOption(text="200"),
-                            ft.DropdownOption(text="...")
-                        ],
-                        label="ISO",
-                        width=Props.DROPDOWN_WIDTH
-                    )
+                    subtitle=self.iso_dropdown 
                 ),
                 ft.ListTile(
                     title=ft.Text("Camera SHUTTERSPEED: "),
-                    subtitle=ft.Dropdown(
-                        options=[
-                            ft.DropdownOption(text="AUTO"),
-                            ft.DropdownOption(text="1/100"),
-                            ft.DropdownOption(text="1/125"),
-                            ft.DropdownOption(text="...")
-                        ],
-                        label="SHUTTERSPEED",
-                        width=Props.DROPDOWN_WIDTH
-                    )
+                    subtitle=self.shutterspeed_dropdown
                 ),
 
             ]
@@ -160,6 +157,36 @@ class PropertiesTab(ft.Tab):
             ],
             scroll=ft.ScrollMode.AUTO
         )
+
+    def __get_available_isos(self):
+
+        isos_list: list[ft.DropdownOption] = []
+
+        gphoto2 = GPhoto2()
+
+        __isos: dict[str, str] = gphoto2.iso_dict
+
+        for iso in __isos.keys():
+            isos_list.append(
+                ft.DropdownOption(text=iso)
+            )
+
+        return isos_list
+
+    def __get_available_shutterspeeds(self):
+
+        shutterspeeds_list: list[ft.DropdownOption] = []
+
+        gphoto2 = GPhoto2()
+
+        __shutterspeeds: dict[str, str] = gphoto2.shutterspeed_dict
+
+        for shutterspeed in __shutterspeeds.keys():
+            shutterspeeds_list.append(
+                ft.DropdownOption(text=shutterspeed)
+            )
+
+        return shutterspeeds_list
 
     def __explorer_width_slider_changed(self, e):
         """
@@ -188,3 +215,18 @@ class PropertiesTab(ft.Tab):
         percentage = int(e.control.value)
         new_width, new_height = convert_percentage_to_resolution(percentage)
         self.scan_tab.modify_view_image_size(new_width, new_height)
+
+    def __iso_dropdown_changed(self, e):
+        """
+        Callback for the iso dropdown menu.
+        """
+
+        Props.CURRENT_ISO = self.iso_dropdown.value
+
+    def __shutterspeed_dropdown_changed(self, e):
+        """
+        Callback for the shutterspeed dropdown menu.
+        """
+
+        Props.CURRENT_SHUTTERSPEED = self.shutterspeed_dropdown.value
+        print(Props.CURRENT_SHUTTERSPEED)

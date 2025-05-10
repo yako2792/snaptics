@@ -31,11 +31,7 @@ class ImageViewer(ft.Container):
 
         # CONTROLS
         self.camera_dropdown = ft.Dropdown(
-            options=[
-                ft.DropdownOption(text="Camera 1"),
-                ft.DropdownOption(text="Camera 2"),
-                ft.DropdownOption(text="Camera 3")
-            ],
+            options=self.__get_cameras_options(),
             label="Camera",
             width=Props.DROPDOWN_WIDTH,
             border_radius=Props.BORDER_RADIUS,
@@ -75,6 +71,19 @@ class ImageViewer(ft.Container):
             )
         )
 
+    def __get_cameras_options(self) -> list[ft.DropdownOption]:
+        cameras_list: list[ft.DropdownOption] = []
+
+        gphoto2 = GPhoto2()
+        available_cameras = gphoto2.get_models_and_ports()
+
+        for camera_name in available_cameras.keys():
+            cameras_list.append(
+                ft.DropdownOption(text=camera_name)
+            )
+
+        return cameras_list
+
     def __camera_dropdown_changed(self, e):
         """
         Update camera selection for testing.
@@ -113,15 +122,34 @@ class ImageViewer(ft.Container):
             self.show_alert("Please, select a camera to test")
             return
         
+        # Check if iso is selected
+        if Props.CURRENT_ISO == "":
+            self.show_alert("Please select an ISO value on Properties tab.")
+            return
+
+        # Check if shutterspeed is selected
+        if Props.CURRENT_SHUTTERSPEED == "":
+            self.show_alert("Please select a SHUTTERSPEED value on Properties tab.")
+            return
+
+        # Check if format is selected
+        if Props.CURRENT_FORMAT == "":
+            self.show_alert("Please select a FORMAT value on Scan tab.")
+            return
+        
         # START TESTING
-        self.show_alert(f"Testing camera {Props.CURRENT_TEST_CAMERA}")
+        gphoto2 = GPhoto2()
+        
+        self.show_alert(f"Testing camera {self.camera_dropdown.value}")
         Props.IS_TESTING = True
 
-        gphoto2 = GPhoto2()
-        gphoto2.change_image_format(format="Smaller JPEG")
-        gphoto2.change_iso(iso="Auto")
-        gphoto2.change_shutterspeed(speed="1/100")
-        gphoto2.trigger_capture(file_name=f"{file_path}/{file_name}")
+        cameras = gphoto2.get_models_and_ports()
+        __camera: str = cameras[Props.CURRENT_TEST_CAMERA]
+        
+        gphoto2.change_image_format(format=Props.CURRENT_FORMAT, camera_port=__camera)
+        gphoto2.change_iso(iso=Props.CURRENT_ISO, camera_port=__camera)
+        gphoto2.change_shutterspeed(speed=Props.CURRENT_SHUTTERSPEED, camera_port=__camera)
+        gphoto2.trigger_capture(file_name=f"{file_path}/{file_name}", camera_port=__camera)
 
         self.view_image.content = ft.Image(
             src=f"/images/view_test/{file_name}",

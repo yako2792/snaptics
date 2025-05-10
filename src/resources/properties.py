@@ -58,6 +58,8 @@ class Properties:
     CURRENT_FREQUENCY: str = ""
     CURRENT_FORMAT: str = ""
     CURRENT_RESOLUTION: str = ""
+    CURRENT_ISO: str = ""
+    CURRENT_SHUTTERSPEED: str = ""
     CURRENT_USE_CAMERA1: str = False
     CURRENT_USE_CAMERA2: str = False
     CURRENT_USE_CAMERA3: str = False
@@ -70,3 +72,11 @@ class Properties:
     # GENERAL PORPOISE TEXTS
     NO_IMAGE: str = "No image"
     DEFAULT_HINT: str = "Empty"
+
+    # CAMERAS TEST CLASS
+    RAW_EXTENSION: str = ".ARW"
+    JPEG_EXTENSION: str = ".jpg"
+
+    ISO_CAMERA_CONFIG: str = "iso"
+    SHUTTERSPEED_CAMERA_CONFIG: str = "shutterspeed"
+    FORMAT_CAMERA_CONFIG: str = "imagequality"

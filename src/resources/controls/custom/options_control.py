@@ -1,6 +1,7 @@
 import flet as ft
 
 from src.resources.properties import Properties as Props
+from src.cameras_test import GPhoto2
 
 
 class OptionsControl(ft.Container):
@@ -45,10 +46,7 @@ class OptionsControl(ft.Container):
         )
 
         self.format_dropdown = ft.Dropdown(
-            options=[
-                ft.DropdownOption(text="RAW"),
-                ft.DropdownOption(text="JPG")
-            ],
+            options=self.__get_format_options(),
             value=None,
             label = "Format",
             width = Props.CHECKBOX_WIDTH,
@@ -125,3 +123,18 @@ class OptionsControl(ft.Container):
         self.freq_dropdown.border_radius = Props.BORDER_RADIUS
         self.format_dropdown.border_radius = Props.BORDER_RADIUS
         self.resolution_dropdown.border_radius = Props.BORDER_RADIUS
+
+    def __get_format_options(self):
+
+        formats_list: list[ft.DropdownOption] = []
+
+        gphoto2 = GPhoto2()
+
+        __formats: dict[str, str] = gphoto2.get_available_formats_for_camera()
+
+        for format in __formats.keys():
+            formats_list.append(
+                ft.DropdownOption(text=format)
+            )
+
+        return formats_list
