@@ -38,7 +38,7 @@ class UseControl(ft.Container):
         # Other elements
         self.camera1_checkbox = ft.Container(
             content=ft.Checkbox(
-                label="Camera 1",
+                label=Props.CAMERAS_LIST[0],
                 value=False,
                 on_change=self.__camera1_checkbox_changed
             ),
@@ -47,7 +47,7 @@ class UseControl(ft.Container):
         )
         self.camera2_checkbox = ft.Container(
             content=ft.Checkbox(
-                label="Camera 2",
+                label=Props.CAMERAS_LIST[1],
                 value=False,
                 on_change=self.__camera2_checkbox_changed
             ),
@@ -56,7 +56,7 @@ class UseControl(ft.Container):
         )
         self.camera3_checkbox = ft.Container(
             content=ft.Checkbox(
-                label="Camera 3",
+                label=Props.CAMERAS_LIST[2],
                 value=False,
                 on_change=self.__camera3_checkbox_changed
             ),
