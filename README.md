@@ -37,7 +37,7 @@ $ source .venv/bin/activate
 ### 1.2 Run As Web
 
 ```bash
-(.env) $ flet run --web -a resources/assets -m src.main
+(.env) $ flet run --port 8000 --web -a resources/assets -m src.main
 ```
 
 ## 2. Project Structure
