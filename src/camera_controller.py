@@ -67,7 +67,7 @@ class GPhoto2:
             RuntimeError: If the gphoto2 command fails.
         """
 
-        lines = GPhoto2.__run_command(f"--port {camera_port} --get-config {camera_config}", capture_output=True, capture_text=True)
+        lines = GPhoto2.__run_command("--port " + camera_port + " --get-config " + camera_config, capture_output=True, capture_text=True)
 
         configs = {}
 
@@ -152,7 +152,7 @@ class GPhoto2:
             bool: True if the configuration was set successfully, False otherwise.
         """
         try:
-            GPhoto2.__run_command(f"--port {camera_port} --set-config {camera_config}={config_value}")
+            GPhoto2.__run_command("--port " + camera_port + " --set-config " + camera_config + "=" + config_value)
             return True
         except:
             return False
@@ -179,7 +179,7 @@ class GPhoto2:
         file_path: str = os.path.join(download_path, file_name)
 
         try:
-            GPhoto2.__run_command(f"--port {camera_port} --capture-image-and-download --filename={file_path}")
+            GPhoto2.__run_command("--port " + camera_port + " --capture-image-and-download --filename=" + file_path)
             return True
         except:
             return False

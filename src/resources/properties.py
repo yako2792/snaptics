@@ -80,8 +80,12 @@ class Properties:
     ISO_CAMERA_CONFIG: str = "iso"
     SHUTTERSPEED_CAMERA_CONFIG: str = "shutterspeed"
     FORMAT_CAMERA_CONFIG: str = "imagequality"
+    RESOLUTION_CAMERA_CONFIG: str = "imagesize"
 
     CAMERAS_DICT: dict[str, str] = gp.get_cameras()
+    CAMERAS_LIST: list[str] = list(CAMERAS_DICT.keys())
     DEFAULT_CAMERA_PORT: str = next(iter(CAMERAS_DICT.values()))
     ISOS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=ISO_CAMERA_CONFIG)
     SHUTTERSPEEDS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=SHUTTERSPEED_CAMERA_CONFIG)
+    FORMATS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=FORMAT_CAMERA_CONFIG)
+    RESOLUTIONS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=RESOLUTION_CAMERA_CONFIG)

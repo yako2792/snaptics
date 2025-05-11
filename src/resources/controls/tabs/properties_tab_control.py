@@ -214,6 +214,12 @@ class PropertiesTab(ft.Tab):
         """
 
         Props.CURRENT_ISO = self.iso_dropdown.value
+        for camera in Props.CAMERAS_LIST:
+            gp.set_config(
+                camera_port=Props.CAMERAS_DICT[camera],
+                camera_config=Props.ISO_CAMERA_CONFIG,
+                config_value=Props.ISOS_DICT[Props.CURRENT_ISO]
+                )
 
     def __shutterspeed_dropdown_changed(self, e):
         """
@@ -221,4 +227,10 @@ class PropertiesTab(ft.Tab):
         """
 
         Props.CURRENT_SHUTTERSPEED = self.shutterspeed_dropdown.value
-        print(Props.CURRENT_SHUTTERSPEED)
+        for camera in Props.CAMERAS_LIST:
+            gp.set_config(
+                camera_port=Props.CAMERAS_DICT[camera],
+                camera_config=Props.SHUTTERSPEED_CAMERA_CONFIG,
+                config_value=Props.SHUTTERSPEEDS_DICT[Props.CURRENT_SHUTTERSPEED]
+                )
+            print("set " + Props.CAMERAS_DICT[camera] + Props.SHUTTERSPEED_CAMERA_CONFIG + Props.SHUTTERSPEEDS_DICT[Props.CURRENT_SHUTTERSPEED])

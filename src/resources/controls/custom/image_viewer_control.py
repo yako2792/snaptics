@@ -50,7 +50,12 @@ class ImageViewer(ft.Container):
             width= Props.IMAGE_VIEW_WIDTH,
             height= Props.IMAGE_VIEW_HEIGHT,
             bgcolor=Props.PAGE_BGCOLOR,
-            content=ft.Text(value=Props.NO_IMAGE)
+            content=ft.Image(
+                src="/images/example_01.png",
+                width=1920,
+                height=1280,
+                fit=ft.ImageFit.COVER
+            )
         )
 
         self.content = ft.Container(
@@ -135,27 +140,14 @@ class ImageViewer(ft.Container):
 
         __camera: str = Props.CAMERAS_DICT[Props.CURRENT_TEST_CAMERA]
         
-        for cfg, val in [
-            (Props.FORMAT_CAMERA_CONFIG, Props.CURRENT_FORMAT),
-            (Props.ISO_CAMERA_CONFIG, Props.CURRENT_ISO),
-            (Props.SHUTTERSPEED_CAMERA_CONFIG, Props.CURRENT_SHUTTERSPEED),
-        ]:
-            gp.set_config(__camera, cfg, val)
-
-        
         gp.capture_image(
             camera_port=__camera,
             download_path=__download_path,
             file_name=__file_name
             )
 
-        self.view_image.content = ft.Image(
-            src=f"/images/view_test/{__file_name}",
-            width=1920,
-            height=1280,
-            fit=ft.ImageFit.COVER
-        )
-        self.view_image.update()
+        self.view_image.content.src = "/images/view_test/" + __file_name
+        self.view_image.content.update()
 
         Props.IS_TESTING = False
         self.show_alert("Finished testing camera " + Props.CURRENT_TEST_CAMERA)

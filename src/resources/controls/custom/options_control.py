@@ -55,10 +55,7 @@ class OptionsControl(ft.Container):
         )
 
         self.resolution_dropdown = ft.Dropdown(
-            options=[
-                ft.DropdownOption(text="24MP (4000x6000)"),
-                ft.DropdownOption(text="FHD (1920x1080)")
-            ],
+            options=self.__get_resolution_options(),
             value=None,
             label="Resolution",
             width = Props.CHECKBOX_WIDTH,
@@ -100,6 +97,12 @@ class OptionsControl(ft.Container):
             - Updates the `Props.CURRENT_FORMAT` with the selected value.
         """
         Props.CURRENT_FORMAT = self.format_dropdown.value
+        for camera in Props.CAMERAS_LIST:
+            gp.set_config(
+                camera_port=Props.CAMERAS_DICT[camera],
+                camera_config=Props.FORMAT_CAMERA_CONFIG,
+                config_value=Props.FORMATS_DICT[Props.CURRENT_FORMAT]
+                )
 
     def __resolution_dropdown_changed(self,e):
         """
@@ -112,6 +115,12 @@ class OptionsControl(ft.Container):
             - Updates the `Props.CURRENT_RESOLUTION` with the selected value.
         """
         Props.CURRENT_RESOLUTION = self.resolution_dropdown.value
+        for camera in Props.CAMERAS_LIST:
+            gp.set_config(
+                camera_port=Props.CAMERAS_DICT[camera],
+                camera_config=Props.RESOLUTION_CAMERA_CONFIG,
+                config_value=Props.RESOLUTIONS_DICT[Props.CURRENT_RESOLUTION]
+                )
 
     def update_all_radius(self):
         """
@@ -128,11 +137,19 @@ class OptionsControl(ft.Container):
 
         formats_list: list[ft.DropdownOption] = []
 
-        __formats: dict[str, str] = gp.get_config(camera_port=Props.DEFAULT_CAMERA_PORT, camera_config=Props.FORMAT_CAMERA_CONFIG)
-
-        for format in __formats.keys():
+        for format in Props.FORMATS_DICT.keys():
             formats_list.append(
                 ft.DropdownOption(text=format)
             )
 
         return formats_list
+    
+    def __get_resolution_options(self):
+
+        resolution_list: list[ft.DropdownOption] = []
+
+        for resolution in Props.RESOLUTIONS_DICT.keys():
+            resolution_list.append(
+                ft.DropdownOption(text=resolution)
+            )
+        return resolution_list
