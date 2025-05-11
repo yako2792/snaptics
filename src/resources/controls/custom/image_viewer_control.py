@@ -2,7 +2,7 @@ import os
 import shutil
 import flet as ft
 from datetime import datetime
-from src.cameras_test import GPhoto2
+from src.camera_controller import GPhoto2 as gp
 from src.resources.properties import Properties as Props
 
 def test_camera_is_not_selected():
@@ -74,10 +74,7 @@ class ImageViewer(ft.Container):
     def __get_cameras_options(self) -> list[ft.DropdownOption]:
         cameras_list: list[ft.DropdownOption] = []
 
-        gphoto2 = GPhoto2()
-        available_cameras = gphoto2.get_models_and_ports()
-
-        for camera_name in available_cameras.keys():
+        for camera_name in Props.CAMERAS_DICT.keys():
             cameras_list.append(
                 ft.DropdownOption(text=camera_name)
             )
@@ -96,63 +93,64 @@ class ImageViewer(ft.Container):
         Action for test button
         :return:
         """
+        
+        __file_name: str = f"test_{datetime.now().strftime('%H-%M-%S')}.jpg"
+        __download_path: str = os.path.join(
+            os.path.dirname(__file__),
+            "..", "..", "assets", "images", "view_test"
+        )
+
+        # Check if test file exists
+        for f in os.listdir(__download_path):
+            path = os.path.join(__download_path, f)
+            os.remove(path)
+
 
         # VALIDATE
         # Check if is testing
         if is_testing():
             self.show_alert("Please wait, a test is already running.")
             return
-        
-        file_path: str = os.path.join(
-            os.path.dirname(__file__),
-            "..", "..", "assets", "images", "view_test"
-        )
-        file_name: str = f"test_{datetime.now().strftime('%H-%M-%S')}.jpg"
-
-        # Check if test file exists
-        shutil.rmtree(f"{file_path}")
-        os.makedirs(f"{file_path}")
-
-        # Remove file from container
-        self.view_image.content = ft.Text(value=Props.NO_IMAGE)
-        self.view_image.update()
 
         # Check if a camera is selected
         if test_camera_is_not_selected():
             self.show_alert("Please, select a camera to test")
             return
         
-        # Check if iso is selected
-        if Props.CURRENT_ISO == "":
-            self.show_alert("Please select an ISO value on Properties tab.")
-            return
+        required_props = {
+            "ISO": Props.CURRENT_ISO,
+            "SHUTTERSPEED": Props.CURRENT_SHUTTERSPEED,
+            "FORMAT": Props.CURRENT_FORMAT
+        }
 
-        # Check if shutterspeed is selected
-        if Props.CURRENT_SHUTTERSPEED == "":
-            self.show_alert("Please select a SHUTTERSPEED value on Properties tab.")
-            return
+        for name, value in required_props.items():
+            if not value:
+                self.show_alert("Please select a " + name + " value.")
+                return
 
-        # Check if format is selected
-        if Props.CURRENT_FORMAT == "":
-            self.show_alert("Please select a FORMAT value on Scan tab.")
-            return
         
         # START TESTING
-        gphoto2 = GPhoto2()
-        
-        self.show_alert(f"Testing camera {self.camera_dropdown.value}")
+        self.show_alert("Testing camera " + self.camera_dropdown.value)
         Props.IS_TESTING = True
 
-        cameras = gphoto2.get_models_and_ports()
-        __camera: str = cameras[Props.CURRENT_TEST_CAMERA]
+        __camera: str = Props.CAMERAS_DICT[Props.CURRENT_TEST_CAMERA]
         
-        gphoto2.change_image_format(format=Props.CURRENT_FORMAT, camera_port=__camera)
-        gphoto2.change_iso(iso=Props.CURRENT_ISO, camera_port=__camera)
-        gphoto2.change_shutterspeed(speed=Props.CURRENT_SHUTTERSPEED, camera_port=__camera)
-        gphoto2.trigger_capture(file_name=f"{file_path}/{file_name}", camera_port=__camera)
+        for cfg, val in [
+            (Props.FORMAT_CAMERA_CONFIG, Props.CURRENT_FORMAT),
+            (Props.ISO_CAMERA_CONFIG, Props.CURRENT_ISO),
+            (Props.SHUTTERSPEED_CAMERA_CONFIG, Props.CURRENT_SHUTTERSPEED),
+        ]:
+            gp.set_config(__camera, cfg, val)
+
+        
+        gp.capture_image(
+            camera_port=__camera,
+            download_path=__download_path,
+            file_name=__file_name
+            )
 
         self.view_image.content = ft.Image(
-            src=f"/images/view_test/{file_name}",
+            src=f"/images/view_test/{__file_name}",
             width=1920,
             height=1280,
             fit=ft.ImageFit.COVER
@@ -160,7 +158,7 @@ class ImageViewer(ft.Container):
         self.view_image.update()
 
         Props.IS_TESTING = False
-        self.show_alert(f"Finished testing camera {Props.CURRENT_TEST_CAMERA}")
+        self.show_alert("Finished testing camera " + Props.CURRENT_TEST_CAMERA)
     
     def show_alert(self, message: str):
         """

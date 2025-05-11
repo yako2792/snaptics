@@ -4,6 +4,7 @@ It centralizes settings, ensuring easy configuration and avoiding hardcoding val
 """
 
 import os
+from src.camera_controller import GPhoto2 as gp
 
 class Properties:
     # GENERAL PAGE
@@ -76,7 +77,11 @@ class Properties:
     # CAMERAS TEST CLASS
     RAW_EXTENSION: str = ".ARW"
     JPEG_EXTENSION: str = ".jpg"
-
     ISO_CAMERA_CONFIG: str = "iso"
     SHUTTERSPEED_CAMERA_CONFIG: str = "shutterspeed"
     FORMAT_CAMERA_CONFIG: str = "imagequality"
+
+    CAMERAS_DICT: dict[str, str] = gp.get_cameras()
+    DEFAULT_CAMERA_PORT: str = next(iter(CAMERAS_DICT.values()))
+    ISOS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=ISO_CAMERA_CONFIG)
+    SHUTTERSPEEDS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=SHUTTERSPEED_CAMERA_CONFIG)

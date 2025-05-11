@@ -1,6 +1,6 @@
 import flet as ft
 from src.resources.properties import Properties as Props
-from src.cameras_test import GPhoto2
+from src.camera_controller import GPhoto2 as gp
 
 
 def convert_percentage_to_width_height(width: int, height: int):
@@ -162,11 +162,7 @@ class PropertiesTab(ft.Tab):
 
         isos_list: list[ft.DropdownOption] = []
 
-        gphoto2 = GPhoto2()
-
-        __isos: dict[str, str] = gphoto2.iso_dict
-
-        for iso in __isos.keys():
+        for iso in Props.ISOS_DICT.keys():
             isos_list.append(
                 ft.DropdownOption(text=iso)
             )
@@ -177,11 +173,7 @@ class PropertiesTab(ft.Tab):
 
         shutterspeeds_list: list[ft.DropdownOption] = []
 
-        gphoto2 = GPhoto2()
-
-        __shutterspeeds: dict[str, str] = gphoto2.shutterspeed_dict
-
-        for shutterspeed in __shutterspeeds.keys():
+        for shutterspeed in Props.SHUTTERSPEEDS_DICT.keys():
             shutterspeeds_list.append(
                 ft.DropdownOption(text=shutterspeed)
             )

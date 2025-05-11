@@ -1,7 +1,7 @@
 import flet as ft
 
 from src.resources.properties import Properties as Props
-from src.cameras_test import GPhoto2
+from src.camera_controller import GPhoto2 as gp
 
 
 class OptionsControl(ft.Container):
@@ -128,9 +128,7 @@ class OptionsControl(ft.Container):
 
         formats_list: list[ft.DropdownOption] = []
 
-        gphoto2 = GPhoto2()
-
-        __formats: dict[str, str] = gphoto2.get_available_formats_for_camera()
+        __formats: dict[str, str] = gp.get_config(camera_port=Props.DEFAULT_CAMERA_PORT, camera_config=Props.FORMAT_CAMERA_CONFIG)
 
         for format in __formats.keys():
             formats_list.append(

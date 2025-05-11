@@ -1,6 +1,7 @@
 import flet as ft
 from src.resources.controls.explorer_control import ExplorerControl
 from src.resources.controls.workspace_control import WorkspaceControl
+from src.camera_controller import GPhoto2 as gp
 
 
 class Layout(ft.Row):
@@ -22,6 +23,7 @@ class Layout(ft.Row):
             page (ft.Page): The main page instance of the application.
         """
         super().__init__()
+        self.kill_gphoto_proccess = gp.kill_initial_process()
         self.page = page
         self.expand = 1
         self.explorer_control = ExplorerControl(self.page)

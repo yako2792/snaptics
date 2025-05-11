@@ -1,19 +1,15 @@
 import flet as ft
-from src.cameras_test import GPhoto2
+from src.camera_controller import GPhoto2 as gp
 from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.properties import Properties as Props
 
 
 def get_cameras():
-    gphoto2 = GPhoto2()
-
-    # Get cameras and ports file
-    cameras_and_ports = gphoto2.get_models_and_ports()
 
     # Create container
     cameras = ft.Column()
 
-    for camera in cameras_and_ports.keys():
+    for camera in Props.CAMERAS_DICT.keys():
 
         this_camera = ft.ExpansionTile(
             title=ft.Row(
