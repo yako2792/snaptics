@@ -18,7 +18,7 @@ class StepperMotorController:
         self.step_pin = step_pin
         self.enable_pin = enable_pin
 
-        GPIO.setmode(GPIO.BCM)
+        GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.dir_pin, GPIO.OUT)
         GPIO.setup(self.step_pin, GPIO.OUT)
         if self.enable_pin is not None:
@@ -40,8 +40,28 @@ class StepperMotorController:
             GPIO.output(self.step_pin, GPIO.LOW)
             time.sleep(delay)
 
+    def move_degs(self, degrees, direction=True, delay=0.001):
+        """
+        Mueve el motor paso a paso un número específico de grados.
+
+        :param degrees: Número de grados a mover.
+        :param direction: Dirección de rotación. True para una dirección, False para la otra.
+        :param delay: Retardo entre pasos en segundos.
+        """
+        steps_per_degree = 200 * 20 / 360  # 11.11 pasos por grado
+        steps = int(degrees * steps_per_degree)
+        self.move_steps(steps, direction, delay)
+
     def cleanup(self):
         """
         Clean up GPIO settings.
         """
         GPIO.cleanup()
+
+
+# motor = StepperMotorController(dir_pin=10, step_pin=8)
+# # motor.move_steps(steps=2000)
+# for i in range(0, 4):
+#     motor.move_degs(45)
+#     time.sleep(5)
+# motor.cleanup()
