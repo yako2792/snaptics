@@ -74,6 +74,21 @@ class OptionsControl(ft.Container):
             padding = Props.PAGE_PADDING
         )
 
+    def show_alert(self, message: str):
+        """
+        Displays a temporary snackbar alert with the given message.
+
+        Args:
+            message (str): The message to display in the snackbar.
+        """
+        snackbar = ft.SnackBar(
+            content=ft.Text(value=message),
+            duration=2000
+        )
+        snackbar.open = True
+        self.page.open(snackbar)
+        self.page.update()
+
     def __freq_dropdown_changed(self,e):
         """
         Updates the current frequency setting when the user selects a new option.
@@ -85,6 +100,7 @@ class OptionsControl(ft.Container):
             - Updates the `Props.CURRENT_FREQUENCY` with the selected value.
         """
         Props.CURRENT_FREQUENCY = self.freq_dropdown.value
+        self.show_alert("Frequency set properly.")
 
     def __format_dropdown_changed(self,e):
         """
@@ -103,6 +119,8 @@ class OptionsControl(ft.Container):
                 camera_config=Props.FORMAT_CAMERA_CONFIG,
                 config_value=Props.FORMATS_DICT[Props.CURRENT_FORMAT]
                 )
+            self.show_alert("Format set properly.")
+            
 
     def __resolution_dropdown_changed(self,e):
         """
@@ -115,12 +133,19 @@ class OptionsControl(ft.Container):
             - Updates the `Props.CURRENT_RESOLUTION` with the selected value.
         """
         Props.CURRENT_RESOLUTION = self.resolution_dropdown.value
+
+        if "RAW" in Props.CURRENT_FORMAT:
+            Props.CURRENT_FILE_EXTENSION = Props.RAW_EXTENSION
+        else:
+            Props.CURRENT_FILE_EXTENSION = Props.JPEG_EXTENSION
+
         for camera in Props.CAMERAS_LIST:
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
                 camera_config=Props.RESOLUTION_CAMERA_CONFIG,
                 config_value=Props.RESOLUTIONS_DICT[Props.CURRENT_RESOLUTION]
                 )
+            self.show_alert("Resolution set properly.")
 
     def update_all_radius(self):
         """

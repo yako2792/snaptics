@@ -1,5 +1,4 @@
 import os
-import shutil
 import flet as ft
 from datetime import datetime
 from src.camera_controller import GPhoto2 as gp
@@ -100,14 +99,10 @@ class ImageViewer(ft.Container):
         """
         
         __file_name: str = f"test_{datetime.now().strftime('%H-%M-%S')}.jpg"
-        __download_path: str = os.path.join(
-            os.path.dirname(__file__),
-            "..", "..", "assets", "images", "view_test"
-        )
 
         # Check if test file exists
-        for f in os.listdir(__download_path):
-            path = os.path.join(__download_path, f)
+        for f in os.listdir(Props.TEST_CAPTURES_DIRECTORY):
+            path = os.path.join(Props.TEST_CAPTURES_DIRECTORY, f)
             os.remove(path)
 
 
@@ -142,7 +137,7 @@ class ImageViewer(ft.Container):
         
         gp.capture_image(
             camera_port=__camera,
-            download_path=__download_path,
+            download_path=Props.TEST_CAPTURES_DIRECTORY,
             file_name=__file_name
             )
 

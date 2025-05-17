@@ -158,6 +158,21 @@ class PropertiesTab(ft.Tab):
             scroll=ft.ScrollMode.AUTO
         )
 
+    def show_alert(self, message: str):
+        """
+        Displays a temporary snackbar alert with the given message.
+
+        Args:
+            message (str): The message to display in the snackbar.
+        """
+        snackbar = ft.SnackBar(
+            content=ft.Text(value=message),
+            duration=2000
+        )
+        snackbar.open = True
+        self.page.open(snackbar)
+        self.page.update()
+
     def __get_available_isos(self):
 
         isos_list: list[ft.DropdownOption] = []
@@ -220,6 +235,7 @@ class PropertiesTab(ft.Tab):
                 camera_config=Props.ISO_CAMERA_CONFIG,
                 config_value=Props.ISOS_DICT[Props.CURRENT_ISO]
                 )
+            self.show_alert("Iso set properly.")
 
     def __shutterspeed_dropdown_changed(self, e):
         """
@@ -234,3 +250,4 @@ class PropertiesTab(ft.Tab):
                 config_value=Props.SHUTTERSPEEDS_DICT[Props.CURRENT_SHUTTERSPEED]
                 )
             print("set " + Props.CAMERAS_DICT[camera] + Props.SHUTTERSPEED_CAMERA_CONFIG + Props.SHUTTERSPEEDS_DICT[Props.CURRENT_SHUTTERSPEED])
+            self.show_alert("Shutterspeed set properly.")

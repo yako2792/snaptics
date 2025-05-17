@@ -20,6 +20,9 @@ class Properties:
         "..", "resources", "assets", "presets", "presets.json"
     )
 
+    CAPTURES_DIRECTORY: str = "src/resources/assets/images/captures/"
+    TEST_CAPTURES_DIRECTORY: str = "src/resources/assets/images/view_test/"
+
     # FRAMES
     EXPLORER_SIZE: float = 0.3
     FRAME_PADDING: int = 3
@@ -66,6 +69,10 @@ class Properties:
     CURRENT_USE_CAMERA3: str = False
     CURRENT_TEST_CAMERA: str = ""
 
+    CAMERA1_DOWNLOAD_PATH: str = CAPTURES_DIRECTORY + "camera_1/"
+    CAMERA2_DOWNLOAD_PATH: str = CAPTURES_DIRECTORY + "camera_2/"
+    CAMERA3_DOWNLOAD_PATH: str = CAPTURES_DIRECTORY + "camera_3/"
+
     # SCAN STATUS
     IS_SCANNING: bool = False
     IS_TESTING: bool = False
@@ -77,6 +84,7 @@ class Properties:
     # CAMERAS TEST CLASS
     RAW_EXTENSION: str = ".ARW"
     JPEG_EXTENSION: str = ".jpg"
+    CURRENT_FILE_EXTENSION: str = ""
     ISO_CAMERA_CONFIG: str = "iso"
     SHUTTERSPEED_CAMERA_CONFIG: str = "shutterspeed"
     FORMAT_CAMERA_CONFIG: str = "imagequality"

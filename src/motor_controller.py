@@ -18,13 +18,6 @@ class StepperMotorController:
         self.step_pin = step_pin
         self.enable_pin = enable_pin
 
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(self.dir_pin, GPIO.OUT)
-        GPIO.setup(self.step_pin, GPIO.OUT)
-        if self.enable_pin is not None:
-            GPIO.setup(self.enable_pin, GPIO.OUT)
-            GPIO.output(self.enable_pin, GPIO.LOW)  # Enable the driver
-
     def move_steps(self, steps, direction=True, delay=0.001):
         """
         Move the stepper motor a specific number of steps.
@@ -33,12 +26,16 @@ class StepperMotorController:
         :param direction: Direction of rotation. True for one direction, False for the other.
         :param delay: Delay between steps in seconds.
         """
+        self.motor_init()
+
         GPIO.output(self.dir_pin, GPIO.HIGH if direction else GPIO.LOW)
         for _ in range(steps):
             GPIO.output(self.step_pin, GPIO.HIGH)
             time.sleep(delay)
             GPIO.output(self.step_pin, GPIO.LOW)
             time.sleep(delay)
+
+        self.cleanup()
 
     def move_degs(self, degrees, direction=True, delay=0.001):
         """
@@ -57,6 +54,21 @@ class StepperMotorController:
         Clean up GPIO settings.
         """
         GPIO.cleanup()
+
+    def motor_init(self) -> bool:
+        try:
+            GPIO.setmode(GPIO.BOARD)
+            GPIO.setup(self.dir_pin, GPIO.OUT)
+            GPIO.setup(self.step_pin, GPIO.OUT)
+            if self.enable_pin is not None:
+                GPIO.setup(self.enable_pin, GPIO.OUT)
+                GPIO.output(self.enable_pin, GPIO.LOW)  # Enable the driver
+            
+            return True
+        
+        except:
+            self.cleanup()
+            return False
 
 
 # motor = StepperMotorController(dir_pin=10, step_pin=8)

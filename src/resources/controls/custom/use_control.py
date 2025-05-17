@@ -1,6 +1,9 @@
+import os
 import time
 import flet as ft
 from src.resources.properties import Properties as Props
+from src.motor_controller import StepperMotorController as Motor
+from src.camera_controller import GPhoto2 as gphoto2
 
 
 def is_scanning():
@@ -34,6 +37,7 @@ class UseControl(ft.Container):
             - A second column with Start, Reset, and Stop buttons.
         """
         super().__init__()
+        self.motor = Motor(dir_pin=10, step_pin=8)
 
         # Other elements
         self.camera1_checkbox = ft.Container(
@@ -156,12 +160,34 @@ class UseControl(ft.Container):
         self.show_alert("Started capture.")
         Props.IS_SCANNING = True
 
-        # Logic here...
-        time.sleep(12)
+        self.clean_directory()
+
+        match Props.CURRENT_FREQUENCY:
+            case "5 [DEG/SHOT]":
+                for i in range(0,72):
+                    self.motor.move_degs(5)
+                    time.sleep(3)
+                    self.trigger_capture(iteration_number = i)
+
+            case "45 [DEG/SHOT]":
+                for i in range(0,8):
+                    self.motor.move_degs(45)
+                    time.sleep(3)
+                    self.trigger_capture(iteration_number = i)
+
+            case "90 [DEG/SHOT]":
+                for i in range(0,4):
+                    self.motor.move_degs(90)
+                    time.sleep(3)
+                    self.trigger_capture(iteration_number = i)
+
+            case _:
+                self.motor.move_degs(360)
+                time.sleep(3)
+
 
         Props.IS_SCANNING = False
         self.show_alert("Finished capture.")
-
 
     def show_alert(self, message: str):
         """
@@ -186,3 +212,42 @@ class UseControl(ft.Container):
         self.start_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
         self.reset_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
         self.stop_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
+    
+    def clean_directory(self):
+        if Props.CURRENT_USE_CAMERA1:
+            for f in os.listdir(Props.CAMERA1_DOWNLOAD_PATH):
+                    path = os.path.join(Props.CAMERA1_DOWNLOAD_PATH, f)
+                    os.remove(path) 
+        
+        if Props.CURRENT_USE_CAMERA2:
+            for f in os.listdir(Props.CAMERA2_DOWNLOAD_PATH):
+                    path = os.path.join(Props.CAMERA2_DOWNLOAD_PATH, f)
+                    os.remove(path)
+
+        if Props.CURRENT_USE_CAMERA3:
+            for f in os.listdir(Props.CAMERA3_DOWNLOAD_PATH):
+                    path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
+                    os.remove(path)
+    
+    def trigger_capture(self, iteration_number: int) -> None:
+
+        if Props.CURRENT_USE_CAMERA1:
+            gphoto2.capture_image(
+                camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[0]],
+                download_path = Props.CAMERA1_DOWNLOAD_PATH,
+                file_name = "A000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+            )
+
+        if Props.CURRENT_USE_CAMERA2:
+            gphoto2.capture_image(
+                camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[1]],
+                download_path = Props.CAMERA2_DOWNLOAD_PATH,
+                file_name = "B000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+            )
+
+        if Props.CURRENT_USE_CAMERA3:
+            gphoto2.capture_image(
+                camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[2]],
+                download_path = Props.CAMERA3_DOWNLOAD_PATH,
+                file_name = "C000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+            )
