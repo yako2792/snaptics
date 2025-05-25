@@ -11,6 +11,9 @@ def get_cameras():
 
     for camera in Props.CAMERAS_DICT.keys():
 
+        if camera == None:
+            continue
+
         this_camera = ft.ExpansionTile(
             title=ft.Row(
                 [

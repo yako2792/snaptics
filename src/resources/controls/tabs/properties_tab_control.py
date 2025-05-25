@@ -179,7 +179,7 @@ class PropertiesTab(ft.Tab):
 
         for iso in Props.ISOS_DICT.keys():
             isos_list.append(
-                ft.DropdownOption(text=iso)
+                ft.DropdownOption(text=str(iso))
             )
 
         return isos_list
@@ -190,7 +190,7 @@ class PropertiesTab(ft.Tab):
 
         for shutterspeed in Props.SHUTTERSPEEDS_DICT.keys():
             shutterspeeds_list.append(
-                ft.DropdownOption(text=shutterspeed)
+                ft.DropdownOption(text=str(shutterspeed))
             )
 
         return shutterspeeds_list

@@ -4,6 +4,7 @@ from src.resources.controls.explorer_control import ExplorerControl
 from src.resources.controls.tabs.preview_tab_control import PreviewTab
 from src.resources.controls.tabs.properties_tab_control import PropertiesTab
 from src.resources.controls.tabs.scan_tab_control import ScanTab
+from src.resources.controls.tabs.routines_tab_control import RoutinesTab
 from src.resources.properties import Properties as Props
 
 class   WorkspaceControl(ft.Container):
@@ -33,14 +34,17 @@ class   WorkspaceControl(ft.Container):
         # Used tabs
         self.explorer_control = explorer_control
         self.preview_tab = PreviewTab(Props.PREVIEW_TAB_TITLE)
-        self.scan_tab = ScanTab(self.page,Props.SCAN_TAB_TITLE)
+        self.scan_tab = ScanTab(self.page, Props.SCAN_TAB_TITLE)
+        self.routines_tab = RoutinesTab(self.page, Props.ROUTINES_TAB_TITLE)
+
         self.properties_tab = PropertiesTab(
             Props.PROPERTIES_TAB_TITLE,
             self.page,
             {
                 Props.EXPLORER_KEY: self.explorer_control,
                 Props.PREVIEW_KEY: self.preview_tab,
-                Props.SCAN_KEY: self.scan_tab
+                Props.SCAN_KEY: self.scan_tab,
+                Props.ROUTINES_KEY: self.routines_tab
             }
         )
 
@@ -52,6 +56,7 @@ class   WorkspaceControl(ft.Container):
                     tabs=[
                         self.preview_tab,
                         self.scan_tab,
+                        self.routines_tab,
                         self.properties_tab
                     ],
                     expand=True

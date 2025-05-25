@@ -80,7 +80,7 @@ class ImageViewer(ft.Container):
 
         for camera_name in Props.CAMERAS_DICT.keys():
             cameras_list.append(
-                ft.DropdownOption(text=camera_name)
+                ft.DropdownOption(text=str(camera_name))
             )
 
         return cameras_list

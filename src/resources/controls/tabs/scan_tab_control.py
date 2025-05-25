@@ -20,7 +20,6 @@ class ScanTab(ft.Tab):
         self.page = page
         self.text = title
         self.icon = ft.Icon(ft.Icons.CAMERA, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED)
-        self.image_source = "some/path/image.jpg"
 
         # Custom controls
         self.image_viewer = ImageViewer(self.page)

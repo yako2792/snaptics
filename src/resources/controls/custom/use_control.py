@@ -42,7 +42,7 @@ class UseControl(ft.Container):
         # Other elements
         self.camera1_checkbox = ft.Container(
             content=ft.Checkbox(
-                label=Props.CAMERAS_LIST[0],
+                label=Props.CAMERAS_LIST[0] or "Not available",
                 value=False,
                 on_change=self.__camera1_checkbox_changed
             ),
@@ -51,7 +51,7 @@ class UseControl(ft.Container):
         )
         self.camera2_checkbox = ft.Container(
             content=ft.Checkbox(
-                label=Props.CAMERAS_LIST[1],
+                label=Props.CAMERAS_LIST[1] or "Not available",
                 value=False,
                 on_change=self.__camera2_checkbox_changed
             ),
@@ -60,7 +60,7 @@ class UseControl(ft.Container):
         )
         self.camera3_checkbox = ft.Container(
             content=ft.Checkbox(
-                label=Props.CAMERAS_LIST[2],
+                label=Props.CAMERAS_LIST[2] or "Not available",
                 value=False,
                 on_change=self.__camera3_checkbox_changed
             ),
@@ -71,6 +71,7 @@ class UseControl(ft.Container):
         # BUTTONS
         self.start_button = ft.ElevatedButton(
             text="Start",
+            icon=ft.Icons.PLAY_ARROW,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -180,6 +181,10 @@ class UseControl(ft.Container):
                     self.motor.move_degs(90)
                     time.sleep(3)
                     self.trigger_capture(iteration_number = i)
+
+            case "360 [DEG/SHOT]":
+                self.motor.move_degs(360)
+                time.sleep(3)
 
             case _:
                 self.motor.move_degs(360)

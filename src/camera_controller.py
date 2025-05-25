@@ -67,6 +67,9 @@ class GPhoto2:
             RuntimeError: If the gphoto2 command fails.
         """
 
+        if camera_port == None:
+            return {None:None}
+
         lines = GPhoto2.__run_command("--port " + camera_port + " --get-config " + camera_config, capture_output=True, capture_text=True)
 
         configs = {}
@@ -131,6 +134,9 @@ class GPhoto2:
 
                         # Add the model and port to the dictionary
                         cameras[model] = port
+            
+            if not cameras:
+                cameras = {None: None}
 
             return cameras
 

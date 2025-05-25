@@ -36,7 +36,8 @@ class OptionsControl(ft.Container):
             options=[
                 ft.DropdownOption(text="5 [DEG/SHOT]"),
                 ft.DropdownOption(text="45 [DEG/SHOT]"),
-                ft.DropdownOption(text="90 [DEG/SHOT]")
+                ft.DropdownOption(text="90 [DEG/SHOT]"),
+                ft.DropdownOption(text="360 [DEG/SHOT]")
             ],
             value=None,
             label="Frequency",
@@ -114,12 +115,16 @@ class OptionsControl(ft.Container):
         """
         Props.CURRENT_FORMAT = self.format_dropdown.value
         for camera in Props.CAMERAS_LIST:
+            if camera == None:
+                continue
+
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
                 camera_config=Props.FORMAT_CAMERA_CONFIG,
                 config_value=Props.FORMATS_DICT[Props.CURRENT_FORMAT]
                 )
-            self.show_alert("Format set properly.")
+        
+        self.show_alert("Format set properly.")
             
 
     def __resolution_dropdown_changed(self,e):
@@ -140,12 +145,16 @@ class OptionsControl(ft.Container):
             Props.CURRENT_FILE_EXTENSION = Props.JPEG_EXTENSION
 
         for camera in Props.CAMERAS_LIST:
+            if camera == None:
+                continue 
+
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
                 camera_config=Props.RESOLUTION_CAMERA_CONFIG,
                 config_value=Props.RESOLUTIONS_DICT[Props.CURRENT_RESOLUTION]
                 )
-            self.show_alert("Resolution set properly.")
+        
+        self.show_alert("Resolution set properly.")
 
     def update_all_radius(self):
         """
@@ -164,7 +173,7 @@ class OptionsControl(ft.Container):
 
         for format in Props.FORMATS_DICT.keys():
             formats_list.append(
-                ft.DropdownOption(text=format)
+                ft.DropdownOption(text=str(format))
             )
 
         return formats_list
@@ -175,6 +184,6 @@ class OptionsControl(ft.Container):
 
         for resolution in Props.RESOLUTIONS_DICT.keys():
             resolution_list.append(
-                ft.DropdownOption(text=resolution)
+                ft.DropdownOption(text=str(resolution))
             )
         return resolution_list
