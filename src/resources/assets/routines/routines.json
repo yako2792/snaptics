@@ -1,0 +1,28 @@
+{
+    "routines": [
+        {
+            "name": "Rutina 2",
+            "stages": [
+                {
+                    "type": "Scan",
+                    "config": {
+                        "preset_name": "preset001"
+                    }
+                },
+                {
+                    "type": "Filter",
+                    "config": {
+                        "filter_name": "filter001"
+                    }
+                },
+                {
+                    "type": "Save",
+                    "config": {
+                        "save_path": "/example/path",
+                        "product_id": "020304002"
+                    }
+                }
+            ]
+        }
+    ]
+}

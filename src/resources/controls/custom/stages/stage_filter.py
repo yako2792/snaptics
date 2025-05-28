@@ -24,7 +24,8 @@ class StageFilter(ft.Container):
             label="Filters",
             options=[ft.dropdown.Option(name) for name in self.__load_filters()],
             width=Props.DROPDOWN_WIDTH,
-            border_radius=Props.BORDER_RADIUS
+            border_radius=Props.BORDER_RADIUS,
+            on_change=self.__preset_dropdown_changed
         )
 
         self.delete_button = ft.IconButton(
@@ -61,12 +62,18 @@ class StageFilter(ft.Container):
             return {}
         with open(Props.PRESETS_PATH, "r") as file:
             return json.load(file)
-        
+    
+    def __preset_dropdown_changed(self, e):
+        Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {
+            "preset_name": self.preset_dropdown.value
+        }
+
     def __delete_button_clicked(self, e):
         self.card_list.content.controls.remove(self)
         new_cards_order = []
 
         Props.STAGES_NUMBER -= 1
+        Props.CURRENT_ROUTINE["stages"].pop(self.stage_number-1)
 
         # Reindex
         for index, card in enumerate(self.card_list.content.controls, start=1):

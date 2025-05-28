@@ -19,7 +19,8 @@ class Properties:
         os.path.dirname(__file__),
         "..", "resources", "assets", "presets", "presets.json"
     )
-
+    
+    ROUTINES_DIRECTORY: str = "src/resources/assets/routines/routines.json"
     CAPTURES_DIRECTORY: str = "src/resources/assets/images/captures/"
     TEST_CAPTURES_DIRECTORY: str = "src/resources/assets/images/view_test/"
 
@@ -104,3 +105,7 @@ class Properties:
 
     # ROUTINES
     STAGES_NUMBER: int = 0
+    CURRENT_ROUTINE: dict = {
+        "name": None,
+        "stages": []
+    }
