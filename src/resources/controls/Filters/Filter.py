@@ -68,4 +68,34 @@ class Filter():
         self.image = cv2.imread(imagen)
         self.hight, self.width = self.image.shape[:2]
         #Creamos una malla de coordenadas
+        self.map_x = np.title(np.arange(self.width), (self.hight, 1)).astype(np.float32)
+        self.map_y = np.title(np.arange(self.hight), (self.width, 1)).astype(np.float32)
+        #Normalizar coordenadas
+        self.cx, self.cy = self.width/2, self.hight/2 #Centro de la imagen
+        self.radio_max = np.sqrt(self.cx**2 + self.cy**2)
+        #Aplicar transformación de ojo de pez
+        self.factor = 0.5 #Intensidad del efecto
+        self.distance = np.sqrt((self.map_x - self.cx)**2 + (self.map_y - self.cy)**2)
+        self.map_x = self.cx + (self.map_x - self.cx) * (1 - self.factor * (self.distance / self.radio_max))
+        self.map_y = self.cy + (self.map_y - self.cy) * (1 - self.factor * (self.distance / self.radio_max))
+        #Aplicamos el remapeo
+        imagen_pez = cv2.remap(self.image, self.map_x, self.map_y, cv2.INTER_LINEAR)
+        return imagen_pez
+
+    def filter_chromatic_aberration(self, imagen):
+        #Cargamos la image
+        self.image = cv2.imread(imagen)
+        self.b, self.g, self.r = cv2.split(self.image)
+        #Desplazamos los canales para simular
+        self.shift_x, self.shift_y = 5, 5 #Ajustar la intensidad
+        self.columns, self.rows = self.image.shape[:2]
+        #Creamos mapas de transformacion
+        self.M_right = np.float32([[1, 0, self.shift_x], [0, 1, self.shift_y]])
+        self.M_left = np.float32([[1, 0, -self.shift_x], [0, 1, -self.shift_y]])
+        #Aplicamos el desplazamiento
+        self.b_shifted = cv2.warpAffine(self.b, self.M_right, (self.columns, self.rows))
+        self.r_shifted = cv2.warpAffine(self.r, self.M_left, (self.columns, self.rows))
+        #Unimos los canales
+        imagen_aberracion = cv2.merge([self.b_shifted, self.g, self.r_shifted])
+        return imagen_aberracion
 
