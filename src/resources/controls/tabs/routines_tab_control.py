@@ -214,8 +214,9 @@ class RoutinesTab(ft.Tab):
     def __apply_routine_button_clicked(self, e):
         
         self.stages_list_container.content.controls = []
-
         routine_name = self.routine_loader_dropdown.value
+        
+
         try:
             stages = Routines.get_stages_in_routine(routine_name=routine_name)
         except:
@@ -229,19 +230,29 @@ class RoutinesTab(ft.Tab):
         for i in range(len(stages), 0, -1):
             Props.STAGES_NUMBER += 1
 
+            stage_config = Routines.get_stage_config(routine_name=routine_name,stage_number=Props.STAGES_NUMBER)
+
             current_stage_card = None
             stage_type = Routines.get_stage_type(routine_name=routine_name, stage_number=Props.STAGES_NUMBER)
 
             match stage_type:
                 case "Scan":
+                    # Create the card
                     current_stage_card = StageScan(
                         stage_number = Props.STAGES_NUMBER,
                         card_list = self.stages_list_container
-                    )  
+                    )
+                    
+                    # Modify current values and apply
+                    current_stage_card.preset_dropdown.value = stage_config["preset_name"]
+                    # print(f"Assigned {stage_config['preset_name']} to Scan card")
+                    
+
+                    # Modify values on backend
                     Props.CURRENT_ROUTINE["stages"].append(
                         {
                             "type": stage_type,
-                            "config": {}
+                            "config": stage_config
                         }
                     )
 
@@ -250,10 +261,15 @@ class RoutinesTab(ft.Tab):
                         stage_number = Props.STAGES_NUMBER,
                         card_list = self.stages_list_container
                     )
+
+                    # Modify current values and apply
+                    current_stage_card.filter_dropdown.value = stage_config["filter_name"]
+                    # print(f"Assigned {stage_config['filter_name']} to Scan card")
+
                     Props.CURRENT_ROUTINE["stages"].append(
                         {
                             "type": stage_type,
-                            "config": {}
+                            "config": stage_config
                         }
                     )  
 
@@ -262,21 +278,26 @@ class RoutinesTab(ft.Tab):
                         stage_number = Props.STAGES_NUMBER,
                         card_list = self.stages_list_container
                     )
+
+                    current_stage_card.save_dropdown.value = stage_config["save_path"]
+                    # print(f"Assigned {stage_config['save_path']} to Scan card")
+
                     Props.CURRENT_ROUTINE["stages"].append(
                         {
                             "type": stage_type,
-                            "config": {}
+                            "config": stage_config
                         }
                     )  
 
                 case _:
                     self.show_alert("Unrecognized stage type: " + stage_type)
                     return
-            
+                
             self.stages_list_container.content.controls.append(
                 current_stage_card
             )
         
+        print(Props.CURRENT_ROUTINE)
         self.stages_list_container.content.update()
         self.show_alert("Applied routine: " + routine_name)
 

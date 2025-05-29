@@ -20,12 +20,12 @@ class StageSave(ft.Container):
         # region Stage card: Controls
         self.header_text = HeaderControl(self.stage_name)
 
-        self.preset_dropdown = ft.Dropdown(
+        self.save_dropdown = ft.Dropdown(
             label="Name",
-            options=[ft.dropdown.Option(name) for name in self.__load_presets()],
+            options=[ft.dropdown.Option(name) for name in self.__load_save_paths()],
             width=Props.DROPDOWN_WIDTH,
             border_radius=Props.BORDER_RADIUS,
-            on_change=self.__preset_dropdown_changed
+            on_change=self.__save_dropdown_changed
         )
 
         self.delete_button = ft.IconButton(
@@ -45,27 +45,22 @@ class StageSave(ft.Container):
                         self.delete_button
                     ]
                 ),
-                self.preset_dropdown
+                self.save_dropdown
             ]
         )
         # endregion
 
     # region Stage card: Controllers
-    def __load_presets(self):
+    def __load_save_paths(self):
         """
         Read presets in json file.
-        :return: dict with all presets
+        :return: list with all presets
         """
-        if not os.path.exists(Props.PRESETS_PATH):
-            with open(Props.PRESETS_PATH, "w") as file:
-                json.dump({}, file, indent=2)
-            return {}
-        with open(Props.PRESETS_PATH, "r") as file:
-            return json.load(file)
+        return ["Not available"]
     
-    def __preset_dropdown_changed(self, e):
+    def __save_dropdown_changed(self, e):
         Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {
-            "preset_name": self.preset_dropdown.value
+            "save_path": self.save_dropdown.value
         }
         
     def __delete_button_clicked(self, e):

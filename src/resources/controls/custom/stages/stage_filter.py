@@ -20,12 +20,12 @@ class StageFilter(ft.Container):
         # region Stage card: Controls
         self.header_text = HeaderControl(self.stage_name)
 
-        self.preset_dropdown = ft.Dropdown(
+        self.filter_dropdown = ft.Dropdown(
             label="Filters",
             options=[ft.dropdown.Option(name) for name in self.__load_filters()],
             width=Props.DROPDOWN_WIDTH,
             border_radius=Props.BORDER_RADIUS,
-            on_change=self.__preset_dropdown_changed
+            on_change=self.__filter_dropdown_changed
         )
 
         self.delete_button = ft.IconButton(
@@ -45,7 +45,7 @@ class StageFilter(ft.Container):
                         self.delete_button
                     ]
                 ),
-                self.preset_dropdown
+                self.filter_dropdown
             ]
         )
         # endregion
@@ -53,19 +53,20 @@ class StageFilter(ft.Container):
     # region Stage card: Controllers
     def __load_filters(self):
         """
-        Read presets in json file.
-        :return: dict with all presets
+        Read filters available in Filter.py.
+        :return: list with all presets
         """
-        if not os.path.exists(Props.PRESETS_PATH):
-            with open(Props.PRESETS_PATH, "w") as file:
-                json.dump({}, file, indent=2)
-            return {}
-        with open(Props.PRESETS_PATH, "r") as file:
-            return json.load(file)
+        return [
+            "Remove background",
+            "Resize image",
+            "Fisheye correction",
+            "CA Correction"
+        ]
+
     
-    def __preset_dropdown_changed(self, e):
+    def __filter_dropdown_changed(self, e):
         Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {
-            "preset_name": self.preset_dropdown.value
+            "filter_name": self.filter_dropdown.value
         }
 
     def __delete_button_clicked(self, e):
