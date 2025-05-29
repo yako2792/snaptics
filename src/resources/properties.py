@@ -31,10 +31,8 @@ class Properties:
     # TABS
     PREVIEW_TAB_TITLE: str = "Preview"
     SCAN_TAB_TITLE: str = "Scan"
-    ROUTINES_TAB_TITLE: str = "Routines"
     PREVIEW_KEY: str = "Preview"
     SCAN_KEY: str = "Scan"
-    ROUTINES_KEY: str = "Routines"
     EXPLORER_KEY: str = "Explorer"
     PROPERTIES_TAB_TITLE: str = "Properties"
 
@@ -51,8 +49,6 @@ class Properties:
     BUTTON_WIDTH: int = 100
     BUTTON_HEIGHT: int = 49
     BORDER_RADIUS: int = 0
-    MARGIN_ALL: int = 15
-    STAGE_CARD_WIDTH: int = 640
 
     # PROPERTIES TAB
     EXPLORER_SETTINGS_TITLE: str = "Properties: Explorer"
@@ -96,15 +92,12 @@ class Properties:
     RESOLUTION_CAMERA_CONFIG: str = "imagesize"
 
     CAMERAS_DICT: dict[str, str] = gp.get_cameras()
-    CAMERAS_LIST = (lambda keys: [None, None, None] if None in keys else list(keys))(CAMERAS_DICT.keys())
+    CAMERAS_LIST: list[str] = list(CAMERAS_DICT.keys())
     DEFAULT_CAMERA_PORT: str = next(iter(CAMERAS_DICT.values()))
     ISOS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=ISO_CAMERA_CONFIG)
     SHUTTERSPEEDS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=SHUTTERSPEED_CAMERA_CONFIG)
     FORMATS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=FORMAT_CAMERA_CONFIG)
     RESOLUTIONS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=RESOLUTION_CAMERA_CONFIG)
-
-    # ROUTINES
-    STAGES_NUMBER: int = 0
     CURRENT_ROUTINE: dict = {
         "name": None,
         "stages": []
