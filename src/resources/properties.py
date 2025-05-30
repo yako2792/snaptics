@@ -23,6 +23,7 @@ class Properties:
     ROUTINES_DIRECTORY: str = "src/resources/assets/routines/routines.json"
     CAPTURES_DIRECTORY: str = "src/resources/assets/images/captures/"
     TEST_CAPTURES_DIRECTORY: str = "src/resources/assets/images/view_test/"
+    FILTERED_IMAGES_DIRECTORY: str = "src/resources/assets/images/filtered_images/"
 
     # FRAMES
     EXPLORER_SIZE: float = 0.3
@@ -81,6 +82,8 @@ class Properties:
     # SCAN STATUS
     IS_SCANNING: bool = False
     IS_TESTING: bool = False
+    IS_FILTERING: bool = False
+    IS_SAVING: bool = False
 
     # GENERAL PORPOISE TEXTS
     NO_IMAGE: str = "No image"
@@ -109,3 +112,4 @@ class Properties:
         "name": None,
         "stages": []
     }
+    APPEND_FILTER: bool = False
