@@ -10,7 +10,7 @@ from src.resources.controls.custom.stages.stage_filter import StageFilter
 from src.resources.controls.custom.stages.stage_save import StageSave
 from src.camera_controller import GPhoto2 as gphoto2
 from src.motor_controller import StepperMotorController as Motor
-from src.resources.controls.filters.filter import Filter
+from src.resources.controls.filters.filters import Filter
 
 
 class RoutinesTab(ft.Tab):
