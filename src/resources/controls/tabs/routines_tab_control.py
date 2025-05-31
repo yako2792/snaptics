@@ -11,7 +11,7 @@ from src.resources.controls.custom.stages.stage_save import StageSave
 from src.camera_controller import GPhoto2 as gphoto2
 from src.motor_controller import StepperMotorController as Motor
 from src.resources.controls.filters.filters import Filter
-
+from src.resources.controls.custom.progress_bar import ProgressBar
 
 class RoutinesTab(ft.Tab):
     """
@@ -21,6 +21,10 @@ class RoutinesTab(ft.Tab):
     def __init__(self, page: ft.Page, title: str):
         super().__init__()
         self.page = page
+        self.progress_bar = ProgressBar(
+            page=self.page,
+            title = f"Routine: {Props.CURRENT_ROUTINE['name']}"
+        )
         self.text = title
         self.motor = Motor(dir_pin=10, step_pin=8)
         self.icon = ft.Icon(ft.Icons.CONSTRUCTION, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED)
@@ -366,39 +370,63 @@ class RoutinesTab(ft.Tab):
         if Props.CURRENT_ROUTINE["stages"] == []:
             self.show_alert("Please add at least one stage.")
             return
+        
+        self.progress_bar.show()
 
         # Check the amout of stages
+        total_stages = len(Props.CURRENT_ROUTINE["stages"])
+        current_stage_num = 1
+
         for stage in Props.CURRENT_ROUTINE["stages"]:
             match stage["type"]:
                 case "Scan":
                     Props.IS_SCANNING = True
 
+                    self.progress_bar.update_legend("Scan: loading...")
                     self.__start_scan(stage=stage)
+                    self.progress_bar.update_legend("Scan: finish...")
+                    self.progress_bar.update_value(new_value=(1/total_stages)*(current_stage_num))
+
+                    current_stage_num += 1
 
                     Props.IS_SCANNING = False
                 
                 case "Filter":
                     Props.IS_FILTERING = True
 
+                    self.progress_bar.update_legend("Filter: loading...")
                     self.__start_filter(stage=stage)
                     Props.APPEND_FILTER = True
+                    self.progress_bar.update_legend("Filter: finish...")
+                    self.progress_bar.update_value(new_value=(1/total_stages)*(current_stage_num))
+
+                    current_stage_num += 1
 
                     Props.IS_FILTERING = False
 
                 case "Save":
                     Props.IS_SAVING = True
 
+                    self.progress_bar.update_legend("Save: loading...")
                     self.__start_save(stage=stage)
+                    self.progress_bar.update_legend("Save: finish...")
+                    self.progress_bar.update_value(new_value=(1/total_stages)*(current_stage_num))
+
+                    current_stage_num += 1
 
                     Props.IS_SAVING = True
 
                 case _:
                     pass
         
+        self.progress_bar.update_value(new_value=(1))
+        self.progress_bar.update_legend(new_legend=f"Finish.")
         Props.APPEND_FILTER = False
     
     def __start_scan(self, stage):
         
+        
+
         # Load preset
         preset_name = stage["config"]["preset_name"]
         presets = self.__load_presets()
@@ -434,22 +462,28 @@ class RoutinesTab(ft.Tab):
         # START CAPTURE
         match Props.CURRENT_FREQUENCY:
             case "5 [DEG/SHOT]":
-                for i in range(0,72):
+                n = 72
+                for i in range(0,n):
                     self.motor.move_degs(5)
                     time.sleep(3)
                     self.trigger_capture(iteration_number = i)
+                    self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
 
             case "45 [DEG/SHOT]":
-                for i in range(0,8):
+                n = 8
+                for i in range(0,n):
                     self.motor.move_degs(45)
                     time.sleep(3)
                     self.trigger_capture(iteration_number = i)
+                    self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
 
             case "90 [DEG/SHOT]":
-                for i in range(0,4):
+                n = 4
+                for i in range(0,n):
                     self.motor.move_degs(90)
                     time.sleep(3)
                     self.trigger_capture(iteration_number = i)
+                    self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
 
             case "360 [DEG/SHOT]":
                 self.motor.move_degs(360)
@@ -484,10 +518,16 @@ class RoutinesTab(ft.Tab):
                     image_path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
                     images_to_filter.append(image_path)
 
+        total_images = len(images_to_filter)
+        filtered_images = 0
+        self.progress_bar.update_legend(new_legend=f"Filter: Found {total_images} images to filter.")
+
         for image in images_to_filter:
 
             file_name = os.path.basename(image)
             file_path = Props.FILTERED_IMAGES_DIRECTORY + file_name
+            filtered_images += 1
+            self.progress_bar.update_legend(new_legend=f"Filter: Applying filter to image {file_name}, remaining images {total_images - filtered_images}.")
 
             match filter_to_apply:
                 case "Remove background":
