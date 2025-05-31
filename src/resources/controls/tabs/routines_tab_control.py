@@ -49,7 +49,6 @@ class RoutinesTab(ft.Tab):
         self.start_routine_button = ft.Container(
             height=Props.BUTTON_HEIGHT,
             expand=True,
-            alignment=ft.alignment.center_right,
             content=ft.ElevatedButton(
                 text="Start",
                 icon=ft.Icons.PLAY_ARROW,
@@ -126,8 +125,7 @@ class RoutinesTab(ft.Tab):
                     ft.Row(
                         [
                             self.stage_type_dropdown,
-                            self.add_stage_button,
-                            self.start_routine_button
+                            self.add_stage_button
                         ]
                     ),
                     
@@ -142,7 +140,12 @@ class RoutinesTab(ft.Tab):
                             ft.Column(
                                 [
                                     self.routine_loader_dropdown,
-                                    self.apply_routine_button
+                                    ft.Row(
+                                        [
+                                            self.apply_routine_button,
+                                            self.start_routine_button
+                                        ]
+                                    )
                                 ]
                             ),
 

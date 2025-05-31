@@ -1,8 +1,23 @@
 import os
 import json
+import time
 import flet as ft
 
 from src.resources.properties import Properties as Props
+from src.resources.controls.custom.progress_bar import ProgressBar
+from src.motor_controller import StepperMotorController as Motor
+from src.camera_controller import GPhoto2 as gphoto2
+from src.resources.controls.custom.progress_bar import ProgressBar
+
+
+def is_scanning():
+    return Props.IS_SCANNING
+
+def no_camera_selected():
+    return not any([Props.CURRENT_USE_CAMERA1, Props.CURRENT_USE_CAMERA2, Props.CURRENT_USE_CAMERA3])
+
+def capture_options_missing():
+    return not all([Props.CURRENT_FREQUENCY, Props.CURRENT_FORMAT, Props.CURRENT_RESOLUTION])
 
 class PresetControl(ft.Container):
     """
@@ -30,6 +45,7 @@ class PresetControl(ft.Container):
         super().__init__()
         self.page = page
         self.presets = self.__load_presets()
+        self.motor = Motor(dir_pin=10, step_pin=8)
 
         # OPTIONS INSTANCES
         self.options = options
@@ -55,6 +71,16 @@ class PresetControl(ft.Container):
             width=Props.BUTTON_WIDTH,
             on_click=self.__apply_preset
         )
+
+        self.start_button = ft.ElevatedButton(
+            text="Start",
+            icon=ft.Icons.PLAY_ARROW,
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__start_button_clicked
+        )
+
         # BUTTONS - RIGHT
         self.add_button = ft.ElevatedButton(
             text="Add",
@@ -85,7 +111,12 @@ class PresetControl(ft.Container):
                     ft.Column(
                         [
                             self.preset_dropdown,
-                            self.apply_button
+                            ft.Row(
+                                [
+                                    self.apply_button,
+                                    self.start_button
+                                ]
+                            )
 
                         ],
                         expand=1
@@ -294,6 +325,10 @@ class PresetControl(ft.Container):
             - Sets corresponding values in the Props class.
             - Displays a confirmation snackbar.
         """
+        if self.preset_dropdown.value == None: 
+            self.show_alert("First select a preset")
+            return
+
         __preset_name = self.preset_dropdown.value
         # READ PRESETS
         presets = self.__load_presets()
@@ -371,3 +406,108 @@ class PresetControl(ft.Container):
         self.add_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
         self.delete_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
         self.update_button.style = ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS))
+
+    def __start_button_clicked(self, e):
+        # VALIDATIONS
+        # Check if there is a scan runnign
+        if is_scanning():
+            self.show_alert("Wait, a scan is being performed.")
+            return
+        # Check at least one camera is selected
+        if no_camera_selected():
+            self.show_alert("At least one camera should be selected.")
+            return
+        # Check all capture options are selected
+        if capture_options_missing():
+            self.show_alert("Some capture options are missing.")
+            return
+        
+        # START CAPTURE
+        self.show_alert("Started capture.")
+        Props.IS_SCANNING = True
+
+        progress_bar = ProgressBar(page=Props.PAGE, title="Scan")
+        progress_bar.show()
+
+        self.clean_directory()
+
+        match Props.CURRENT_FREQUENCY:
+            case "5 [DEG/SHOT]":
+                n = 72
+                for i in range(0,n):
+                    self.motor.move_degs(5)
+                    self.trigger_capture(iteration_number = i)
+
+                    progress_bar.update_value(new_value=(1/n)*(i+1))
+                    progress_bar.update_legend(new_legend=f"Series: {i + 1}, remaining {n - i - 1}")
+
+            case "45 [DEG/SHOT]":
+                n = 8
+                for i in range(0,n):
+                    self.motor.move_degs(45)
+                    self.trigger_capture(iteration_number = i)
+
+                    progress_bar.update_value(new_value=(1/n)*(i+1))
+                    progress_bar.update_legend(new_legend=f"Series: {i + 1}, remaining {n - i -1}")
+
+            case "90 [DEG/SHOT]":
+                n = 4
+                for i in range(0,n):
+                    self.motor.move_degs(90)
+                    self.trigger_capture(iteration_number = i)
+
+                    progress_bar.update_value(new_value=(1/n)*(i+1))
+                    progress_bar.update_legend(new_legend=f"Series: {i + 1}, remaining {n - i - 1}")
+
+            case "360 [DEG/SHOT]":
+                self.motor.move_degs(360)
+                time.sleep(3)
+
+            case _:
+                self.motor.move_degs(360)
+                time.sleep(3)
+
+
+        Props.IS_SCANNING = False
+        progress_bar.update_value(new_value=(1))
+        progress_bar.update_legend(new_legend=f"Finish.")
+        self.show_alert("Finished capture.")
+
+    def clean_directory(self):
+        if Props.CURRENT_USE_CAMERA1:
+            for f in os.listdir(Props.CAMERA1_DOWNLOAD_PATH):
+                path = os.path.join(Props.CAMERA1_DOWNLOAD_PATH, f)
+                os.remove(path) 
+        
+        if Props.CURRENT_USE_CAMERA2:
+            for f in os.listdir(Props.CAMERA2_DOWNLOAD_PATH):
+                path = os.path.join(Props.CAMERA2_DOWNLOAD_PATH, f)
+                os.remove(path)
+
+        if Props.CURRENT_USE_CAMERA3:
+            for f in os.listdir(Props.CAMERA3_DOWNLOAD_PATH):
+                path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
+                os.remove(path)
+    
+    def trigger_capture(self, iteration_number: int) -> None:
+
+        if Props.CURRENT_USE_CAMERA1:
+            gphoto2.capture_image(
+                camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[0]],
+                download_path = Props.CAMERA1_DOWNLOAD_PATH,
+                file_name = "A000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+            )
+
+        if Props.CURRENT_USE_CAMERA2:
+            gphoto2.capture_image(
+                camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[1]],
+                download_path = Props.CAMERA2_DOWNLOAD_PATH,
+                file_name = "B000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+            )
+
+        if Props.CURRENT_USE_CAMERA3:
+            gphoto2.capture_image(
+                camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[2]],
+                download_path = Props.CAMERA3_DOWNLOAD_PATH,
+                file_name = "C000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+            )

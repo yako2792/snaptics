@@ -114,18 +114,9 @@ class PropertiesTab(ft.Tab):
             controls_padding=Props.TAB_PADDING,
             controls=[
                 ft.ListTile(
-                    title=ft.Text("Buttons border radius: "),
-                    subtitle=ft.Slider(min=0, max=100, divisions=10, label="{value}%", on_change=self.__scan_border_radius_slider_changed, value=Props.BORDER_RADIUS)
-                ),
-                ft.ListTile(
                     title=ft.Text("View test image size: "),
                     subtitle=ft.Slider(min=40, max=100, divisions=6, label="{value}%", on_change=self.__image_viewer_size_slider_changed, value=convert_percentage_to_width_height(Props.IMAGE_VIEW_WIDTH, Props.IMAGE_VIEW_HEIGHT))
-                ),
-                ft.ListTile(
-                    title=ft.Text("Save file path: "),
-                    subtitle=ft.TextField(label="Path", border=ft.InputBorder.UNDERLINE, hint_text=Props.DEFAULT_HINT)
-                ),
-
+                )
             ]
         )
 

@@ -4,6 +4,7 @@ It centralizes settings, ensuring easy configuration and avoiding hardcoding val
 """
 
 import os
+from flet import Page
 from src.camera_controller import GPhoto2 as gp
 
 class Properties:
@@ -19,6 +20,7 @@ class Properties:
         os.path.dirname(__file__),
         "..", "resources", "assets", "presets", "presets.json"
     )
+    PAGE: Page = None
     
     ROUTINES_DIRECTORY: str = "src/resources/assets/routines/routines.json"
     CAPTURES_DIRECTORY: str = "src/resources/assets/images/captures/"
@@ -54,6 +56,7 @@ class Properties:
     BORDER_RADIUS: int = 0
     MARGIN_ALL: int = 15
     STAGE_CARD_WIDTH: int = 640
+    DIALOG_HEIGHT: int = 160
 
     # PROPERTIES TAB
     EXPLORER_SETTINGS_TITLE: str = "Properties: Explorer"

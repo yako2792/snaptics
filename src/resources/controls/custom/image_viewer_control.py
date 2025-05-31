@@ -41,6 +41,7 @@ class ImageViewer(ft.Container):
             text="Test",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT, 
+            width=Props.BUTTON_WIDTH,
             on_click=self.__test_button_clicked
         )
 
