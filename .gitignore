@@ -2,7 +2,9 @@
 .idea
 
 __pycache__/
-captures/
-filtered_images/
-view_test/
+camera_1/*
+camera_2/*
+camera_3/*
+filtered_images/*
+view_test/*
 *.pyc
