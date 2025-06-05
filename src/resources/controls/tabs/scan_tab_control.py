@@ -26,6 +26,8 @@ class ScanTab(ft.Tab):
         self.options_control = OptionsControl()
         self.use_control = UseControl()
         self.presets_control = PresetControl(self.page, self.options_control, self.use_control)
+        Props.OPTIONS_CONTROL = self.options_control
+        Props.USE_CONTROL = self.use_control
 
         self.content=ft.Container(
             padding=Props.TAB_PADDING,

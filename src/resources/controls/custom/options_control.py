@@ -1,7 +1,8 @@
 import flet as ft
-
+import time
 from src.resources.properties import Properties as Props
 from src.camera_controller import GPhoto2 as gp
+from src.resources.controls.custom.loading_dialog import LoadingDialog
 
 
 class OptionsControl(ft.Container):
@@ -101,7 +102,15 @@ class OptionsControl(ft.Container):
             - Updates the `Props.CURRENT_FREQUENCY` with the selected value.
         """
         Props.CURRENT_FREQUENCY = self.freq_dropdown.value
-        self.show_alert("Frequency set properly.")
+
+        loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
+        loading_dialog.show()
+        loading_dialog.update_legend(f"Applying frequency: {Props.CURRENT_FREQUENCY}")
+        time.sleep(1)
+        loading_dialog.update_legend(f"Frequency applied properly")
+        loading_dialog.update_legend(f"Finish!")
+        loading_dialog.hide()
+
 
     def __format_dropdown_changed(self,e):
         """
@@ -114,17 +123,27 @@ class OptionsControl(ft.Container):
             - Updates the `Props.CURRENT_FORMAT` with the selected value.
         """
         Props.CURRENT_FORMAT = self.format_dropdown.value
+
+        loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
+        loading_dialog.show()
+        loading_dialog.update_legend(f"Applying format: {Props.CURRENT_FORMAT}")
+
         for camera in Props.CAMERAS_LIST:
             if camera == None:
                 continue
+            
+            loading_dialog.update_legend(f"Applying format to camera: {camera}")
 
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
                 camera_config=Props.FORMAT_CAMERA_CONFIG,
                 config_value=Props.FORMATS_DICT[Props.CURRENT_FORMAT]
                 )
+            
+            loading_dialog.update_legend(f"Format applied properly")
         
-        self.show_alert("Format set properly.")
+        loading_dialog.update_legend(f"Finish!")
+        loading_dialog.hide()
             
 
     def __resolution_dropdown_changed(self,e):
@@ -139,6 +158,10 @@ class OptionsControl(ft.Container):
         """
         Props.CURRENT_RESOLUTION = self.resolution_dropdown.value
 
+        loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
+        loading_dialog.show()
+        loading_dialog.update_legend(f"Applying resolution: {Props.CURRENT_RESOLUTION}")
+
         if "RAW" in Props.CURRENT_FORMAT:
             Props.CURRENT_FILE_EXTENSION = Props.RAW_EXTENSION
         else:
@@ -148,13 +171,18 @@ class OptionsControl(ft.Container):
             if camera == None:
                 continue 
 
+            loading_dialog.update_legend(f"Applying resolution to camera: {camera}")
+
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
                 camera_config=Props.RESOLUTION_CAMERA_CONFIG,
                 config_value=Props.RESOLUTIONS_DICT[Props.CURRENT_RESOLUTION]
                 )
+            
+            loading_dialog.update_legend(f"Resolution applied properly")
         
-        self.show_alert("Resolution set properly.")
+        loading_dialog.update_legend(f"Finish!")
+        loading_dialog.hide()
 
     def update_all_radius(self):
         """

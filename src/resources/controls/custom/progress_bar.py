@@ -96,6 +96,7 @@ class ProgressBar:
 
 
     def __close_button_clicked(self, e):
+        self.progress_bar.value = 0
         self.hide()
 
     def __cancel_button_clicked(self, e):

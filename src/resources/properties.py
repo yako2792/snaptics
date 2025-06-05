@@ -4,7 +4,7 @@ It centralizes settings, ensuring easy configuration and avoiding hardcoding val
 """
 
 import os
-from flet import Page
+from flet import Page, Container
 from src.camera_controller import GPhoto2 as gp
 
 class Properties:
@@ -26,6 +26,9 @@ class Properties:
     CAPTURES_DIRECTORY: str = "src/resources/assets/images/captures/"
     TEST_CAPTURES_DIRECTORY: str = "src/resources/assets/images/view_test/"
     FILTERED_IMAGES_DIRECTORY: str = "src/resources/assets/images/filtered_images/"
+    
+    OPTIONS_CONTROL: Container = None
+    USE_CONTROL: Container = None
 
     # FRAMES
     EXPLORER_SIZE: float = 0.3
@@ -57,6 +60,8 @@ class Properties:
     MARGIN_ALL: int = 15
     STAGE_CARD_WIDTH: int = 640
     DIALOG_HEIGHT: int = 160
+    GIF_SIZE: int = 30
+    LOADING_DIALOG_HEIGHT: int = 90
 
     # PROPERTIES TAB
     EXPLORER_SETTINGS_TITLE: str = "Properties: Explorer"
@@ -65,6 +70,8 @@ class Properties:
     SCAN_SETTINGS_SUBTITLE: str = "Customize some values from the Scan tab."
     CAMERA_SETTINGS_TITLE: str = "Properties: Cameras"
     CAMERA_SETTINGS_SUBTITLE: str = "Customize some camera properties."
+    FILTERS_SETTINGS_TITLE: str = "Properties: Filters"
+    FILTERS_SETTINGS_SUBTITLE: str = "Customize some filter properties."
     INITIALLY_EXPANDED_PROPERTIES: bool = True
 
     # SCAN TAB
@@ -95,7 +102,7 @@ class Properties:
     # CAMERAS TEST CLASS
     RAW_EXTENSION: str = ".ARW"
     JPEG_EXTENSION: str = ".jpg"
-    CURRENT_FILE_EXTENSION: str = ""
+    CURRENT_FILE_EXTENSION: str = ".png"
     ISO_CAMERA_CONFIG: str = "iso"
     SHUTTERSPEED_CAMERA_CONFIG: str = "shutterspeed"
     FORMAT_CAMERA_CONFIG: str = "imagequality"
@@ -116,3 +123,7 @@ class Properties:
         "stages": []
     }
     APPEND_FILTER: bool = False
+
+    # FILTERS
+    FILTER_RESOLUTION_OUTPUT: str = "480p"
+    RM_BG_THRESHOLD: int = 120

@@ -1,6 +1,7 @@
 import flet as ft
 from src.resources.properties import Properties as Props
 from src.camera_controller import GPhoto2 as gp
+from src.resources.controls.custom.loading_dialog import LoadingDialog
 
 
 def convert_percentage_to_width_height(width: int, height: int):
@@ -90,6 +91,29 @@ class PropertiesTab(ft.Tab):
             on_change=self.__shutterspeed_dropdown_changed
         )
 
+        self.resolution_dropdown = ft.Dropdown(
+            options=[
+                ft.DropdownOption(text="1080p"),
+                ft.DropdownOption(text="720p"),
+                ft.DropdownOption(text="480p"),
+                ft.DropdownOption(text="360p"),
+                ft.DropdownOption(text="240p"),
+                ft.DropdownOption(text="144p"),
+            ],
+            label="RESOLUTION",
+            width=Props.DROPDOWN_WIDTH, 
+            on_change=self.__resolution_dropdown_changed
+        )
+
+        self.rm_bg_threshold_input = ft.Slider(
+            min=20,
+            max=180, 
+            divisions=160,
+            label="{value}", 
+            on_change=self.__rm_bg_threshold_input_changed, 
+            value=Props.RM_BG_THRESHOLD
+        )
+
         # Explorer settings
         self.explorer_settings: ft.ExpansionTile = ft.ExpansionTile(
             title=ft.Text(value=Props.EXPLORER_SETTINGS_TITLE),
@@ -120,6 +144,25 @@ class PropertiesTab(ft.Tab):
             ]
         )
 
+        # Filter settings
+        self.filter_settings: ft.ExpansionTile = ft.ExpansionTile(
+            title=ft.Text(value=Props.FILTERS_SETTINGS_TITLE),
+            subtitle=ft.Text(value=Props.FILTERS_SETTINGS_SUBTITLE),
+            affinity=ft.TileAffinity.LEADING,
+            initially_expanded=Props.INITIALLY_EXPANDED_PROPERTIES,
+            controls_padding=Props.TAB_PADDING,
+            controls=[
+                ft.ListTile(
+                    title=ft.Text("Remove background threshold: "),
+                    subtitle=self.rm_bg_threshold_input 
+                ),
+                ft.ListTile(
+                    title=ft.Text("Resize image resolution: "),
+                    subtitle=self.resolution_dropdown 
+                )
+            ]
+        )
+
         # Camera settings
         self.camera_settings: ft.ExpansionTile = ft.ExpansionTile(
             title=ft.Text(value=Props.CAMERA_SETTINGS_TITLE),
@@ -144,7 +187,8 @@ class PropertiesTab(ft.Tab):
             [
                 self.explorer_settings,
                 self.scan_settings,
-                self.camera_settings
+                self.camera_settings,
+                self.filter_settings
             ],
             scroll=ft.ScrollMode.AUTO
         )
@@ -195,15 +239,6 @@ class PropertiesTab(ft.Tab):
         new_width = e.control.value / 100
         self.explorer_tab.modify_width(new_width)
 
-    def __scan_border_radius_slider_changed(self, e):
-        """
-        Callback for the button border radius slider.
-
-        Updates the corner radius of buttons in the Scan tab.
-        """
-        new_radius = e.control.value
-        self.scan_tab.modify_button_radius(new_radius)
-
     def __image_viewer_size_slider_changed(self, e):
         """
         Callback for the image viewer size slider.
@@ -220,13 +255,25 @@ class PropertiesTab(ft.Tab):
         """
 
         Props.CURRENT_ISO = self.iso_dropdown.value
+
+        loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
+        loading_dialog.show()
+        loading_dialog.update_legend(f"Applying iso: {Props.CURRENT_ISO}")
+
         for camera in Props.CAMERAS_LIST:
+            
+            loading_dialog.update_legend(f"Applying iso to camera: {camera}")
+
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
                 camera_config=Props.ISO_CAMERA_CONFIG,
                 config_value=Props.ISOS_DICT[Props.CURRENT_ISO]
                 )
-            self.show_alert("Iso set properly.")
+            
+            loading_dialog.update_legend(f"Iso applied to camera: {camera}")
+        
+        loading_dialog.update_legend(f"Finish!")
+        loading_dialog.hide()
 
     def __shutterspeed_dropdown_changed(self, e):
         """
@@ -234,11 +281,35 @@ class PropertiesTab(ft.Tab):
         """
 
         Props.CURRENT_SHUTTERSPEED = self.shutterspeed_dropdown.value
+
+        loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
+        loading_dialog.show()
+        loading_dialog.update_legend(f"Applying shutterspeed: {Props.CURRENT_ISO}")
+
         for camera in Props.CAMERAS_LIST:
+
+            loading_dialog.update_legend(f"Applying shutterspeed to camera: {camera}")
+
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
                 camera_config=Props.SHUTTERSPEED_CAMERA_CONFIG,
                 config_value=Props.SHUTTERSPEEDS_DICT[Props.CURRENT_SHUTTERSPEED]
                 )
-            print("set " + Props.CAMERAS_DICT[camera] + Props.SHUTTERSPEED_CAMERA_CONFIG + Props.SHUTTERSPEEDS_DICT[Props.CURRENT_SHUTTERSPEED])
-            self.show_alert("Shutterspeed set properly.")
+            
+            loading_dialog.update_legend(f"Shutterspeed applied to camera: {camera}")
+        
+        loading_dialog.update_legend(f"Finish!")
+        loading_dialog.hide()
+
+
+    def __resolution_dropdown_changed(self, e):
+        """
+        Callback for the resolution dropdown menu.
+        """
+        Props.FILTER_RESOLUTION_OUTPUT = self.resolution_dropdown.value
+
+    def __rm_bg_threshold_input_changed(self, e):
+        """
+        Callback for the remove background threshold input.
+        """
+        Props.RM_BG_THRESHOLD = self.rm_bg_threshold_input.value

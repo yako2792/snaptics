@@ -1,25 +1,24 @@
 {
     "routines": [
         {
-            "name": "Rutina 2",
+            "name": "TEST1",
             "stages": [
                 {
                     "type": "Scan",
                     "config": {
-                        "preset_name": "preset001"
+                        "preset_name": "PRODUCT"
                     }
                 },
                 {
                     "type": "Filter",
                     "config": {
-                        "filter_name": "filter001"
+                        "filter_name": "Resize image"
                     }
                 },
                 {
-                    "type": "Save",
+                    "type": "Filter",
                     "config": {
-                        "save_path": "/example/path",
-                        "product_id": "020304002"
+                        "filter_name": "Remove background"
                     }
                 }
             ]

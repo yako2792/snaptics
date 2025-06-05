@@ -471,7 +471,6 @@ class PresetControl(ft.Container):
         Props.IS_SCANNING = False
         progress_bar.update_value(new_value=(1))
         progress_bar.update_legend(new_legend=f"Finish.")
-        self.show_alert("Finished capture.")
 
     def clean_directory(self):
         if Props.CURRENT_USE_CAMERA1:

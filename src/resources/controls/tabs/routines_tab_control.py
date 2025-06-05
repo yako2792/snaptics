@@ -12,6 +12,8 @@ from src.camera_controller import GPhoto2 as gphoto2
 from src.motor_controller import StepperMotorController as Motor
 from src.resources.controls.filters.filters import Filter
 from src.resources.controls.custom.progress_bar import ProgressBar
+from src.camera_controller import GPhoto2 as gp
+from src.resources.controls.custom.loading_dialog import LoadingDialog
 
 class RoutinesTab(ft.Tab):
     """
@@ -241,6 +243,10 @@ class RoutinesTab(ft.Tab):
         Props.CURRENT_ROUTINE["stages"] = []
         Props.CURRENT_ROUTINE["name"] = routine_name
 
+        loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
+        loading_dialog.show()
+        loading_dialog.update_legend(f"Applying routine: {routine_name}")
+
         for i in range(len(stages), 0, -1):
             Props.STAGES_NUMBER += 1
 
@@ -248,6 +254,8 @@ class RoutinesTab(ft.Tab):
 
             current_stage_card = None
             stage_type = Routines.get_stage_type(routine_name=routine_name, stage_number=Props.STAGES_NUMBER)
+            
+            loading_dialog.update_legend(f"Adding stage {Props.STAGES_NUMBER}: {stage_type}")
 
             match stage_type:
                 case "Scan":
@@ -258,9 +266,40 @@ class RoutinesTab(ft.Tab):
                     )
                     
                     # Modify current values and apply
+                    loading_dialog.update_legend(f"Loading presets")
                     current_stage_card.preset_dropdown.value = stage_config["preset_name"]
-                    # print(f"Assigned {stage_config['preset_name']} to Scan card")
+                    presets  = self.__load_presets()
+
+                    # Add capture values 
+                    loading_dialog.update_legend(f"Applying preset values to cameras")
+                    Props.CURRENT_FREQUENCY = presets[stage_config["preset_name"]]["frequency"]
+                    Props.CURRENT_FORMAT = presets[stage_config["preset_name"]]["format"]
+                    Props.CURRENT_RESOLUTION = presets[stage_config["preset_name"]]["resolution"]
+                    Props.CURRENT_USE_CAMERA1 = presets[stage_config["preset_name"]]["use_camera1"]
+                    Props.CURRENT_USE_CAMERA2 = presets[stage_config["preset_name"]]["use_camera2"]
+                    Props.CURRENT_USE_CAMERA3 = presets[stage_config["preset_name"]]["use_camera3"]
+
+                    for camera in Props.CAMERAS_LIST:
+                        if camera == None:
+                            continue
+                        
+                        loading_dialog.update_legend(f"Applying config to camera: {camera}")
+                        gp.set_config(
+                            camera_port=Props.CAMERAS_DICT[camera],
+                            camera_config=Props.FORMAT_CAMERA_CONFIG,
+                            config_value=Props.FORMATS_DICT[Props.CURRENT_FORMAT]
+                        )
+                        loading_dialog.update_legend(f"Applied format config: {Props.FORMAT_CAMERA_CONFIG}")
+
+                        gp.set_config(
+                            camera_port=Props.CAMERAS_DICT[camera],
+                            camera_config=Props.RESOLUTION_CAMERA_CONFIG,
+                            config_value=Props.RESOLUTIONS_DICT[Props.CURRENT_RESOLUTION]
+                        )
+                        loading_dialog.update_legend(f"Applied resolution config: {Props.RESOLUTION_CAMERA_CONFIG}")
+
                     
+                    loading_dialog.update_legend(f"Applied camera config properly!")
 
                     # Modify values on backend
                     Props.CURRENT_ROUTINE["stages"].append(
@@ -306,7 +345,10 @@ class RoutinesTab(ft.Tab):
                 case _:
                     self.show_alert("Unrecognized stage type: " + stage_type)
                     return
-                
+            
+            loading_dialog.update_legend(f"Finish!")
+            loading_dialog.hide()
+
             self.stages_list_container.content.controls.append(
                 current_stage_card
             )
@@ -371,6 +413,7 @@ class RoutinesTab(ft.Tab):
             self.show_alert("Please add at least one stage.")
             return
         
+        self.progress_bar.percentage.value = "0%"
         self.progress_bar.show()
 
         # Check the amout of stages
@@ -442,12 +485,12 @@ class RoutinesTab(ft.Tab):
         __use_camera3 = preset["use_camera3"]
 
         # MODIFY CURRENT VALUES
-        self.options.freq_dropdown.value = __freq
-        self.options.format_dropdown.value = __format
-        self.options.resolution_dropdown.value = __resolution
-        self.camera_use.camera1_checkbox.content.value = __use_camera1
-        self.camera_use.camera2_checkbox.content.value = __use_camera2
-        self.camera_use.camera3_checkbox.content.value = __use_camera3
+        Props.OPTIONS_CONTROL.freq_dropdown.value = __freq
+        Props.OPTIONS_CONTROL.format_dropdown.value = __format
+        Props.OPTIONS_CONTROL.resolution_dropdown.value = __resolution
+        Props.USE_CONTROL.camera1_checkbox.content.value = __use_camera1
+        Props.USE_CONTROL.camera2_checkbox.content.value = __use_camera2
+        Props.USE_CONTROL.camera3_checkbox.content.value = __use_camera3
 
         # APPLY CHANGES IN PROPERTIES CLASS
         Props.CURRENT_FREQUENCY = __freq
@@ -465,7 +508,6 @@ class RoutinesTab(ft.Tab):
                 n = 72
                 for i in range(0,n):
                     self.motor.move_degs(5)
-                    time.sleep(3)
                     self.trigger_capture(iteration_number = i)
                     self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
 
@@ -473,7 +515,6 @@ class RoutinesTab(ft.Tab):
                 n = 8
                 for i in range(0,n):
                     self.motor.move_degs(45)
-                    time.sleep(3)
                     self.trigger_capture(iteration_number = i)
                     self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
 
@@ -481,7 +522,6 @@ class RoutinesTab(ft.Tab):
                 n = 4
                 for i in range(0,n):
                     self.motor.move_degs(90)
-                    time.sleep(3)
                     self.trigger_capture(iteration_number = i)
                     self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
 
@@ -523,32 +563,38 @@ class RoutinesTab(ft.Tab):
         self.progress_bar.update_legend(new_legend=f"Filter: Found {total_images} images to filter.")
 
         for image in images_to_filter:
-
+            print(image)
             file_name = os.path.basename(image)
+            print(file_name)
             file_path = Props.FILTERED_IMAGES_DIRECTORY + file_name
             filtered_images += 1
             self.progress_bar.update_legend(new_legend=f"Filter: Applying filter to image {file_name}, remaining images {total_images - filtered_images}.")
 
             match filter_to_apply:
                 case "Remove background":
+                    print("Applying filter to " + image)
+                    
                     Filter.remove_background(
                         image_path=image,
                         output_path=file_path
                     )
 
                 case "Resize image":
+                    print("Applying filter to " + image)
                     Filter.resize_image(
                         image_path=image,
                         output_path=file_path
                     )
                 
                 case "Fisheye correction":
+                    print("Applying filter to " + image)
                     Filter.resize_image(
                         image_path=image,
                         output_path=file_path
                     )
 
                 case "CA Correction":
+                    print("Applying filter to " + image)
                     Filter.ca_correction(
                         image_path=image,
                         output_path=file_path
