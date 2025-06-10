@@ -1,7 +1,13 @@
+import json
 import flet as ft
 from src.resources.properties import Properties as Props
 from src.camera_controller import GPhoto2 as gp
+from src.resources.utils.servers_controller import Servers
 from src.resources.controls.custom.loading_dialog import LoadingDialog
+from src.resources.controls.custom.delete_server_dialog import DeleteServerDialog
+from src.resources.controls.custom.server_dialog import ServerDialog
+from src.resources.controls.custom.credentials_dialog import CredentialsDialog
+from src.resources.controls.custom.update_server_dialog import UpdateServerDialog
 
 
 def convert_percentage_to_width_height(width: int, height: int):
@@ -105,6 +111,22 @@ class PropertiesTab(ft.Tab):
             on_change=self.__resolution_dropdown_changed
         )
 
+        self.servers_dropdown = ft.Dropdown(
+            options=self.__get_available_servers(),
+            label = "SERVERS",
+            width = Props.DROPDOWN_WIDTH,
+            on_change=self.__servers_dropdown_changed
+        )
+        Props.SERVERS_DROPDOWN = self.servers_dropdown
+
+        self.credentials_dropdown = ft.Dropdown(
+            # options=self.__get_available_credentials,
+            label = "CREDENTIALS",
+            width = Props.DROPDOWN_WIDTH,
+            # on_change=self.__servers_dropdown_changed
+        )
+
+
         self.rm_bg_threshold_input = ft.Slider(
             min=20,
             max=180, 
@@ -112,6 +134,50 @@ class PropertiesTab(ft.Tab):
             label="{value}", 
             on_change=self.__rm_bg_threshold_input_changed, 
             value=Props.RM_BG_THRESHOLD
+        )
+
+        self.add_server_button = ft.ElevatedButton(
+            text="Add",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__add_server
+        )
+        self.update_server_button = ft.ElevatedButton(
+            text="Update",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__udpate_server
+        )
+        self.delete_server_button = ft.OutlinedButton(
+            text="Delete",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__delete_server
+        )
+
+        self.add_credentials_button = ft.ElevatedButton(
+            text="Add",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__add_credentials
+        )
+        self.update_credentials_button = ft.ElevatedButton(
+            text="Update",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            # on_click=self.__update_preset
+        )
+        self.delete_credentials_button = ft.OutlinedButton(
+            text="Delete",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__delete_credentials
         )
 
         # Explorer settings
@@ -183,12 +249,48 @@ class PropertiesTab(ft.Tab):
             ]
         )
 
+        # Save settings
+        self.save_settings: ft.ExpansionTile = ft.ExpansionTile(
+            title=ft.Text(value=Props.SAVE_SETTINGS_TITLE),
+            subtitle=ft.Text(value=Props.SAVE_SETTINGS_SUBTITLE),
+            affinity=ft.TileAffinity.LEADING,
+            initially_expanded=Props.INITIALLY_EXPANDED_PROPERTIES,
+            controls_padding=Props.TAB_PADDING,
+            controls=[
+                ft.ListTile(
+                    title=ft.Text("Servers: "),
+                    subtitle=ft.Row(
+                        [
+                            self.servers_dropdown,
+                            self.add_server_button,
+                            self.update_server_button,
+                            self.delete_server_button
+                        ]
+                    ) 
+                ),
+                ft.ListTile(
+                    title=ft.Text("Credentials: "),
+                    subtitle=ft.Row(
+                        [
+                            self.credentials_dropdown,
+                            self.add_credentials_button,
+                            self.update_credentials_button,
+                            self.delete_credentials_button
+                        ]
+                    )
+                ),
+
+            ]
+        )
+
+        # Layout
         self.content = ft.Column(
             [
                 self.explorer_settings,
                 self.scan_settings,
                 self.camera_settings,
-                self.filter_settings
+                self.filter_settings,
+                self.save_settings
             ],
             scroll=ft.ScrollMode.AUTO
         )
@@ -308,8 +410,88 @@ class PropertiesTab(ft.Tab):
         """
         Props.FILTER_RESOLUTION_OUTPUT = self.resolution_dropdown.value
 
+    def __get_available_servers(self):
+        """
+        Callback for the servers dropdown menu.
+        """
+        server_list = Servers.get_available_servers()
+        controls = []
+
+        for server in server_list:
+            controls.append(
+                ft.DropdownOption(text=server)
+            )
+        
+        return controls
+    
+    def __servers_dropdown_changed(self, e):
+        """
+        Callback for the servers dropdown changed.
+        """
+        Props.SELECTED_SERVER = self.servers_dropdown.value
+
+    def __add_server(self, e):
+        """
+        Callback for add server action.
+        """
+        allert = ServerDialog(page = Props.PAGE, title="Add Server")
+        allert.show()
+
+    def __udpate_server(self, e):
+        """
+        Callback for update server action.
+        """
+
+        if Props.SELECTED_SERVER == "":
+            self.show_alert("Please select a server first.")
+            return
+
+        allert = UpdateServerDialog(page = Props.PAGE, title="Server details")
+        allert.show()
+
+    def __delete_server(self, e):
+        """
+        Callback for delete server action.
+        """
+        if Props.SELECTED_SERVER == "":
+            self.show_alert("Please, select a server first.")
+            return
+
+        allert = DeleteServerDialog(page = Props.PAGE, title="Wait!")
+        allert.show()
+    
+    def __add_credentials(self, e):
+        """
+        Callback for add credentials action.
+        """
+        allert = CredentialsDialog(page = Props.PAGE, title="Add Credentials")
+        allert.show()
+
+
+    def __delete_credentials(self, e):
+        """
+        Callback for delete credentials action.
+        """
+        allert = DeleteServerDialog(page = Props.PAGE, title="Wait!")
+        allert.show()
+
     def __rm_bg_threshold_input_changed(self, e):
         """
         Callback for the remove background threshold input.
         """
         Props.RM_BG_THRESHOLD = self.rm_bg_threshold_input.value
+
+    def show_alert(self, message: str):
+        """
+        Displays a temporary snackbar alert with the given message.
+
+        Args:
+            message (str): The message to display in the snackbar.
+        """
+        snackbar = ft.SnackBar(
+            content=ft.Text(value=message),
+            duration=2000
+        )
+        snackbar.open = True
+        self.page.open(snackbar)
+        self.page.update()

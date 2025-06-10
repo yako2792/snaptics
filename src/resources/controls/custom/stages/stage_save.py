@@ -20,12 +20,28 @@ class StageSave(ft.Container):
         # region Stage card: Controls
         self.header_text = HeaderControl(self.stage_name)
 
-        self.save_dropdown = ft.Dropdown(
-            label="Name",
-            options=[ft.dropdown.Option(name) for name in self.__load_save_paths()],
-            width=Props.DROPDOWN_WIDTH,
+        self.server_dropdown = ft.Dropdown(
+            label="Server",
+            options=[ft.dropdown.Option(name) for name in self.__load_available_servers()],
+            width=Props.DROPDOWN_WIDTH * 0.7,
             border_radius=Props.BORDER_RADIUS,
-            on_change=self.__save_dropdown_changed
+            # on_change=self.__server_dropdown_changed
+        )
+
+        self.path_dropdown = ft.Dropdown(
+            label="Path",
+            options=[ft.dropdown.Option(name) for name in self.__load_available_paths()],
+            width=Props.DROPDOWN_WIDTH * 0.7,
+            border_radius=Props.BORDER_RADIUS,
+            # on_change=self.__path_dropdown_changed
+        )
+
+        self.credentials_dropdown = ft.Dropdown(
+            label="Credentials",
+            options=[ft.dropdown.Option(name) for name in self.__load_available_credentials()],
+            width=Props.DROPDOWN_WIDTH * 1.43,
+            border_radius=Props.BORDER_RADIUS,
+            # on_change=self.__path_dropdown_changed
         )
 
         self.delete_button = ft.IconButton(
@@ -45,22 +61,39 @@ class StageSave(ft.Container):
                         self.delete_button
                     ]
                 ),
-                self.save_dropdown
+                ft.Row(
+                    [
+                        self.server_dropdown,
+                        self.path_dropdown
+                    ]
+                ),
+                self.credentials_dropdown
             ]
         )
         # endregion
 
     # region Stage card: Controllers
-    def __load_save_paths(self):
+    def __load_available_servers(self):
         """
-        Read presets in json file.
-        :return: list with all presets
+        Returns the available servers.
         """
-        return ["Not available"]
+        return ["127.0.0.1", "0.0.0.0"]
     
-    def __save_dropdown_changed(self, e):
+    def __load_available_paths(self):
+        """
+        Returns the available paths.
+        """
+        return ["/path/psd/all", "/path/jpg", "/path/seed/"]
+    
+    def __load_available_credentials(self):
+        """
+        Returns the available credentials.
+        """
+        return ["Server1_Credentials", "Server2_Credentials"]
+    
+    def __server_dropdown_changed(self, e):
         Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {
-            "save_path": self.save_dropdown.value
+            "server": self.server_dropdown.value
         }
         
     def __delete_button_clicked(self, e):

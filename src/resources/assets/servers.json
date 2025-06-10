@@ -1,0 +1,12 @@
+{
+    "servers": [
+        {
+            "displayName": "hostTest1",
+            "hostName": "1.1.1.1",
+            "paths": [
+                "/example/1",
+                "/example/2"
+            ]
+        }
+    ]
+}

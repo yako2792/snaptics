@@ -4,7 +4,7 @@ It centralizes settings, ensuring easy configuration and avoiding hardcoding val
 """
 
 import os
-from flet import Page, Container
+from flet import Page, Container, Dropdown
 from src.camera_controller import GPhoto2 as gp
 
 class Properties:
@@ -23,6 +23,7 @@ class Properties:
     PAGE: Page = None
     
     ROUTINES_DIRECTORY: str = "src/resources/assets/routines/routines.json"
+    SERVERS_DIRECTORY: str = "src/resources/assets/servers.json"
     CAPTURES_DIRECTORY: str = "src/resources/assets/images/captures/"
     TEST_CAPTURES_DIRECTORY: str = "src/resources/assets/images/view_test/"
     FILTERED_IMAGES_DIRECTORY: str = "src/resources/assets/images/filtered_images/"
@@ -70,9 +71,11 @@ class Properties:
     SCAN_SETTINGS_SUBTITLE: str = "Customize some values from the Scan tab."
     CAMERA_SETTINGS_TITLE: str = "Properties: Cameras"
     CAMERA_SETTINGS_SUBTITLE: str = "Customize some camera properties."
+    SAVE_SETTINGS_TITLE: str = "Properties: Save"
+    SAVE_SETTINGS_SUBTITLE: str = "Modify available options in save stage."
     FILTERS_SETTINGS_TITLE: str = "Properties: Filters"
     FILTERS_SETTINGS_SUBTITLE: str = "Customize some filter properties."
-    INITIALLY_EXPANDED_PROPERTIES: bool = True
+    INITIALLY_EXPANDED_PROPERTIES: bool = False
 
     # SCAN TAB
     CURRENT_FREQUENCY: str = ""
@@ -127,3 +130,7 @@ class Properties:
     # FILTERS
     FILTER_RESOLUTION_OUTPUT: str = "480p"
     RM_BG_THRESHOLD: int = 120
+
+    # SERVERS
+    SELECTED_SERVER: str = ""
+    SERVERS_DROPDOWN: Dropdown = None
