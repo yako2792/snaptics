@@ -4,28 +4,23 @@ from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.utils.servers_controller import Servers
 
 
-class PathDialog:
+class DeletePathDialog:
     def __init__(self, page: ft.Page, title: str, parent_page):
-        self.parent_page = parent_page
         self.page = page
+        self.parent_page = parent_page
         self.title = ft.Row(
             [
                 ft.Icon(
-                    name=ft.Icons.EDIT_DOCUMENT
+                    name=ft.Icons.ERROR_OUTLINE
                 ),
                 HeaderControl(title)
             ]
         )
 
-        self.save_button = ft.ElevatedButton(
-            text="Save",
-            disabled=False,
-            icon=ft.Icons.SAVE_SHARP,
-            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
-            height=Props.BUTTON_HEIGHT,
-            width=Props.BUTTON_WIDTH,
-            on_click=self.__save_button_clicked
+        self.legend = ft.Text(
+            value=f"Are you sure you want to delete path '{Props.SELECTED_PATH}' ?"
         )
+
         self.cancel_button = ft.OutlinedButton(
             text="Cancel",
             disabled=False,
@@ -35,7 +30,15 @@ class PathDialog:
             width=Props.BUTTON_WIDTH,
             on_click=self.__close_button_clicked
         )
-        self.path_input = ft.TextField(label="Path", hint_text="/output/directory")
+        self.delete_button = ft.ElevatedButton(
+            text="Delete",
+            disabled=False,
+            icon=ft.Icons.DELETE,
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__delete_button_clicked
+        )
 
         self.dialog = ft.AlertDialog(
             modal=True,
@@ -44,14 +47,10 @@ class PathDialog:
                 content=ft.Column(
                     controls=[
                         self.title,
-                        ft.Column(
-                            [
-                                self.path_input
-                            ]
-                        ),
+                        self.legend,
                         ft.Row(
                             [
-                                self.save_button,
+                                self.delete_button,
                                 self.cancel_button
                             ],
                             alignment=ft.MainAxisAlignment.END
@@ -59,30 +58,40 @@ class PathDialog:
                     ],
                     spacing=Props.TAB_PADDING,
                     alignment=ft.MainAxisAlignment.CENTER,
-                    height=Props.LOADING_DIALOG_HEIGHT+Props.BUTTON_HEIGHT*3,
-                    width=Props.STAGE_CARD_WIDTH
-                )
+                ),
+                height=Props.LOADING_DIALOG_HEIGHT+Props.BUTTON_HEIGHT,
+                width=Props.STAGE_CARD_WIDTH
             )
         )
 
+    def __delete_button_clicked(self, e):
+        Servers.remove_path_in_server(display_name=Props.SELECTED_SERVER, path = Props.SELECTED_PATH)
+        self.show_alert(f"Path deleted: {Props.SELECTED_PATH}")
+        Props.SELECTED_PATH = ""
+        self.hide()
+        self.update_paths_options()
+        self.parent_page.show()
+    
     def __close_button_clicked(self, e):
         self.hide()
         self.parent_page.show()
 
-    def __save_button_clicked(self, e):
-        if self.path_input.value == None:
-            self.show_alert("Path should not be None.")
-            return
+    def show(self):
+        if self.dialog not in self.page.overlay:
+            self.page.overlay.append(self.dialog)
+        self.dialog.open = True
+        self.page.update()
 
-        if self.path_input.value == "":
-            self.show_alert("Path should not be empty.")
-            return
-        
-        Servers.add_path_to_server(server_display_name=Props.SELECTED_SERVER, path=self.path_input.value)
-        
-        self.hide()
+    def hide(self):
+        self.dialog.open = False
+        self.page.update()
+
+    def update_paths_options(self):
         self.parent_page.update_paths()
-        self.parent_page.show()
+
+    def update_legend(self, new_legend: str):
+        self.legend.value = new_legend
+        self.legend.update()
 
     def show_alert(self, message: str):
         """
@@ -97,17 +106,4 @@ class PathDialog:
         )
         snackbar.open = True
         self.page.open(snackbar)
-        self.page.update()
-
-    def show(self):
-         
-        if self.dialog not in self.page.overlay:
-            self.page.overlay.append(self.dialog)
-            
-        self.dialog.open = True
-        self.page.update()
-
-    def hide(self):
-        self.dialog.open = False
-        self.page.overlay.remove(self.dialog)
         self.page.update()

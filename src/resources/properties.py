@@ -134,3 +134,4 @@ class Properties:
     # SERVERS
     SELECTED_SERVER: str = ""
     SERVERS_DROPDOWN: Dropdown = None
+    SELECTED_PATH: str = ""

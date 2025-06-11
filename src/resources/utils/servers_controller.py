@@ -77,20 +77,67 @@ class Servers:
         data = Servers._load_json() 
         data["servers"] = [r for r in data["servers"] if r["displayName"] != display_name]
         Servers._save_json(data)
-
+    
     @staticmethod
-    def update_server(display_name_old: str, display_name_new: str, host_name: str, paths: list[str]):
+    def add_path_to_server(server_display_name: str, path: str):
         """
-        Updates the stages of the given server.
+        Adds a path to the given server.
         """
-        data = Servers._load_json() 
-        server = next((r for r in data["servers"] if r["displayName"] == display_name_old), None)
+
+        data = Servers._load_json()
+        server = next((r for r in data["servers"] if r["displayName"] == server_display_name), None)
 
         if server is None:
             raise ValueError("Server does not exists.")
         
-        server["displayName"] = display_name_new
-        server["hostName"] = host_name
-        server["paths"] = paths
+        server["paths"].append(path)
+        Servers._save_json(data)
+
+    @staticmethod
+    def update_path_in_server(display_name: str, path_old: str, path_new: str):
+        """
+        Updates the path of the given server.
+        """
+
+        data = Servers._load_json()
+        server = next((r for r in data["servers"] if r["displayName"] == display_name), None)
+
+        index = server["paths"].index(path_old)
+        server["paths"][index] = path_new
+
+        Servers._save_json(data)
+
+    @staticmethod
+    def remove_path_in_server(display_name: str, path: str):
+        """
+        Updates the path of the given server.
+        """
+
+        data = Servers._load_json()
+        server = next((r for r in data["servers"] if r["displayName"] == display_name), None)
+
+        server["paths"].remove(path)
+
+        Servers._save_json(data)
+
+    @staticmethod
+    def update_server(display_name_old: str, display_name_new: str, host_name: str, paths: list[str]):
+        """
+        Updates the attributes of the given server in the JSON.
+        """
+        data = Servers._load_json()
+        server = next((r for r in data["servers"] if r["displayName"] == display_name_old), None)
+
+        if server is None:
+            raise ValueError("Server does not exist.")
+
+        if display_name_new and display_name_new.strip():
+            server["displayName"] = display_name_new
+
+        if host_name and host_name.strip():
+            server["hostName"] = host_name
+
+        if isinstance(paths, list):
+            server["paths"] = paths
 
         Servers._save_json(data)

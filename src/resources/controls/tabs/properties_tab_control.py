@@ -126,16 +126,6 @@ class PropertiesTab(ft.Tab):
             # on_change=self.__servers_dropdown_changed
         )
 
-
-        self.rm_bg_threshold_input = ft.Slider(
-            min=20,
-            max=180, 
-            divisions=160,
-            label="{value}", 
-            on_change=self.__rm_bg_threshold_input_changed, 
-            value=Props.RM_BG_THRESHOLD
-        )
-
         self.add_server_button = ft.ElevatedButton(
             text="Add",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -218,10 +208,6 @@ class PropertiesTab(ft.Tab):
             initially_expanded=Props.INITIALLY_EXPANDED_PROPERTIES,
             controls_padding=Props.TAB_PADDING,
             controls=[
-                ft.ListTile(
-                    title=ft.Text("Remove background threshold: "),
-                    subtitle=self.rm_bg_threshold_input 
-                ),
                 ft.ListTile(
                     title=ft.Text("Resize image resolution: "),
                     subtitle=self.resolution_dropdown 
@@ -474,12 +460,6 @@ class PropertiesTab(ft.Tab):
         """
         allert = DeleteServerDialog(page = Props.PAGE, title="Wait!")
         allert.show()
-
-    def __rm_bg_threshold_input_changed(self, e):
-        """
-        Callback for the remove background threshold input.
-        """
-        Props.RM_BG_THRESHOLD = self.rm_bg_threshold_input.value
 
     def show_alert(self, message: str):
         """

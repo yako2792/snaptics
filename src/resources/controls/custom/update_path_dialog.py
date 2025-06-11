@@ -4,10 +4,11 @@ from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.utils.servers_controller import Servers
 
 
-class PathDialog:
+class UpdatePathDialog:
     def __init__(self, page: ft.Page, title: str, parent_page):
         self.parent_page = parent_page
         self.page = page
+        self.path_old = Props.SELECTED_PATH
         self.title = ft.Row(
             [
                 ft.Icon(
@@ -35,7 +36,7 @@ class PathDialog:
             width=Props.BUTTON_WIDTH,
             on_click=self.__close_button_clicked
         )
-        self.path_input = ft.TextField(label="Path", hint_text="/output/directory")
+        self.path_input = ft.TextField(value=Props.SELECTED_PATH, label="Path", hint_text="/output/directory")
 
         self.dialog = ft.AlertDialog(
             modal=True,
@@ -70,6 +71,7 @@ class PathDialog:
         self.parent_page.show()
 
     def __save_button_clicked(self, e):
+
         if self.path_input.value == None:
             self.show_alert("Path should not be None.")
             return
@@ -78,8 +80,8 @@ class PathDialog:
             self.show_alert("Path should not be empty.")
             return
         
-        Servers.add_path_to_server(server_display_name=Props.SELECTED_SERVER, path=self.path_input.value)
-        
+        Servers.update_path_in_server(display_name=Props.SELECTED_SERVER, path_old=self.path_old, path_new=self.path_input.value)
+
         self.hide()
         self.parent_page.update_paths()
         self.parent_page.show()
@@ -100,10 +102,10 @@ class PathDialog:
         self.page.update()
 
     def show(self):
-         
+
         if self.dialog not in self.page.overlay:
             self.page.overlay.append(self.dialog)
-            
+
         self.dialog.open = True
         self.page.update()
 
