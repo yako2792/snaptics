@@ -129,6 +129,7 @@ class Properties:
     }
     APPEND_FILTER: bool = False
     PRODUCT_ID: str = ""
+    LETTER_PREFIX: str = ""
 
     # FILTERS
     FILTER_RESOLUTION_OUTPUT: str = "480p"

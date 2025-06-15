@@ -511,6 +511,19 @@ class RoutinesTab(ft.Tab):
             case "5 [DEG/SHOT]":
                 n = 72
                 for i in range(0,n):
+                    
+                    # Prefix
+                    match i:
+                        case 17:
+                            Props.LETTER_PREFIX = "C"
+                        case 71:
+                            Props.LETTER_PREFIX = "A"
+                        case 35:
+                            Props.LETTER_PREFIX = "B"
+                        case _:
+                            Props.LETTER_PREFIX = ""
+
+
                     self.motor.move_degs(5)
                     self.trigger_capture(iteration_number = i)
                     self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
@@ -518,6 +531,18 @@ class RoutinesTab(ft.Tab):
             case "45 [DEG/SHOT]":
                 n = 8
                 for i in range(0,n):
+
+                    # Prefix
+                    match i:
+                        case 1:
+                            Props.LETTER_PREFIX = "C"
+                        case 7:
+                            Props.LETTER_PREFIX = "A"
+                        case 3:
+                            Props.LETTER_PREFIX = "B"
+                        case _:
+                            Props.LETTER_PREFIX = ""
+
                     self.motor.move_degs(45)
                     self.trigger_capture(iteration_number = i)
                     self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
@@ -525,6 +550,18 @@ class RoutinesTab(ft.Tab):
             case "90 [DEG/SHOT]":
                 n = 4
                 for i in range(0,n):
+
+                    # Prefix
+                    match i:
+                        case 0:
+                            Props.LETTER_PREFIX = "C"
+                        case 3:
+                            Props.LETTER_PREFIX = "A"
+                        case 1:
+                            Props.LETTER_PREFIX = "B"
+                        case _:
+                            Props.LETTER_PREFIX = ""
+                    
                     self.motor.move_degs(90)
                     self.trigger_capture(iteration_number = i)
                     self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
@@ -645,7 +682,7 @@ class RoutinesTab(ft.Tab):
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[0]],
                 download_path = Props.CAMERA1_DOWNLOAD_PATH,
-                file_name = Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+                file_name = Props.LETTER_PREFIX + Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
 
         if Props.CURRENT_USE_CAMERA2:
@@ -656,10 +693,12 @@ class RoutinesTab(ft.Tab):
             )
 
         if Props.CURRENT_USE_CAMERA3:
+            local_prefix = "D" if Props.LETTER_PREFIX == "A" else ""
+            
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[2]],
                 download_path = Props.CAMERA3_DOWNLOAD_PATH,
-                file_name = Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+                file_name = local_prefix + Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
 
     def show_alert(self, message: str):

@@ -107,9 +107,11 @@ snaptics
 ## 3.3 Enhancements
 
 - [x] Credentials manager using dotenv
-- [ ] Image listing under cameras
 - [x] Stage padding
 - [x] Code product on scan stage 
-- [ ] Image preview
-- [ ] Image crop filter
 - [x] Save card dynamic server options 
+- [x] Letter code for different capture degrees
+- [ ] Save images via lftp logic
+- [ ] Image listing under cameras
+- [ ] Image preview in tab tab
+- [ ] Image crop filter
