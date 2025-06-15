@@ -3,6 +3,8 @@ import json
 import flet as ft
 from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.properties import Properties as Props
+from src.resources.utils.servers_controller import Servers
+from src.resources.utils.credentials_controller import Credentials
 
 class StageSave(ft.Container):
 
@@ -25,15 +27,16 @@ class StageSave(ft.Container):
             options=[ft.dropdown.Option(name) for name in self.__load_available_servers()],
             width=Props.DROPDOWN_WIDTH * 0.7,
             border_radius=Props.BORDER_RADIUS,
-            # on_change=self.__server_dropdown_changed
+            on_change=self.__server_dropdown_changed
         )
 
         self.path_dropdown = ft.Dropdown(
             label="Path",
-            options=[ft.dropdown.Option(name) for name in self.__load_available_paths()],
+            hint_text="Select a server",
+            options=[],
             width=Props.DROPDOWN_WIDTH * 0.7,
             border_radius=Props.BORDER_RADIUS,
-            # on_change=self.__path_dropdown_changed
+            on_change=self.__path_dropdown_changed
         )
 
         self.credentials_dropdown = ft.Dropdown(
@@ -41,7 +44,7 @@ class StageSave(ft.Container):
             options=[ft.dropdown.Option(name) for name in self.__load_available_credentials()],
             width=Props.DROPDOWN_WIDTH * 1.43,
             border_radius=Props.BORDER_RADIUS,
-            # on_change=self.__path_dropdown_changed
+            on_change=self.__credentials_dropdown_changed
         )
 
         self.delete_button = ft.IconButton(
@@ -77,24 +80,37 @@ class StageSave(ft.Container):
         """
         Returns the available servers.
         """
-        return ["127.0.0.1", "0.0.0.0"]
+        return Servers.get_available_servers()
     
     def __load_available_paths(self):
         """
         Returns the available paths.
         """
-        return ["/path/psd/all", "/path/jpg", "/path/seed/"]
+        self.path_dropdown.value = None
+        self.path_dropdown.options = [ft.dropdown.Option(path) for path in Servers.get_paths_in_server(Props.USE_SERVER)]
+        self.path_dropdown.update()
     
     def __load_available_credentials(self):
         """
         Returns the available credentials.
         """
-        return ["Server1_Credentials", "Server2_Credentials"]
+        return Credentials.get_available_users()
     
+    def __path_dropdown_changed(self, e):
+        """
+        Set the use path value in global properties.
+        """
+        Props.USE_PATH = self.path_dropdown.value
+
     def __server_dropdown_changed(self, e):
-        Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {
-            "server": self.server_dropdown.value
-        }
+        Props.USE_SERVER = self.server_dropdown.value
+        Props.USE_PATH = ""
+        self.__load_available_paths()
+
+    def __credentials_dropdown_changed(self, e):
+        Props.USE_USER = self.credentials_dropdown.value
+        Props.USE_PASSWORD = Credentials.get_user_password(Props.USE_USER)
+        
         
     def __delete_button_clicked(self, e):
         self.card_list.content.controls.remove(self)

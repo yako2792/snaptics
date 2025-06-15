@@ -5,8 +5,10 @@ from src.camera_controller import GPhoto2 as gp
 from src.resources.utils.servers_controller import Servers
 from src.resources.controls.custom.loading_dialog import LoadingDialog
 from src.resources.controls.custom.delete_server_dialog import DeleteServerDialog
+from src.resources.controls.custom.delete_credentials_dialog import DeleteCredentialsDialog
 from src.resources.controls.custom.server_dialog import ServerDialog
 from src.resources.controls.custom.credentials_dialog import CredentialsDialog
+from src.resources.utils.credentials_controller import Credentials
 from src.resources.controls.custom.update_server_dialog import UpdateServerDialog
 
 
@@ -120,11 +122,12 @@ class PropertiesTab(ft.Tab):
         Props.SERVERS_DROPDOWN = self.servers_dropdown
 
         self.credentials_dropdown = ft.Dropdown(
-            # options=self.__get_available_credentials,
+            options=[ft.dropdown.Option(name) for name in self.__load_available_credentials()],
             label = "CREDENTIALS",
             width = Props.DROPDOWN_WIDTH,
-            # on_change=self.__servers_dropdown_changed
+            on_change=self.__credentials_dropdown_changed
         )
+        Props.CREDENTIALS_DROPDOWN = self.credentials_dropdown
 
         self.add_server_button = ft.ElevatedButton(
             text="Add",
@@ -154,13 +157,6 @@ class PropertiesTab(ft.Tab):
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
             on_click=self.__add_credentials
-        )
-        self.update_credentials_button = ft.ElevatedButton(
-            text="Update",
-            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
-            height=Props.BUTTON_HEIGHT,
-            width=Props.BUTTON_WIDTH,
-            # on_click=self.__update_preset
         )
         self.delete_credentials_button = ft.OutlinedButton(
             text="Delete",
@@ -260,7 +256,6 @@ class PropertiesTab(ft.Tab):
                         [
                             self.credentials_dropdown,
                             self.add_credentials_button,
-                            self.update_credentials_button,
                             self.delete_credentials_button
                         ]
                     )
@@ -416,6 +411,13 @@ class PropertiesTab(ft.Tab):
         """
         Props.SELECTED_SERVER = self.servers_dropdown.value
 
+    def __credentials_dropdown_changed(self, e):
+        """
+        Callback for credentials dropdown option changed.
+        """
+        Props.SELECTED_USER = self.credentials_dropdown.value
+        Props.SELECTED_PASSWORD = Credentials.get_user_password(Props.SELECTED_USER)
+
     def __add_server(self, e):
         """
         Callback for add server action.
@@ -450,15 +452,22 @@ class PropertiesTab(ft.Tab):
         """
         Callback for add credentials action.
         """
-        allert = CredentialsDialog(page = Props.PAGE, title="Add Credentials")
+        allert = CredentialsDialog(page = Props.PAGE, title="Add Credentials", parent = self)
         allert.show()
+
+    def __load_available_credentials(self):
+        return Credentials.get_available_users()
+
+    def reload_credentials(self):
+        self.credentials_dropdown.options = [ft.dropdown.Option(name) for name in self.__load_available_credentials()]
+        self.credentials_dropdown.update()
 
 
     def __delete_credentials(self, e):
         """
         Callback for delete credentials action.
         """
-        allert = DeleteServerDialog(page = Props.PAGE, title="Wait!")
+        allert = DeleteCredentialsDialog(page = Props.PAGE, title="Wait!")
         allert.show()
 
     def show_alert(self, message: str):

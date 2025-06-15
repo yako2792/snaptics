@@ -28,7 +28,11 @@ class RoutinesTab(ft.Tab):
             title = f"Routine: {Props.CURRENT_ROUTINE['name']}"
         )
         self.text = title
-        self.motor = Motor(dir_pin=10, step_pin=8)
+        self.motor = Motor(
+            dir_pin=Props.DIR_PIN,
+            step_pin=Props.STEP_PIN
+        )
+
         self.icon = ft.Icon(ft.Icons.CONSTRUCTION, size=Props.TAB_ICON_SIZE, visible=Props.TAB_ICON_ENABLED)
 
         # region Tab: Controls

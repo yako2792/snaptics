@@ -45,7 +45,10 @@ class PresetControl(ft.Container):
         super().__init__()
         self.page = page
         self.presets = self.__load_presets()
-        self.motor = Motor(dir_pin=10, step_pin=8)
+        self.motor = Motor(
+            dir_pin=Props.DIR_PIN,
+            step_pin=Props.STEP_PIN
+        )
 
         # OPTIONS INSTANCES
         self.options = options

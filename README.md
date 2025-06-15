@@ -103,3 +103,11 @@ snaptics
         ├── data
         └── temp
 ```
+
+## 3.3 Enhancements
+
+- [x] Credentials manager using dotenv
+- [ ] Image listing under cameras
+- [ ] Image preview
+- [ ] Image crop filter
+- [x] Save card dynamic server options 

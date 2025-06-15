@@ -4,6 +4,7 @@ It centralizes settings, ensuring easy configuration and avoiding hardcoding val
 """
 
 import os
+from cryptography.fernet import Fernet
 from flet import Page, Container, Dropdown
 from src.camera_controller import GPhoto2 as gp
 
@@ -24,6 +25,7 @@ class Properties:
     
     ROUTINES_DIRECTORY: str = "src/resources/assets/routines/routines.json"
     SERVERS_DIRECTORY: str = "src/resources/assets/servers.json"
+    CREDENTIALS_DIRECTORY: str = "src/resources/assets/credentials/credentials.json"
     CAPTURES_DIRECTORY: str = "src/resources/assets/images/captures/"
     TEST_CAPTURES_DIRECTORY: str = "src/resources/assets/images/view_test/"
     FILTERED_IMAGES_DIRECTORY: str = "src/resources/assets/images/filtered_images/"
@@ -131,7 +133,21 @@ class Properties:
     FILTER_RESOLUTION_OUTPUT: str = "480p"
     RM_BG_THRESHOLD: int = 120
 
-    # SERVERS
+    # SERVERS AND CREDENTIALS
     SELECTED_SERVER: str = ""
     SERVERS_DROPDOWN: Dropdown = None
+    CREDENTIALS_DROPDOWN: Dropdown = None
     SELECTED_PATH: str = ""
+    SELECTED_USER: str = ""
+    SELECTED_PASSWORD: str = ""
+    
+    USE_SERVER: str = ""
+    USE_PATH: str = ""
+    USE_USER: str = ""
+    USE_PASSWORD: str = ""
+
+
+
+    # MOTOR
+    DIR_PIN: int = 10
+    STEP_PIN: int = 8

@@ -4,28 +4,22 @@ from src.resources.controls.custom.header_control import HeaderControl
 from src.resources.utils.credentials_controller import Credentials
 
 
-class CredentialsDialog:
-    def __init__(self, page: ft.Page, title: str, parent):
+class DeleteCredentialsDialog:
+    def __init__(self, page: ft.Page, title: str):
         self.page = page
-        self.parent_object = parent
         self.title = ft.Row(
             [
                 ft.Icon(
-                    name=ft.Icons.EDIT_DOCUMENT
+                    name=ft.Icons.ERROR_OUTLINE
                 ),
                 HeaderControl(title)
             ]
         )
 
-        self.save_button = ft.ElevatedButton(
-            text="Save",
-            disabled=False,
-            icon=ft.Icons.SAVE_SHARP,
-            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
-            height=Props.BUTTON_HEIGHT,
-            width=Props.BUTTON_WIDTH,
-            on_click=self.__save_button_clicked
+        self.legend = ft.Text(
+            value=f"Are you sure you want to delete credential '{Props.SELECTED_USER}' ?"
         )
+
         self.cancel_button = ft.OutlinedButton(
             text="Cancel",
             disabled=False,
@@ -35,9 +29,15 @@ class CredentialsDialog:
             width=Props.BUTTON_WIDTH,
             on_click=self.__close_button_clicked
         )
-        self.user_input = ft.TextField(label="User", hint_text="Input your username")
-        self.password_input = ft.TextField(label="Password", hint_text="Input your password", password=True, can_reveal_password=True)
-
+        self.delete_button = ft.ElevatedButton(
+            text="Delete",
+            disabled=False,
+            icon=ft.Icons.DELETE,
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__delete_button_clicked
+        )
 
         self.dialog = ft.AlertDialog(
             modal=True,
@@ -46,15 +46,10 @@ class CredentialsDialog:
                 content=ft.Column(
                     controls=[
                         self.title,
-                        ft.Column(
-                            [
-                                self.user_input,
-                                self.password_input
-                            ]
-                        ),
+                        self.legend,
                         ft.Row(
                             [
-                                self.save_button,
+                                self.delete_button,
                                 self.cancel_button
                             ],
                             alignment=ft.MainAxisAlignment.END
@@ -62,44 +57,47 @@ class CredentialsDialog:
                     ],
                     spacing=Props.TAB_PADDING,
                     alignment=ft.MainAxisAlignment.CENTER,
-                    height=Props.LOADING_DIALOG_HEIGHT+Props.BUTTON_HEIGHT*4,
-                    width=Props.STAGE_CARD_WIDTH
-                )
+                ),
+                height=Props.LOADING_DIALOG_HEIGHT+Props.BUTTON_HEIGHT,
+                width=Props.STAGE_CARD_WIDTH
             )
         )
 
+    def __delete_button_clicked(self, e):
+        Credentials.remove_user(user_name=Props.SELECTED_USER)
+        self.show_alert(f"Credential deleted: {Props.SELECTED_USER}")
+        Props.SELECTED_USER = ""
+        self.hide()
+        self.update_credentials_options()
+    
     def __close_button_clicked(self, e):
         self.hide()
-    
-    def __save_button_clicked(self, e):
-        user_name = self.user_input.value
-        password = self.password_input.value
-
-        if user_name == None or user_name == "":
-            self.show_alert("Username should not be empty.")
-
-        if password == None or password == "":
-            self.show_alert("Password should not be empty.")
-
-        Credentials.add_user_and_password(
-            user_name=user_name,
-            password=Credentials.encrypt_password(password)
-        )
-
-        self.hide()
-        self.parent_object.reload_credentials()
-        self.show_alert("Added credentials for user: " + user_name)
-
 
     def show(self):
-        if self.dialog not in self.page.overlay:
-            self.page.overlay.append(self.dialog)
+        self.page.overlay.append(self.dialog)
         self.dialog.open = True
         self.page.update()
 
     def hide(self):
         self.dialog.open = False
         self.page.update()
+
+    def update_credentials_options(self):
+
+        credentials_list = Credentials.get_available_users()
+        controls = []
+
+        for credential in credentials_list:
+            controls.append(
+                ft.DropdownOption(text=credential)
+            )
+
+        Props.CREDENTIALS_DROPDOWN.options = controls
+        Props.CREDENTIALS_DROPDOWN.update()
+
+    def update_legend(self, new_legend: str):
+        self.legend.value = new_legend
+        self.legend.update()
 
     def show_alert(self, message: str):
         """
