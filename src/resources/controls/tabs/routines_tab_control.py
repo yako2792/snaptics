@@ -651,6 +651,7 @@ class RoutinesTab(ft.Tab):
 
         # GET IMAGES TO TRANSFER
         images_to_transfer = []
+        print(f"Images to transfer before: {images_to_transfer}")
 
         if Props.APPEND_FILTER:
             for f in os.listdir(Props.FILTERED_IMAGES_DIRECTORY):
@@ -672,13 +673,25 @@ class RoutinesTab(ft.Tab):
                     image_path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
                     images_to_transfer.append(image_path)
 
+        print(f"Images to transfer after: {images_to_transfer}")
+
         # TRANSFER IMAGES
         total_images = len(images_to_transfer)
+        print(f"Total images: {total_images}")
         for image_file_path in images_to_transfer:
             file_name = os.path.basename(image_file_path)
-            
             total_images-=1
+
+            if file_name == ".gitkeep":
+                continue
+
+            print(f"Sending image: {file_name}")
             self.progress_bar.update_legend(new_legend=f"Save: Uploading image {file_name}, remaining {total_images}.")
+
+            if not Props.USE_PATH.endswith('/'):
+                Props.USE_PATH += '/'
+                
+            print(f"Remote file path: {Props.USE_PATH + file_name}")
 
             Save.post_file_in_remote(
                 local_file_path=image_file_path,
