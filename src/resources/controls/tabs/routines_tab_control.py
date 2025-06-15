@@ -645,21 +645,21 @@ class RoutinesTab(ft.Tab):
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[0]],
                 download_path = Props.CAMERA1_DOWNLOAD_PATH,
-                file_name = "A000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+                file_name = Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
 
         if Props.CURRENT_USE_CAMERA2:
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[1]],
                 download_path = Props.CAMERA2_DOWNLOAD_PATH,
-                file_name = "B000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+                file_name = Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
 
         if Props.CURRENT_USE_CAMERA3:
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[2]],
                 download_path = Props.CAMERA3_DOWNLOAD_PATH,
-                file_name = "C000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+                file_name = Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
 
     def show_alert(self, message: str):

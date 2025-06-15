@@ -200,9 +200,10 @@ class OptionsControl(ft.Container):
         formats_list: list[ft.DropdownOption] = []
 
         for format in Props.FORMATS_DICT.keys():
-            formats_list.append(
-                ft.DropdownOption(text=str(format))
-            )
+            if "raw" not in format.lower():
+                formats_list.append(
+                    ft.DropdownOption(text=str(format))
+                )
 
         return formats_list
     

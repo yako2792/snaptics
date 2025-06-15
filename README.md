@@ -109,6 +109,7 @@ snaptics
 - [x] Credentials manager using dotenv
 - [ ] Image listing under cameras
 - [x] Stage padding
+- [x] Code product on scan stage 
 - [ ] Image preview
 - [ ] Image crop filter
 - [x] Save card dynamic server options 

@@ -28,6 +28,14 @@ class StageScan(ft.Container):
             on_change=self.__preset_dropdown_changed
         )
 
+        self.product_code_input = ft.TextField(
+            label="Id",
+            hint_text="Product Id. e.g., 023498",
+            width=Props.DROPDOWN_WIDTH,
+            border_radius=Props.BORDER_RADIUS,
+            on_change=self.__product_id_changed
+        )
+
         self.delete_button = ft.IconButton(
             icon = ft.Icons.DELETE,
             icon_size = Props.TAB_ICON_SIZE,
@@ -45,7 +53,8 @@ class StageScan(ft.Container):
                         self.delete_button
                     ]
                 ),
-                self.preset_dropdown
+                self.preset_dropdown,
+                self.product_code_input
             ]
         )
         # endregion
@@ -67,6 +76,9 @@ class StageScan(ft.Container):
         Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {
             "preset_name": self.preset_dropdown.value
         }
+
+    def __product_id_changed(self, e):
+        Props.PRODUCT_ID = self.product_code_input.value
         
     def __delete_button_clicked(self, e):
         self.card_list.content.controls.remove(self)

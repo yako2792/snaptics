@@ -128,6 +128,7 @@ class Properties:
         "stages": []
     }
     APPEND_FILTER: bool = False
+    PRODUCT_ID: str = ""
 
     # FILTERS
     FILTER_RESOLUTION_OUTPUT: str = "480p"
