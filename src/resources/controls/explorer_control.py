@@ -8,11 +8,14 @@ def get_cameras():
 
     # Create container
     cameras = ft.Column()
+    camera_num = 0
+    cameras_to_list: list = []
 
     for camera in Props.CAMERAS_DICT.keys():
-
         if camera == None:
             continue
+
+        camera_num += 1
 
         this_camera = ft.ExpansionTile(
             title=ft.Row(
@@ -21,27 +24,27 @@ def get_cameras():
                     ft.Text(value=camera)
                 ]
             ),
+            controls=[],
             initially_expanded=False,
             controls_padding=Props.TAB_PADDING,
         )
 
-        # Extraer fotos de cada cámara
-        # for photo in camera['photos']:
-        #     filename = photo['filename']
-        #     file_path = photo['file_path']
-        #     capture_date = photo['capture_date']
-        #
-        #     this_camera.controls.append(
-        #         ft.ListTile(
-        #             title=ft.Row(
-        #                 [
-        #                     ft.Icon(ft.Icons.IMAGE_OUTLINED, size=Props.TAB_ICON_SIZE,
-        #                             visible=Props.TAB_ICON_ENABLED),
-        #                     ft.Text(value=filename)
-        #                 ]
-        #             )
-        #         )
-        #     )
+        match camera_num:
+            case 1:
+                cameras_to_list = Props.IMAGES_LIST_CAMERA1
+
+            case 2:
+                cameras_to_list = Props.IMAGES_LIST_CAMERA2
+
+            case 3:
+                cameras_to_list = Props.IMAGES_LIST_CAMERA3
+
+        for photo in cameras_to_list:
+            this_camera.controls.append(
+                ft.ListTile(
+                    title=photo.content
+                )
+            )
 
         cameras.controls.append(this_camera)
 
@@ -83,6 +86,8 @@ class ExplorerControl(ft.Container):
             padding=Props.TAB_PADDING
         )
 
+        Props.EXPLORER_CAMERAS = self
+
     def modify_width(self, new_width: float):
         """
         Modify Explorer frame width.
@@ -92,3 +97,9 @@ class ExplorerControl(ft.Container):
         self.width = self.page.width * new_width
         Props.EXPLORER_SIZE = new_width
         self.update()
+
+    def update_cameras(self):
+        cameras = get_cameras()
+        self.cameras_list.controls.clear()
+        self.cameras_list.controls.extend(cameras.controls)
+        self.cameras_list.update()

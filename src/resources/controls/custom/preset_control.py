@@ -8,6 +8,7 @@ from src.resources.controls.custom.progress_bar import ProgressBar
 from src.motor_controller import StepperMotorController as Motor
 from src.camera_controller import GPhoto2 as gphoto2
 from src.resources.controls.custom.progress_bar import ProgressBar
+from src.resources.controls.custom.image_text_button import ImageTextButton
 
 
 def is_scanning():
@@ -475,6 +476,8 @@ class PresetControl(ft.Container):
         progress_bar.update_value(new_value=(1))
         progress_bar.update_legend(new_legend=f"Finish.")
 
+        self.show_images_under_cameras()
+
     def clean_directory(self):
         if Props.CURRENT_USE_CAMERA1:
             for f in os.listdir(Props.CAMERA1_DOWNLOAD_PATH):
@@ -513,3 +516,26 @@ class PresetControl(ft.Container):
                 download_path = Props.CAMERA3_DOWNLOAD_PATH,
                 file_name = "C000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
+
+    
+    def show_images_under_cameras(self):
+        """
+        Show original images under cameras.
+        """
+
+        if Props.CURRENT_USE_CAMERA1:
+            for f in os.listdir(Props.CAMERA1_DOWNLOAD_PATH):
+                image_path = os.path.join(Props.CAMERA1_DOWNLOAD_PATH, f)
+                Props.IMAGES_LIST_CAMERA1.append(ImageTextButton(image_path))    
+
+        if Props.CURRENT_USE_CAMERA2:
+            for f in os.listdir(Props.CAMERA2_DOWNLOAD_PATH):
+                image_path = os.path.join(Props.CAMERA2_DOWNLOAD_PATH, f)
+                Props.IMAGES_LIST_CAMERA2.append(ImageTextButton(image_path))  
+            
+        if Props.CURRENT_USE_CAMERA3:
+            for f in os.listdir(Props.CAMERA3_DOWNLOAD_PATH):
+                image_path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
+                Props.IMAGES_LIST_CAMERA3.append(ImageTextButton(image_path))  
+
+        Props.EXPLORER_CAMERAS.update_cameras()

@@ -51,6 +51,11 @@ class Properties:
     TAB_ICON_ENABLED: bool = True
     TAB_PADDING: int = 15
 
+    EXPLORER_CAMERAS: Container = None
+    IMAGES_LIST_CAMERA1: list = []
+    IMAGES_LIST_CAMERA2: list = []
+    IMAGES_LIST_CAMERA3: list = []
+
     # CONTROLS STYLE
     IMAGE_VIEW_WIDTH: int = 640
     IMAGE_VIEW_HEIGHT: int = 360
@@ -106,7 +111,7 @@ class Properties:
 
     # CAMERAS TEST CLASS
     RAW_EXTENSION: str = ".ARW"
-    JPEG_EXTENSION: str = ".jpg"
+    JPEG_EXTENSION: str = ".png"
     CURRENT_FILE_EXTENSION: str = ".png"
     ISO_CAMERA_CONFIG: str = "iso"
     SHUTTERSPEED_CAMERA_CONFIG: str = "shutterspeed"
