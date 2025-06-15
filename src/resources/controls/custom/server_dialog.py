@@ -36,7 +36,7 @@ class ServerDialog:
         )
 
         self.display_name_input = ft.TextField(label="Display Name", hint_text="Alias for this server")
-        self.host_name_input = ft.TextField(label="Server", hint_text="http://<host>:<port>")
+        self.host_name_input = ft.TextField(label="Server", hint_text="<host>:<port>")
 
         self.dialog = ft.AlertDialog(
             modal=True,

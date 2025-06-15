@@ -103,7 +103,13 @@ class StageSave(ft.Container):
         Props.USE_PATH = self.path_dropdown.value
 
     def __server_dropdown_changed(self, e):
-        Props.USE_SERVER = self.server_dropdown.value
+
+        address = self.server_dropdown.value.split(':')
+
+        
+
+        Props.USE_SERVER = address[0]
+        Props.USE_PORT = address[1]
         Props.USE_PATH = ""
         self.__load_available_paths()
 

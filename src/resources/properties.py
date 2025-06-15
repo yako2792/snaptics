@@ -144,6 +144,7 @@ class Properties:
     SELECTED_PASSWORD: str = ""
     
     USE_SERVER: str = ""
+    USE_PORT: str = ""
     USE_PATH: str = ""
     USE_USER: str = ""
     USE_PASSWORD: str = ""

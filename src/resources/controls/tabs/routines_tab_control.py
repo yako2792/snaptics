@@ -14,6 +14,7 @@ from src.resources.controls.filters.filters import Filter
 from src.resources.controls.custom.progress_bar import ProgressBar
 from src.camera_controller import GPhoto2 as gp
 from src.resources.controls.custom.loading_dialog import LoadingDialog
+from src.resources.utils.save_controller import Save
 
 class RoutinesTab(ft.Tab):
     """
@@ -645,7 +646,46 @@ class RoutinesTab(ft.Tab):
                     pass
 
     def __start_save(self, stage):
-        pass
+
+        self.progress_bar.update_legend(new_legend=f"Save: Preparing to save files to remote {Props.USE_SERVER} server.")
+
+        # GET IMAGES TO TRANSFER
+        images_to_transfer = []
+
+        if Props.APPEND_FILTER:
+            for f in os.listdir(Props.FILTERED_IMAGES_DIRECTORY):
+                image_path = os.path.join(Props.FILTERED_IMAGES_DIRECTORY, f)
+                images_to_transfer.append(image_path)
+        else: 
+            if Props.CURRENT_USE_CAMERA1:
+                for f in os.listdir(Props.CAMERA1_DOWNLOAD_PATH):
+                    image_path = os.path.join(Props.CAMERA1_DOWNLOAD_PATH, f)
+                    images_to_transfer.append(image_path)
+
+            if Props.CURRENT_USE_CAMERA2:
+                for f in os.listdir(Props.CAMERA2_DOWNLOAD_PATH):
+                    image_path = os.path.join(Props.CAMERA2_DOWNLOAD_PATH, f)
+                    images_to_transfer.append(image_path)
+            
+            if Props.CURRENT_USE_CAMERA3:
+                for f in os.listdir(Props.CAMERA3_DOWNLOAD_PATH):
+                    image_path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
+                    images_to_transfer.append(image_path)
+
+        # TRANSFER IMAGES
+        total_images = len(images_to_transfer)
+        for image_file_path in images_to_transfer:
+            file_name = os.path.basename(image_file_path)
+            
+            total_images-=1
+            self.progress_bar.update_legend(new_legend=f"Save: Uploading image {file_name}, remaining {total_images}.")
+
+            Save.post_file_in_remote(
+                local_file_path=image_file_path,
+                remote_file_path=Props.USE_PATH + file_name
+            )
+
+        self.progress_bar.update_legend(new_legend=f"Save: Image saving process complete.")
     
     def __load_presets(self):
         """
