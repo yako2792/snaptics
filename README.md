@@ -112,6 +112,6 @@ snaptics
 - [x] Save card dynamic server options 
 - [x] Letter code for different capture degrees
 - [x] Save images via lftp logic
-- [ ] Image listing under cameras
-- [ ] Image preview in tab tab
+- [x] Image listing under cameras
+- [x] Image preview in tab tab
 - [ ] Image crop filter

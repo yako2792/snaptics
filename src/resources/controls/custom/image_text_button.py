@@ -15,5 +15,10 @@ class ImageTextButton(ft.Container):
                     ft.Text(value=self.name, color="white")
                 ]
             ),
-            # on_click=self.__open_preview_tab()
+            on_click=self.__open_preview_tab
         )
+    
+    def __open_preview_tab(self, e):
+        print(f"Opening image: {self.file_path}")
+        Props.WORKSPACE_TAB.go_to_index_tab(0)
+        Props.WORKSPACE_TAB.update_image_in_tab(self.file_path)

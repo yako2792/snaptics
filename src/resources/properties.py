@@ -46,6 +46,7 @@ class Properties:
     ROUTINES_KEY: str = "Routines"
     EXPLORER_KEY: str = "Explorer"
     PROPERTIES_TAB_TITLE: str = "Properties"
+    WORKSPACE_TAB: Container = None
 
     TAB_ICON_SIZE: int = 18
     TAB_ICON_ENABLED: bool = True

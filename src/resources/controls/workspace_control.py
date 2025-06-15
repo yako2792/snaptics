@@ -30,10 +30,11 @@ class   WorkspaceControl(ft.Container):
         self.alignment = ft.alignment.top_left
         self.expand = 1
         self.padding = Props.FRAME_PADDING
+        Props.WORKSPACE_TAB = self
 
         # Used tabs
         self.explorer_control = explorer_control
-        self.preview_tab = PreviewTab(Props.PREVIEW_TAB_TITLE)
+        self.preview_tab = PreviewTab(Props.PREVIEW_TAB_TITLE, self.page)
         self.scan_tab = ScanTab(self.page, Props.SCAN_TAB_TITLE)
         self.routines_tab = RoutinesTab(self.page, Props.ROUTINES_TAB_TITLE)
 
@@ -48,18 +49,28 @@ class   WorkspaceControl(ft.Container):
             }
         )
 
+        self.tabs = ft.Tabs(
+            selected_index=1,
+            animation_duration = Props.ANIMATIONS_DURATION,
+            tabs=[
+                self.preview_tab,
+                self.scan_tab,
+                self.routines_tab,
+                self.properties_tab
+            ],
+            expand=True
+        )
+
         self.content = ft.Column(
             [
-                ft.Tabs(
-                    selected_index=1,
-                    animation_duration = Props.ANIMATIONS_DURATION,
-                    tabs=[
-                        self.preview_tab,
-                        self.scan_tab,
-                        self.routines_tab,
-                        self.properties_tab
-                    ],
-                    expand=True
-                )
+                self.tabs
             ]
         )
+
+    def go_to_index_tab(self, index: int):
+        self.tabs.selected_index = index
+        self.tabs.update()
+    
+    def update_image_in_tab(self, file_path: str):
+        self.preview_tab.update_image_preview(file_path)
+        
