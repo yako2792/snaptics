@@ -15,7 +15,7 @@ class StageSave(ft.Container):
         self.stage_number = stage_number
         self.stage_name: str = "Stage " + str(self.stage_number) + self.type
         self.margin = Props.MARGIN_ALL
-        self.padding = Props.TAB_PADDING
+        self.padding = ft.padding.only(left=Props.TAB_PADDING+100, top=Props.TAB_PADDING, right=Props.TAB_PADDING, bottom=Props.TAB_PADDING)
         self.width = Props.STAGE_CARD_WIDTH
         self.expand = True
 

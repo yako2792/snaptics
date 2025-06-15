@@ -146,8 +146,6 @@ class Properties:
     USE_USER: str = ""
     USE_PASSWORD: str = ""
 
-
-
     # MOTOR
     DIR_PIN: int = 10
     STEP_PIN: int = 8
