@@ -13,7 +13,7 @@ class Save:
         if not Props.USE_PATH.endswith('/'):
             Props.USE_PATH += '/'
 
-        transport = paramiko.Transport((Props.USE_SERVER, int(Props.USE_PORT)))
+        transport = paramiko.Transport((Props.USE_IP, int(Props.USE_PORT)))
         transport.connect(
             username=Props.USE_USER, 
             password=Credentials.decrypt_password(
