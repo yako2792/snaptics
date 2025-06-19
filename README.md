@@ -114,4 +114,6 @@ snaptics
 - [x] Save images via lftp logic
 - [x] Image listing under cameras
 - [x] Image preview in tab tab
+- [x] After a Save stage take og images*
+- [x] Directory with product id before saving images
 - [ ] Image crop filter

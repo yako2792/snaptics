@@ -455,6 +455,8 @@ class RoutinesTab(ft.Tab):
                 case "Save":
                     Props.IS_SAVING = True
 
+                    Props.APPEND_FILTER = False
+                    self.clean_directory_filtered()
                     self.progress_bar.update_legend("Save: loading...")
                     self.__start_save(stage=stage)
                     self.progress_bar.update_legend("Save: finish...")
@@ -515,12 +517,16 @@ class RoutinesTab(ft.Tab):
                     
                     # Prefix
                     match i:
-                        case 17:
-                            Props.LETTER_PREFIX = "C"
-                        case 71:
+                        case 8:
                             Props.LETTER_PREFIX = "A"
-                        case 35:
+                        case 17:
                             Props.LETTER_PREFIX = "B"
+                        case 71:
+                            Props.LETTER_PREFIX = "C"
+                        case 35:
+                            Props.LETTER_PREFIX = "D"
+                        case 53:
+                            Props.LETTER_PREFIX = "E"
                         case _:
                             Props.LETTER_PREFIX = ""
 
@@ -535,12 +541,16 @@ class RoutinesTab(ft.Tab):
 
                     # Prefix
                     match i:
-                        case 1:
-                            Props.LETTER_PREFIX = "C"
-                        case 7:
+                        case 0:
                             Props.LETTER_PREFIX = "A"
-                        case 3:
+                        case 1:
                             Props.LETTER_PREFIX = "B"
+                        case 7:
+                            Props.LETTER_PREFIX = "C"
+                        case 3:
+                            Props.LETTER_PREFIX = "D"
+                        case 5:
+                            Props.LETTER_PREFIX = "E"
                         case _:
                             Props.LETTER_PREFIX = ""
 
@@ -555,11 +565,13 @@ class RoutinesTab(ft.Tab):
                     # Prefix
                     match i:
                         case 0:
-                            Props.LETTER_PREFIX = "C"
-                        case 3:
-                            Props.LETTER_PREFIX = "A"
-                        case 1:
                             Props.LETTER_PREFIX = "B"
+                        case 3:
+                            Props.LETTER_PREFIX = "C"
+                        case 1:
+                            Props.LETTER_PREFIX = "D"
+                        case 2:
+                            Props.LETTER_PREFIX = "E"
                         case _:
                             Props.LETTER_PREFIX = ""
                     
@@ -729,29 +741,35 @@ class RoutinesTab(ft.Tab):
             for f in os.listdir(Props.CAMERA3_DOWNLOAD_PATH):
                     path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
                     os.remove(path)
+    
+    def clean_directory_filtered(self):
+        for f in os.listdir(Props.FILTERED_IMAGES_DIRECTORY):
+            path = os.path.join(Props.FILTERED_IMAGES_DIRECTORY, f)
+            os.remove(path) 
 
     def trigger_capture(self, iteration_number: int) -> None:
         if Props.CURRENT_USE_CAMERA1:
+            local_prefix = "" if Props.LETTER_PREFIX in ("A","F") else Props.LETTER_PREFIX
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[0]],
-                download_path = Props.CAMERA1_DOWNLOAD_PATH,
-                file_name = Props.LETTER_PREFIX + Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+                download_path = Props.CAMERA1_DOWNLOAD_PATH + "/" + Props.PRODUCT_ID + "/",
+                file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
 
         if Props.CURRENT_USE_CAMERA2:
+            local_prefix = "A" if Props.LETTER_PREFIX == "A" else ""
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[1]],
-                download_path = Props.CAMERA2_DOWNLOAD_PATH,
-                file_name = Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+                download_path = Props.CAMERA2_DOWNLOAD_PATH  + "/" + Props.PRODUCT_ID + "/",
+                file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
 
         if Props.CURRENT_USE_CAMERA3:
-            local_prefix = "D" if Props.LETTER_PREFIX == "A" else ""
-            
+            local_prefix = "F" if Props.LETTER_PREFIX == "C" else ""
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[2]],
-                download_path = Props.CAMERA3_DOWNLOAD_PATH,
-                file_name = local_prefix + Props.PRODUCT_ID + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
+                download_path = Props.CAMERA3_DOWNLOAD_PATH  + "/" + Props.PRODUCT_ID + "/",
+                file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
 
     def show_alert(self, message: str):
