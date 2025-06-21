@@ -3,9 +3,9 @@
 .env
 
 __pycache__/
-camera_1/*
-camera_2/*
-camera_3/*
+camera_1/*.png
+camera_2/*.png
+camera_3/*.png
 filtered_images/*
 view_test/*
 *.pyc
