@@ -237,12 +237,20 @@ class RoutinesTab(ft.Tab):
         self.stages_list_container.content.controls = []
         routine_name = self.routine_loader_dropdown.value
         
-
-        try:
-            stages = Routines.get_stages_in_routine(routine_name=routine_name)
-        except:
-            self.show_alert("Issue loading routine, or routine does not exists: " + routine_name)
+        if routine_name in ("", None, " "):
+            self.show_alert("Please select a routine to apply.")
             return
+        if routine_name not in Routines.get_available_routines():
+            self.show_alert("Routine does not exists: " + routine_name)
+            return
+        # Load routine
+
+        stages = Routines.get_stages_in_routine(routine_name=routine_name)
+
+        if stages == []:
+            self.show_alert("Routine does not have any stages: " + routine_name)
+            return
+        # Reset current routine
         
         Props.STAGES_NUMBER = 0
         Props.CURRENT_ROUTINE["stages"] = []
@@ -272,17 +280,21 @@ class RoutinesTab(ft.Tab):
                     
                     # Modify current values and apply
                     loading_dialog.update_legend(f"Loading presets")
-                    current_stage_card.preset_dropdown.value = stage_config["preset_name"]
+                    current_stage_card.preset_dropdown.value = stage_config.get("preset_name")
                     presets  = self.__load_presets()
 
                     # Add capture values 
                     loading_dialog.update_legend(f"Applying preset values to cameras")
-                    Props.CURRENT_FREQUENCY = presets[stage_config["preset_name"]]["frequency"]
-                    Props.CURRENT_FORMAT = presets[stage_config["preset_name"]]["format"]
-                    Props.CURRENT_RESOLUTION = presets[stage_config["preset_name"]]["resolution"]
-                    Props.CURRENT_USE_CAMERA1 = presets[stage_config["preset_name"]]["use_camera1"]
-                    Props.CURRENT_USE_CAMERA2 = presets[stage_config["preset_name"]]["use_camera2"]
-                    Props.CURRENT_USE_CAMERA3 = presets[stage_config["preset_name"]]["use_camera3"]
+                    preset = presets.get(stage_config.get("preset_name"))
+                    if preset is None:
+                        self.show_alert(f"Preset '{stage_config.get('preset_name')}' not found. Please check your routine configuration.")
+                    else:
+                        Props.CURRENT_FREQUENCY = preset["frequency"]
+                        Props.CURRENT_FORMAT = preset["format"]
+                        Props.CURRENT_RESOLUTION = preset["resolution"]
+                        Props.CURRENT_USE_CAMERA1 = preset["use_camera1"]
+                        Props.CURRENT_USE_CAMERA2 = preset["use_camera2"]
+                        Props.CURRENT_USE_CAMERA3 = preset["use_camera3"]
 
                     for camera in Props.CAMERAS_LIST:
                         if camera == None:
@@ -321,7 +333,7 @@ class RoutinesTab(ft.Tab):
                     )
 
                     # Modify current values and apply
-                    current_stage_card.filter_dropdown.value = stage_config["filter_name"]
+                    current_stage_card.filter_dropdown.value = stage_config.get('filter_name')
                     # print(f"Assigned {stage_config['filter_name']} to Scan card")
 
                     Props.CURRENT_ROUTINE["stages"].append(
@@ -337,7 +349,9 @@ class RoutinesTab(ft.Tab):
                         card_list = self.stages_list_container
                     )
 
-                    current_stage_card.save_dropdown.value = stage_config["save_path"]
+                    current_stage_card.server_dropdown.value = stage_config.get("server_name")
+                    current_stage_card.path_dropdown.value = stage_config.get("path")
+                    current_stage_card.credentials_dropdown.value = stage_config.get("credentials", {}).get("user", "")
                     # print(f"Assigned {stage_config['save_path']} to Scan card")
 
                     Props.CURRENT_ROUTINE["stages"].append(
@@ -348,8 +362,10 @@ class RoutinesTab(ft.Tab):
                     )  
 
                 case _:
+                    # Unrecognized stage type
+                    loading_dialog.update_legend(f"Unrecognized stage type: {stage_type}")
                     self.show_alert("Unrecognized stage type: " + stage_type)
-                    return
+                    continue
             
             loading_dialog.update_legend(f"Finish!")
             loading_dialog.hide()
@@ -369,6 +385,17 @@ class RoutinesTab(ft.Tab):
         routine_name = Props.CURRENT_ROUTINE["name"]
         stages = Props.CURRENT_ROUTINE["stages"]
 
+        # Validations
+        if stages == []:
+            self.show_alert("Please add at least one stage to the routine.")
+            return
+        if routine_name in ("", None, " "):
+            self.show_alert("Please enter a routine name to add.")
+            return
+        if routine_name in Routines.get_available_routines():
+            self.show_alert("Routine already exists: " + routine_name)
+            return
+
         Routines.add_routine(routine_name=routine_name, stages=stages)
 
         self.routine_loader_dropdown.options = self.__get_available_routines()
@@ -380,19 +407,35 @@ class RoutinesTab(ft.Tab):
         routine_name = Props.CURRENT_ROUTINE["name"]
         stages = Props.CURRENT_ROUTINE["stages"]
 
+        if routine_name in ("", None, " "):
+            self.show_alert("Please enter a routine name to update.")
+            return
+        if routine_name not in Routines.get_available_routines():
+            self.show_alert("Routine does not exists: " + routine_name)
+            return
+        # Update routine
+
         Routines.update_routine(routine_name=routine_name, stages=stages)
         self.show_alert("Updated routine: " + routine_name)
     
     def __delete_routine_button_clicked(self, e):
         
         routine_name = self.routine_name_input.value
-
+        if routine_name in ("", None, " "):
+            self.show_alert("Please enter a routine name to delete.")
+            return
+        
+        if routine_name not in Routines.get_available_routines():
+            self.show_alert("Routine does not exists: " + routine_name)
+            return
+        
+        # Delete routine
         try:
             Routines.remove_routine(routine_name=routine_name)
             self.routine_loader_dropdown.options = self.__get_available_routines()
             self.routine_loader_dropdown.update()
         except:
-            self.show_alert("Issue deleting routine: " + routine_name)
+            self.show_alert("Issue deleting routine or routine already deleted: " + routine_name)
 
         self.show_alert("Deleted routine: " + routine_name)
 

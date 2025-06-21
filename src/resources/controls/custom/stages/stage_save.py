@@ -101,11 +101,20 @@ class StageSave(ft.Container):
         Set the use path value in global properties.
         """
         Props.USE_PATH = self.path_dropdown.value
+        Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"]["path"] = Props.USE_PATH
 
     def __server_dropdown_changed(self, e):
-        
+
+        # Clear the path dropdown
+        self.path_dropdown.value = None
+        self.path_dropdown.options = []
+        self.path_dropdown.update()
+
+        # Update the global properties
         Props.USE_SERVER = self.server_dropdown.value
         Props.USE_PATH = ""
+
+        # Load the paths available in the selected server
         self.__load_available_paths()
 
         address = Servers.get_server_ip(display_name=Props.USE_SERVER)
@@ -113,9 +122,23 @@ class StageSave(ft.Container):
         Props.USE_IP = address_split[0]
         Props.USE_PORT = address_split[1]
 
+        # Update the current routine configuration
+        Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {
+            "server_name": Props.USE_SERVER,
+            "server_ip": Props.USE_IP,
+            "server_port": Props.USE_PORT,
+            "path": Props.USE_PATH
+        }
+
+        
+
     def __credentials_dropdown_changed(self, e):
         Props.USE_USER = self.credentials_dropdown.value
         Props.USE_PASSWORD = Credentials.get_user_password(Props.USE_USER)
+        Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"]["credentials"] = {
+            "user": Props.USE_USER,
+            "password": Props.USE_PASSWORD
+        }
         
         
     def __delete_button_clicked(self, e):
