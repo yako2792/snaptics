@@ -100,3 +100,63 @@ class Filter:
         corrected_img = cv2.merge((b_shifted, g, r_shifted))
         cv2.imwrite(output_path, corrected_img)
         print(f"Chromatic aberration corrected and saved at: {output_path}")
+
+    @staticmethod
+    def crop_center_object(image_path, width, height, output_path='cropped_image.png', margin=10):
+        """
+        Crops and centers the main object in an image to a fixed size (width x height) with a white background.
+        Ensures at least 'margin' pixels between the object and image borders.
+        """
+        try:
+            input_img = Image.open(image_path).convert("RGBA")
+        except Exception as e:
+            raise ValueError(f"Could not open image: {e}")
+
+        # Remove background using rembg
+        img_no_bg = remove(input_img)
+        img_np = np.array(img_no_bg)
+
+        # Find non-transparent area (bounding box of the object)
+        alpha = img_np[:, :, 3]
+        non_empty_columns = np.where(alpha.max(axis=0) > 0)[0]
+        non_empty_rows = np.where(alpha.max(axis=1) > 0)[0]
+
+        if len(non_empty_columns) == 0 or len(non_empty_rows) == 0:
+            raise ValueError("No object detected in the image (fully transparent).")
+
+        left, right = non_empty_columns[0], non_empty_columns[-1]
+        top, bottom = non_empty_rows[0], non_empty_rows[-1]
+
+        object_box = img_np[top:bottom+1, left:right+1]
+        object_img = Image.fromarray(object_box)
+
+        # Original object size
+        obj_width, obj_height = object_img.size
+
+        # Calculate available area (excluding margins)
+        target_width = width - 2 * margin
+        target_height = height - 2 * margin
+
+        # Compute scaling factor while preserving aspect ratio
+        scale = min(target_width / obj_width, target_height / obj_height)
+        new_width = int(obj_width * scale)
+        new_height = int(obj_height * scale)
+
+        # Resize the object
+        resized_object = object_img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+        # Create white background (RGB)
+        background = Image.new("RGB", (width, height), (255, 255, 255))
+
+        # Prepare RGB version of the object (composited onto white)
+        object_rgb = Image.new("RGB", resized_object.size, (255, 255, 255))
+        object_rgb.paste(resized_object, mask=resized_object.split()[3])  # Use alpha channel as mask
+
+        # Center the object on the canvas
+        paste_x = (width - new_width) // 2
+        paste_y = (height - new_height) // 2
+        background.paste(object_rgb, (paste_x, paste_y))
+
+        # Save final image
+        background.save(output_path)
+        print(f"Centered and cropped product image saved to: {output_path}")

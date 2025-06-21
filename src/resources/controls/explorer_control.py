@@ -81,7 +81,8 @@ class ExplorerControl(ft.Container):
                 [
                     HeaderControl("Cameras"),
                     self.cameras_list
-                ]
+                ],
+                scroll=ft.ScrollMode.AUTO
             ),
             padding=Props.TAB_PADDING
         )

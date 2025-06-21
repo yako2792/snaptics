@@ -33,7 +33,7 @@ class StageSave(ft.Container):
         self.path_dropdown = ft.Dropdown(
             label="Path",
             hint_text="Select a server",
-            options=[],
+            options=self.__get_path_options(),
             width=Props.DROPDOWN_WIDTH * 0.7,
             border_radius=Props.BORDER_RADIUS,
             on_change=self.__path_dropdown_changed
@@ -76,6 +76,16 @@ class StageSave(ft.Container):
         # endregion
 
     # region Stage card: Controllers
+    
+    def __get_path_options(self):
+        """
+        Returns the options for the path dropdown.
+        If no server is selected, it returns an empty list.
+        """
+        if self.server_dropdown.value not in (None, ""):
+            return [ft.dropdown.Option(path) for path in Servers.get_paths_in_server(Props.USE_SERVER)]
+        return []
+
     def __load_available_servers(self):
         """
         Returns the available servers.

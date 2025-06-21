@@ -510,7 +510,7 @@ class RoutinesTab(ft.Tab):
 
                     current_stage_num += 1
 
-                    Props.IS_SAVING = True
+                    Props.IS_SAVING = False
 
                 case _:
                     pass
@@ -697,6 +697,19 @@ class RoutinesTab(ft.Tab):
                         output_path=file_path
                     )
                 
+                case "Crop Center":
+
+                    (width, height) = Props.CROP_RESLUTIONS.get(
+                        stage["config"].get("resolution"))
+
+                    print("Applying filter to " + image)
+                    Filter.crop_center_object(
+                        image_path=image,
+                        output_path=file_path,
+                        width=width,
+                        height=height,
+                    )
+                
                 case _:
                     pass
 
@@ -756,7 +769,7 @@ class RoutinesTab(ft.Tab):
             if not Props.USE_PATH.endswith('/'):
                 Props.USE_PATH += '/'
                 
-            print(f"Remote file path: {Props.USE_PATH + file_name}")
+            print(f"Remote file path: {Props.USE_PATH + '/' + Props.PRODUCT_ID + '/' + file_name}")
 
             Save.post_file_in_remote(
                 local_file_path=image_file_path,

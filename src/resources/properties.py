@@ -140,6 +140,12 @@ class Properties:
     # FILTERS
     FILTER_RESOLUTION_OUTPUT: str = "480p"
     RM_BG_THRESHOLD: int = 120
+    CROP_RESLUTIONS: dict[str, tuple[int, int]] = {
+        "Small": (70, 57),
+        "Medium": (400, 328),
+        "Large": (1200, 984),
+        "Model": (640, 640)
+    }
 
     # SERVERS AND CREDENTIALS
     SELECTED_SERVER: str = ""

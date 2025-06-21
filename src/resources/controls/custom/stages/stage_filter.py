@@ -34,6 +34,15 @@ class StageFilter(ft.Container):
             on_click = self.__delete_button_clicked
         )
 
+        self.resolution_dropdown = ft.Dropdown(
+            label="Resolution",
+            options=[ft.dropdown.Option(name) for name in self.__load_resolutions()],
+            width=Props.DROPDOWN_WIDTH,
+            border_radius=Props.BORDER_RADIUS,
+            visible=False,
+            on_change = self.__resolution_dropdown_changed
+        )
+
         # endregion
 
         # region Stage card: Content
@@ -45,7 +54,8 @@ class StageFilter(ft.Container):
                         self.delete_button
                     ]
                 ),
-                self.filter_dropdown
+                self.filter_dropdown,
+                self.resolution_dropdown
             ]
         )
         # endregion
@@ -60,14 +70,45 @@ class StageFilter(ft.Container):
             "Remove background",
             "Resize image",
             "Fisheye correction",
-            "CA Correction"
+            "CA Correction",
+            "Crop Center",
         ]
 
+    def __load_resolutions(self):
+        """
+        Read resolutions available in Filter.py.
+        :return: list with all presets
+        """
+        return [
+            "Small",
+            "Medium",
+            "Large",
+            "Model"
+        ]
     
     def __filter_dropdown_changed(self, e):
         Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {
             "filter_name": self.filter_dropdown.value
         }
+
+        if self.filter_dropdown.value == "Crop Center":
+            self.add_resolution_dropdown()
+        else:
+            self.remove_resolution_dropdown()
+
+    def add_resolution_dropdown(self):
+        self.resolution_dropdown.visible = True
+        self.content.update()
+   
+    def remove_resolution_dropdown(self):
+        self.resolution_dropdown.visible = False
+        self.content.update()
+
+        # Reset resolution dropdown value
+        self.resolution_dropdown.value = None
+
+    def __resolution_dropdown_changed(self, e):
+        Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"]["resolution"] = self.resolution_dropdown.value
 
     def __delete_button_clicked(self, e):
         self.card_list.content.controls.remove(self)
