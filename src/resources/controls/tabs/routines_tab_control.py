@@ -710,25 +710,35 @@ class RoutinesTab(ft.Tab):
 
         if Props.APPEND_FILTER:
             for f in os.listdir(Props.FILTERED_IMAGES_DIRECTORY):
+                if not f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif')):
+                    continue  # Skip non-image files
                 image_path = os.path.join(Props.FILTERED_IMAGES_DIRECTORY, f)
                 images_to_transfer.append(image_path)
         else: 
             if Props.CURRENT_USE_CAMERA1:
                 for f in os.listdir(Props.CAMERA1_DOWNLOAD_PATH):
+                    if not f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif')):
+                        continue  # Skip non-image files
                     image_path = os.path.join(Props.CAMERA1_DOWNLOAD_PATH, f)
                     images_to_transfer.append(image_path)
 
             if Props.CURRENT_USE_CAMERA2:
                 for f in os.listdir(Props.CAMERA2_DOWNLOAD_PATH):
+                    if not f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif')):
+                        continue  # Skip non-image files
                     image_path = os.path.join(Props.CAMERA2_DOWNLOAD_PATH, f)
                     images_to_transfer.append(image_path)
             
             if Props.CURRENT_USE_CAMERA3:
                 for f in os.listdir(Props.CAMERA3_DOWNLOAD_PATH):
+                    if not f.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.gif')):
+                        continue  # Skip non-image files
                     image_path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
                     images_to_transfer.append(image_path)
 
         print(f"Images to transfer after: {images_to_transfer}")
+
+        Props.USE_PATH = stage["config"]["path"]
 
         # TRANSFER IMAGES
         total_images = len(images_to_transfer)
@@ -750,7 +760,7 @@ class RoutinesTab(ft.Tab):
 
             Save.post_file_in_remote(
                 local_file_path=image_file_path,
-                remote_file_path=Props.USE_PATH + file_name
+                remote_file_path=Props.USE_PATH + '/' + Props.PRODUCT_ID + '/' + file_name
             )
 
         self.progress_bar.update_legend(new_legend=f"Save: Image saving process complete.")
@@ -795,7 +805,7 @@ class RoutinesTab(ft.Tab):
             local_prefix = "" if Props.LETTER_PREFIX in ("A","F") else Props.LETTER_PREFIX
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[0]],
-                download_path = Props.CAMERA1_DOWNLOAD_PATH + "/" + Props.PRODUCT_ID + "/",
+                download_path = Props.CAMERA1_DOWNLOAD_PATH,
                 file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
 
@@ -803,7 +813,7 @@ class RoutinesTab(ft.Tab):
             local_prefix = "A" if Props.LETTER_PREFIX == "A" else ""
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[1]],
-                download_path = Props.CAMERA2_DOWNLOAD_PATH  + "/" + Props.PRODUCT_ID + "/",
+                download_path = Props.CAMERA2_DOWNLOAD_PATH,
                 file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
 
@@ -811,7 +821,7 @@ class RoutinesTab(ft.Tab):
             local_prefix = "F" if Props.LETTER_PREFIX == "C" else ""
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[2]],
-                download_path = Props.CAMERA3_DOWNLOAD_PATH  + "/" + Props.PRODUCT_ID + "/",
+                download_path = Props.CAMERA3_DOWNLOAD_PATH,
                 file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
 

@@ -10,9 +10,6 @@ class Save:
         Post the given resource on the given remote directory.
         """
 
-        if not Props.USE_PATH.endswith('/'):
-            Props.USE_PATH += '/'
-
         transport = paramiko.Transport((Props.USE_IP, int(Props.USE_PORT)))
         transport.connect(
             username=Props.USE_USER, 
