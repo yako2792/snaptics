@@ -116,4 +116,60 @@ snaptics
 - [x] Image preview in tab tab
 - [x] After a Save stage take og images*
 - [x] Directory with product id before saving images
-- [ ] Image crop filter
+- [x] Image crop filter
+
+# Auto Start on Raspberry Pi
+
+1. Create an executable `start.sh` file.
+
+```bash
+#!/bin/bash
+cd /home/user/Documents/snaptics
+source .venv/bin/activate
+flet run --port 8000 --web -a resources/assets -m src.main
+```
+
+2. Make it executable.
+
+```bash
+chmod +x start.sh
+```
+
+3. Create a systemd serivce.
+
+Command
+
+```bash 
+touch /etc/systemd/system/snaptics.service
+```
+
+Content
+
+```service
+[Unit]
+Description=Snaptics App
+After=network.target
+
+[Service]
+ExecStart=/home/user/Documents/snaptics/start.sh
+WorkingDirectory=/home/user/Documents/snaptics
+Restart=always
+User=user
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
+```
+
+4. Enable and start the service.
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable snaptics.service
+sudo systemctl start snaptics.service
+```
+
+5. Check logs.
+```
+journalctl -u snaptics.service -f
+```
