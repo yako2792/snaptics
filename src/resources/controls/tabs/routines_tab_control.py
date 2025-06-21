@@ -498,12 +498,15 @@ class RoutinesTab(ft.Tab):
                 case "Save":
                     Props.IS_SAVING = True
 
-                    Props.APPEND_FILTER = False
-                    self.clean_directory_filtered()
                     self.progress_bar.update_legend("Save: loading...")
                     self.__start_save(stage=stage)
                     self.progress_bar.update_legend("Save: finish...")
                     self.progress_bar.update_value(new_value=(1/total_stages)*(current_stage_num))
+
+                    
+                    # Clean filtered directory if not appending
+                    Props.APPEND_FILTER = False
+                    self.clean_directory_filtered()
 
                     current_stage_num += 1
 
@@ -517,9 +520,6 @@ class RoutinesTab(ft.Tab):
         Props.APPEND_FILTER = False
     
     def __start_scan(self, stage):
-        
-        
-
         # Load preset
         preset_name = stage["config"]["preset_name"]
         presets = self.__load_presets()
