@@ -387,6 +387,11 @@ class PropertiesTab(ft.Tab):
         """
 
         Props.CURRENT_ISO = self.iso_dropdown.value
+        # Check if cameras are connected
+        print(Props.CAMERAS_DICT.keys())
+        if not Props.CAMERAS_DICT or all(k is None for k in Props.CAMERAS_DICT.keys()):
+            self.show_alert("No cameras connected. Please connect a camera first.")
+            return
 
         loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
         loading_dialog.show()
@@ -413,6 +418,11 @@ class PropertiesTab(ft.Tab):
         """
 
         Props.CURRENT_SHUTTERSPEED = self.shutterspeed_dropdown.value
+        # Check if cameras are connected
+        print(Props.CAMERAS_DICT.keys())
+        if not Props.CAMERAS_DICT or all(k is None for k in Props.CAMERAS_DICT.keys()):
+            self.show_alert("No cameras connected. Please connect a camera first.")
+            return
 
         loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
         loading_dialog.show()
