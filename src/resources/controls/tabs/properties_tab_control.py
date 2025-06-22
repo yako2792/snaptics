@@ -1,3 +1,4 @@
+import os
 import json
 import flet as ft
 from src.resources.properties import Properties as Props
@@ -166,6 +167,22 @@ class PropertiesTab(ft.Tab):
             on_click=self.__delete_credentials
         )
 
+        self.reboot_system_button = ft.ElevatedButton(
+            text="Reboot",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__reboot_system_clicked
+        )
+
+        self.reset_system_button = ft.OutlinedButton(
+            text="Reset",
+            style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
+            height=Props.BUTTON_HEIGHT,
+            width=Props.BUTTON_WIDTH,
+            on_click=self.__reset_system_clicked
+        )
+
         # Explorer settings
         self.explorer_settings: ft.ExpansionTile = ft.ExpansionTile(
             title=ft.Text(value=Props.EXPLORER_SETTINGS_TITLE),
@@ -264,6 +281,37 @@ class PropertiesTab(ft.Tab):
             ]
         )
 
+        # System settings
+        self.system_settings: ft.ExpansionTile = ft.ExpansionTile(
+            title=ft.Text(value=Props.SYSTEM_SETTINGS_TITLE),
+            subtitle=ft.Text(value=Props.SYSTEM_SETTINGS_SUBTITLE),
+            affinity=ft.TileAffinity.LEADING,
+            initially_expanded=Props.INITIALLY_EXPANDED_PROPERTIES,
+            controls_padding=Props.TAB_PADDING,
+            controls=[
+                ft.ListTile(
+                    title=ft.Text("Reboot: "),
+                    subtitle=ft.Column(
+                        [
+                            ft.Text("This will reboot the system immediately. Please save your work before proceeding.", italic=True, color=ft.Colors.with_opacity(0.6, color=ft.Colors.WHITE)),
+                            self.reboot_system_button,
+                        ]
+                    ) 
+                ),
+                ft.ListTile(
+                    title=ft.Text("Reset: "),
+                    subtitle=ft.Column(
+                        [
+                            ft.Text("This will reset the system to its initial state. All settings will be lost.", italic=True, color=ft.Colors.with_opacity(0.6, color=ft.Colors.WHITE)),
+                            self.reset_system_button,
+                        ]
+                    )
+                ),
+
+            ]
+        )
+
+
         # Layout
         self.content = ft.Column(
             [
@@ -271,7 +319,8 @@ class PropertiesTab(ft.Tab):
                 self.scan_settings,
                 self.camera_settings,
                 self.filter_settings,
-                self.save_settings
+                self.save_settings,
+                self.system_settings 
             ],
             scroll=ft.ScrollMode.AUTO
         )
@@ -469,6 +518,19 @@ class PropertiesTab(ft.Tab):
         """
         allert = DeleteCredentialsDialog(page = Props.PAGE, title="Wait!")
         allert.show()
+
+    def __reboot_system_clicked(self, e):
+        """
+        Callback for reboot system button clicked.
+        """
+        os.system("sudo /sbin/reboot now")
+    
+    def __reset_system_clicked(self, e):
+        """
+        Callback for reset system button clicked.
+        """
+        self.page.overlay = []
+        self.page.update()
 
     def show_alert(self, message: str):
         """

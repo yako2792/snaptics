@@ -81,6 +81,8 @@ class Properties:
     CAMERA_SETTINGS_SUBTITLE: str = "Customize some camera properties."
     SAVE_SETTINGS_TITLE: str = "Properties: Save"
     SAVE_SETTINGS_SUBTITLE: str = "Modify available options in save stage."
+    SYSTEM_SETTINGS_TITLE: str = "Properties: System"
+    SYSTEM_SETTINGS_SUBTITLE: str = "Options that affect directly the system. Be careful with these!"
     FILTERS_SETTINGS_TITLE: str = "Properties: Filters"
     FILTERS_SETTINGS_SUBTITLE: str = "Customize some filter properties."
     INITIALLY_EXPANDED_PROPERTIES: bool = False
