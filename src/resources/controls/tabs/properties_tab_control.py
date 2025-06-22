@@ -539,7 +539,7 @@ class PropertiesTab(ft.Tab):
         """
         Callback for reset system button clicked.
         """
-        self.page.overlay = []
+        self.page.overlay.clear()
         self.page.update()
 
     def show_alert(self, message: str):
