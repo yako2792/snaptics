@@ -141,3 +141,11 @@ class Servers:
             server["paths"] = paths
 
         Servers._save_json(data)
+
+    @staticmethod
+    def clear_servers():
+        """
+        Clears all the servers.
+        """
+        data = {"servers": []}
+        Servers._save_json(data)

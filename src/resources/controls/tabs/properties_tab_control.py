@@ -11,6 +11,7 @@ from src.resources.controls.custom.server_dialog import ServerDialog
 from src.resources.controls.custom.credentials_dialog import CredentialsDialog
 from src.resources.utils.credentials_controller import Credentials
 from src.resources.controls.custom.update_server_dialog import UpdateServerDialog
+from src.resources.utils.routines_controller import Routines
 
 
 def convert_percentage_to_width_height(width: int, height: int):
@@ -539,8 +540,97 @@ class PropertiesTab(ft.Tab):
         """
         Callback for reset system button clicked.
         """
+        self.__clear_overlay()
+        self.__clear_credentials()
+        self.__clear_servers()
+        self.__clear_presets()
+        self.__clear_routines()
+        self.__clear_images()
+
+
+    
+    def __clear_overlay(self):
+        """
+        Clears the overlay of the page.
+        This is used to remove any dialogs or overlays currently displayed.
+        """
         self.page.overlay.clear()
         self.page.update()
+        self.show_alert("Overlay cleared.")
+    
+    def __clear_images(self):
+        """
+        Clears the images stored in the application.
+        This is used to reset the images to their initial state.
+        """
+        for f in os.listdir(Props.CAMERA1_DOWNLOAD_PATH):
+            if f.endswith(".gitkeep"):
+                continue
+            path = os.path.join(Props.CAMERA1_DOWNLOAD_PATH, f)
+            os.remove(path)
+        self.show_alert("Images in camera 1 cleared.")
+        
+        for f in os.listdir(Props.CAMERA2_DOWNLOAD_PATH):
+            if f.endswith(".gitkeep"):
+                continue
+            path = os.path.join(Props.CAMERA2_DOWNLOAD_PATH, f)
+            os.remove(path)
+        self.show_alert("Images in camera 2 cleared.")
+        
+        for f in os.listdir(Props.CAMERA3_DOWNLOAD_PATH):
+            if f.endswith(".gitkeep"):
+                continue
+            path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
+            os.remove(path)
+        self.show_alert("Images in camera 3 cleared.")
+
+        for f in os.listdir(Props.FILTERED_IMAGES_DIRECTORY):
+            if f.endswith(".gitkeep"):
+                continue
+            path = os.path.join(Props.FILTERED_IMAGES_DIRECTORY, f)
+            os.remove(path)
+        self.show_alert("Images in camera 3 cleared.")
+
+    def __clear_routines(self):
+        """
+        Clears the routines stored in the application.
+        This is used to reset the routines to their initial state.
+        """
+        Routines.remove_all_routines()
+        self.show_alert("Routines cleared.")
+    
+    def __clear_credentials(self):
+        """
+        Clears the credentials stored in the application.
+        This is used to reset the credentials to their initial state.
+        """
+        Credentials.clear_credentials()
+        self.credentials_dropdown.options = [ft.dropdown.Option(name) for name in self.__load_available_credentials()]
+        self.credentials_dropdown.update()
+        Props.SELECTED_USER = ""
+        Props.SELECTED_PASSWORD = ""
+        self.show_alert("Credentials cleared.")
+
+    def __clear_servers(self):
+        """
+        Clears the servers stored in the application.
+        This is used to reset the servers to their initial state.
+        """
+        Servers.clear_servers()
+        self.servers_dropdown.options = self.__get_available_servers()
+        self.servers_dropdown.update()
+        self.show_alert("Servers cleared.")
+
+    def __clear_presets(self):
+        """
+        Clears the presets stored in the application.
+        This is used to reset the presets to their initial state.
+        """
+        presets = {}
+        with open(Props.PRESETS_PATH, "w") as file:
+            json.dump(presets, file, indent=2)
+
+        self.show_alert("Presets cleared.")
 
     def show_alert(self, message: str):
         """

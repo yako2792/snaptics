@@ -117,5 +117,12 @@ class Credentials:
         decrypted = f.decrypt(encrypted_password.encode())
         return decrypted.decode()
 
+    @staticmethod
+    def clear_credentials():
+        """
+        Clears all credentials.
+        """
+        data = {"credentials": []}
+        Credentials._save_json(data)
 
 

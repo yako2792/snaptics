@@ -113,3 +113,12 @@ class Routines:
         
         routine["stages"] = stages
         Routines._save_json(data)
+
+    @staticmethod
+    def remove_all_routines():
+        """
+        Clears all routines stored in the application.
+        This is used to reset the routines to their initial state.
+        """
+        data = {"routines": []}
+        Routines._save_json(data)
