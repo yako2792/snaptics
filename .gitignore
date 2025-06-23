@@ -6,6 +6,9 @@ __pycache__/
 camera_1/*.png
 camera_2/*.png
 camera_3/*.png
+src/resources/assets/images/captures/camera_1/*.png
+src/resources/assets/images/captures/camera_2/*.png
+src/resources/assets/images/captures/camera_3/*.png
 filtered_images/*
 view_test/*
 *.pyc
