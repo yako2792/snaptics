@@ -235,6 +235,14 @@ class RoutinesTab(ft.Tab):
         ]
 
     def __apply_routine_button_clicked(self, e):
+        """ Applies the selected routine to the current stages list.
+        Validates if the routine exists and if it has stages.
+        If the routine is valid, it loads the stages and applies the configurations.
+        """
+        # Reset current stages list
+        Props.STAGES_NUMBER = 0
+        Props.CURRENT_ROUTINE["stages"] = []
+        Props.CURRENT_ROUTINE["name"] = None
         
         self.stages_list_container.content.controls = []
         routine_name = self.routine_loader_dropdown.value
@@ -253,9 +261,6 @@ class RoutinesTab(ft.Tab):
             self.show_alert("Routine does not have any stages: " + routine_name)
             return
         # Reset current routine
-        
-        Props.STAGES_NUMBER = 0
-        Props.CURRENT_ROUTINE["stages"] = []
         Props.CURRENT_ROUTINE["name"] = routine_name
 
         loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
