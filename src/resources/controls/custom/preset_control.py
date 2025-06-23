@@ -417,6 +417,11 @@ class PresetControl(ft.Container):
         if is_scanning():
             self.show_alert("Wait, a scan is being performed.")
             return
+
+        if not Props.CAMERAS_DICT or all(k is None for k in Props.CAMERAS_DICT.keys()):
+            self.show_alert("No cameras connected. Please connect a camera first.")
+            return
+
         # Check at least one camera is selected
         if no_camera_selected():
             self.show_alert("At least one camera should be selected.")
