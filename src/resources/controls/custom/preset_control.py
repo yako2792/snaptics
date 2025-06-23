@@ -62,6 +62,7 @@ class PresetControl(ft.Container):
             width=Props.DROPDOWN_WIDTH,
             border_radius=Props.BORDER_RADIUS
         )
+        
         self.preset_name_input = ft.TextField(
             label="Name",
             width=Props.DROPDOWN_WIDTH,
@@ -143,6 +144,8 @@ class PresetControl(ft.Container):
             ),
             padding = Props.PAGE_PADDING
         )
+
+        Props.PRESETS = self
 
 
     def __load_presets(self):
@@ -544,3 +547,8 @@ class PresetControl(ft.Container):
                 Props.IMAGES_LIST_CAMERA3.append(ImageTextButton(image_path))  
 
         Props.EXPLORER_CAMERAS.update_cameras()
+
+    def clear(self):
+        self.preset_dropdown.options = []
+        self.preset_dropdown.value = None
+        self.preset_dropdown.update()

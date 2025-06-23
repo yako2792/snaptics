@@ -181,6 +181,8 @@ class RoutinesTab(ft.Tab):
         )
         # endregion
 
+        Props.ROUTINES = self
+
     # region Controllers
     def __add_stage_button_clicked(self, e):
         # Validations
@@ -852,4 +854,18 @@ class RoutinesTab(ft.Tab):
         snackbar.open = True
         self.page.open(snackbar)
         self.page.update()
+    
+    def clear(self):
+        """
+        Clears the current routine and resets the stages list.
+        """
+        Props.STAGES_NUMBER = 0
+        Props.CURRENT_ROUTINE["stages"] = []
+        Props.CURRENT_ROUTINE["name"] = None
+        self.stages_list_container.content.controls = []
+        self.stages_list_container.content.update()
+        self.routine_loader_dropdown.options = self.__get_available_routines()
+        self.routine_loader_dropdown.update()
+        self.routine_loader_dropdown.value = None
+
     # endregion

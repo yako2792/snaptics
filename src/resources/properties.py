@@ -5,7 +5,7 @@ It centralizes settings, ensuring easy configuration and avoiding hardcoding val
 
 import os
 from cryptography.fernet import Fernet
-from flet import Page, Container, Dropdown
+from flet import Page, Container, Dropdown, Tab
 from src.camera_controller import GPhoto2 as gp
 
 class Properties:
@@ -32,6 +32,8 @@ class Properties:
     
     OPTIONS_CONTROL: Container = None
     USE_CONTROL: Container = None
+    PRESETS: Container = None
+    ROUTINES: Tab = None
 
     # FRAMES
     EXPLORER_SIZE: float = 0.3

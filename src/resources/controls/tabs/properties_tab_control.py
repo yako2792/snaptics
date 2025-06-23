@@ -597,6 +597,9 @@ class PropertiesTab(ft.Tab):
         This is used to reset the routines to their initial state.
         """
         Routines.remove_all_routines()
+
+        Props.ROUTINES.clear()
+
         self.show_alert("Routines cleared.")
     
     def __clear_credentials(self):
@@ -629,6 +632,8 @@ class PropertiesTab(ft.Tab):
         presets = {}
         with open(Props.PRESETS_PATH, "w") as file:
             json.dump(presets, file, indent=2)
+        
+        Props.PRESETS.clear()
 
         self.show_alert("Presets cleared.")
 
