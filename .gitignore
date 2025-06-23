@@ -9,6 +9,7 @@ camera_3/*.png
 src/resources/assets/images/captures/camera_1/*.png
 src/resources/assets/images/captures/camera_2/*.png
 src/resources/assets/images/captures/camera_3/*.png
+src/resources/assets/images/view_test/*.jpg
 filtered_images/*
 view_test/*
 *.pyc
