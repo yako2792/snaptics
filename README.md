@@ -170,6 +170,13 @@ sudo systemctl start snaptics.service
 ```
 
 5. Check logs.
-```
+
+```bash
 journalctl -u snaptics.service -f
+```
+
+6. Check Network configuration.
+
+```bash
+sudo nmtui
 ```
