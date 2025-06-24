@@ -74,7 +74,8 @@ class DeleteCredentialsDialog:
         self.hide()
 
     def show(self):
-        self.page.overlay.append(self.dialog)
+        if self.dialog not in self.page.overlay:
+            self.page.overlay.append(self.dialog)
         self.dialog.open = True
         self.page.update()
 

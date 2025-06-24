@@ -1,10 +1,10 @@
+import os
 import flet as ft
 from src.resources.properties import Properties as Props
 from src.resources.controls.custom.header_control import HeaderControl
-from src.resources.utils.servers_controller import Servers
 
 
-class DeleteServerDialog:
+class ResetDialog:
     def __init__(self, page: ft.Page, title: str):
         self.page = page
         self.title = ft.Row(
@@ -17,7 +17,7 @@ class DeleteServerDialog:
         )
 
         self.legend = ft.Text(
-            value=f"Are you sure you want to delete server '{Props.SELECTED_SERVER}' ?"
+            value=f"Are you sure you want to reboot the system? This action will restart the device and may cause unsaved changes to be lost.",
         )
 
         self.cancel_button = ft.OutlinedButton(
@@ -30,9 +30,9 @@ class DeleteServerDialog:
             on_click=self.__close_button_clicked
         )
         self.delete_button = ft.ElevatedButton(
-            text="Delete",
+            text="Reboot",
             disabled=False,
-            icon=ft.Icons.DELETE,
+            icon=ft.Icons.RESTART_ALT,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -64,11 +64,8 @@ class DeleteServerDialog:
         )
 
     def __delete_button_clicked(self, e):
-        Servers.remove_server(display_name=Props.SELECTED_SERVER)
-        self.show_alert(f"Server deleted: {Props.SELECTED_SERVER}")
-        Props.SELECTED_SERVER = ""
         self.hide()
-        self.update_server_options()
+        os.system("sudo /sbin/reboot now")
     
     def __close_button_clicked(self, e):
         self.hide()
@@ -82,19 +79,6 @@ class DeleteServerDialog:
     def hide(self):
         self.dialog.open = False
         self.page.update()
-
-    def update_server_options(self):
-
-        server_list = Servers.get_available_servers()
-        controls = []
-
-        for server in server_list:
-            controls.append(
-                ft.DropdownOption(text=server)
-            )
-
-        Props.SERVERS_DROPDOWN.options = controls
-        Props.SERVERS_DROPDOWN.update()
 
     def update_legend(self, new_legend: str):
         self.legend.value = new_legend

@@ -6,6 +6,7 @@ from src.camera_controller import GPhoto2 as gp
 from src.resources.utils.servers_controller import Servers
 from src.resources.controls.custom.loading_dialog import LoadingDialog
 from src.resources.controls.custom.delete_server_dialog import DeleteServerDialog
+from src.resources.controls.custom.reset_dialog import ResetDialog
 from src.resources.controls.custom.delete_credentials_dialog import DeleteCredentialsDialog
 from src.resources.controls.custom.server_dialog import ServerDialog
 from src.resources.controls.custom.credentials_dialog import CredentialsDialog
@@ -298,17 +299,7 @@ class PropertiesTab(ft.Tab):
                             self.reboot_system_button,
                         ]
                     ) 
-                ),
-                ft.ListTile(
-                    title=ft.Text("Reset: "),
-                    subtitle=ft.Column(
-                        [
-                            ft.Text("This will reset the system to its initial state. All settings will be lost.", italic=True, color=ft.Colors.with_opacity(0.6, color=ft.Colors.WHITE)),
-                            self.reset_system_button,
-                        ]
-                    )
-                ),
-
+                )
             ]
         )
 
@@ -534,17 +525,18 @@ class PropertiesTab(ft.Tab):
         """
         Callback for reboot system button clicked.
         """
-        os.system("sudo /sbin/reboot now")
+        allert = ResetDialog(page = Props.PAGE, title="Reboot System")
+        allert.show()
     
     def __reset_system_clicked(self, e):
         """
         Callback for reset system button clicked.
         """
         self.__clear_overlay()
-        self.__clear_credentials()
-        self.__clear_servers()
-        self.__clear_presets()
-        self.__clear_routines()
+        # self.__clear_credentials()
+        # self.__clear_servers()
+        # self.__clear_presets()
+        # self.__clear_routines()
         self.__clear_images()
 
 
