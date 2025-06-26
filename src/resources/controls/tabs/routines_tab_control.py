@@ -26,7 +26,7 @@ class RoutinesTab(ft.Tab):
         self.page = page
         self.progress_bar = ProgressBar(
             page=self.page,
-            title = f"Routine: {Props.CURRENT_ROUTINE['name']}"
+            title = f"Rutina: {Props.CURRENT_ROUTINE['name']}"
         )
         self.text = title
         self.motor = Motor(
@@ -44,13 +44,13 @@ class RoutinesTab(ft.Tab):
                 ft.DropdownOption(text="Save")
             ],
             value=None,
-            label="Type",
+            label="Tipo",
             width = Props.CHECKBOX_WIDTH,
             border_radius = Props.BORDER_RADIUS,
         )
 
         self.add_stage_button = ft.ElevatedButton(
-            text="Add",
+            text="Añadir",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -61,7 +61,7 @@ class RoutinesTab(ft.Tab):
             height=Props.BUTTON_HEIGHT,
             expand=True,
             content=ft.ElevatedButton(
-                text="Start",
+                text="Comenzar",
                 icon=ft.Icons.PLAY_ARROW,
                 style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
                 height=Props.BUTTON_HEIGHT,
@@ -81,13 +81,13 @@ class RoutinesTab(ft.Tab):
         self.routine_loader_dropdown = ft.Dropdown(
             options=self.__get_available_routines(),
             value=None,
-            label="Name",
+            label="Nombre",
             width = Props.CHECKBOX_WIDTH,
             border_radius = Props.BORDER_RADIUS
         )
 
         self.apply_routine_button = ft.ElevatedButton(
-            text="Apply",
+            text="Aplicar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -95,14 +95,14 @@ class RoutinesTab(ft.Tab):
         )
 
         self.routine_name_input = ft.TextField(
-            label="Name",
+            label="Nombre",
             width=Props.DROPDOWN_WIDTH,
             border_radius=Props.BORDER_RADIUS,
             on_change=self.__routine_name_input_changed 
         )
 
         self.add_new_routine_button = ft.ElevatedButton(
-            text="Add",
+            text="Añadir",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -110,7 +110,7 @@ class RoutinesTab(ft.Tab):
         )
 
         self.update_routine_button = ft.ElevatedButton(
-            text="Update",
+            text="Actualizar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -118,7 +118,7 @@ class RoutinesTab(ft.Tab):
         )
 
         self.delete_routine_button = ft.ElevatedButton(
-            text="Delete",
+            text="Borrar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -132,7 +132,7 @@ class RoutinesTab(ft.Tab):
             content = ft.Column(
                 [
                     # Stages: Selector
-                    HeaderControl("Stages"),
+                    HeaderControl("Etapas"),
                     ft.Row(
                         [
                             self.stage_type_dropdown,
@@ -144,7 +144,7 @@ class RoutinesTab(ft.Tab):
                     self.stages_list_container,
                     
                     # Stages: Routine saver
-                    HeaderControl("Routine"),
+                    HeaderControl("Rutina"),
                     ft.Row(
                         [   
                             # Routine saver: Left
@@ -190,7 +190,7 @@ class RoutinesTab(ft.Tab):
         Props.STAGES_NUMBER += 1
 
         if (stage_value == None):
-            self.show_alert("Select a stage type to continue.")
+            self.show_alert("Selecciona una etapa para continuar.")
             return
         
         # Add stage
@@ -248,24 +248,24 @@ class RoutinesTab(ft.Tab):
         routine_name = self.routine_loader_dropdown.value
         
         if routine_name in ("", None, " "):
-            self.show_alert("Please select a routine to apply.")
+            self.show_alert("Por favor, selecciona una rutina para aplicar.")
             return
         if routine_name not in Routines.get_available_routines():
-            self.show_alert("Routine does not exists: " + routine_name)
+            self.show_alert("La rutina no existe: " + routine_name)
             return
         # Load routine
 
         stages = Routines.get_stages_in_routine(routine_name=routine_name)
 
         if stages == []:
-            self.show_alert("Routine does not have any stages: " + routine_name)
+            self.show_alert("La rutina no tiene etapas: " + routine_name)
             return
         # Reset current routine
         Props.CURRENT_ROUTINE["name"] = routine_name
 
-        loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
+        loading_dialog = LoadingDialog(page=Props.PAGE, title="Espera")
         loading_dialog.show()
-        loading_dialog.update_legend(f"Applying routine: {routine_name}")
+        loading_dialog.update_legend(f"Aplicando rutina: {routine_name}")
 
         for i in range(len(stages), 0, -1):
             Props.STAGES_NUMBER += 1
@@ -275,7 +275,7 @@ class RoutinesTab(ft.Tab):
             current_stage_card = None
             stage_type = Routines.get_stage_type(routine_name=routine_name, stage_number=Props.STAGES_NUMBER)
             
-            loading_dialog.update_legend(f"Adding stage {Props.STAGES_NUMBER}: {stage_type}")
+            loading_dialog.update_legend(f"Añadiendo etapa {Props.STAGES_NUMBER}: {stage_type}")
 
             match stage_type:
                 case "Scan":
@@ -286,15 +286,15 @@ class RoutinesTab(ft.Tab):
                     )
                     
                     # Modify current values and apply
-                    loading_dialog.update_legend(f"Loading presets")
+                    loading_dialog.update_legend(f"Cargando presets...")
                     current_stage_card.preset_dropdown.value = stage_config.get("preset_name")
                     presets  = self.__load_presets()
 
                     # Add capture values 
-                    loading_dialog.update_legend(f"Applying preset values to cameras")
+                    loading_dialog.update_legend(f"Aplicando preset a las cámaras.")
                     preset = presets.get(stage_config.get("preset_name"))
                     if preset is None:
-                        self.show_alert(f"Preset '{stage_config.get('preset_name')}' not found. Please check your routine configuration.")
+                        self.show_alert(f"Preset '{stage_config.get('preset_name')}' no encontrado. Por favor, verifica la configuración de tu rutina.")
                     else:
                         Props.CURRENT_FREQUENCY = preset["frequency"]
                         Props.CURRENT_FORMAT = preset["format"]
@@ -307,23 +307,23 @@ class RoutinesTab(ft.Tab):
                         if camera == None:
                             continue
                         
-                        loading_dialog.update_legend(f"Applying config to camera: {camera}")
+                        loading_dialog.update_legend(f"Aplicando configuración a la cámara: {camera}")
                         gp.set_config(
                             camera_port=Props.CAMERAS_DICT[camera],
                             camera_config=Props.FORMAT_CAMERA_CONFIG,
                             config_value=Props.FORMATS_DICT[Props.CURRENT_FORMAT]
                         )
-                        loading_dialog.update_legend(f"Applied format config: {Props.FORMAT_CAMERA_CONFIG}")
+                        loading_dialog.update_legend(f"Aplicando configuración de formato: {Props.FORMAT_CAMERA_CONFIG}")
 
                         gp.set_config(
                             camera_port=Props.CAMERAS_DICT[camera],
                             camera_config=Props.RESOLUTION_CAMERA_CONFIG,
                             config_value=Props.RESOLUTIONS_DICT[Props.CURRENT_RESOLUTION]
                         )
-                        loading_dialog.update_legend(f"Applied resolution config: {Props.RESOLUTION_CAMERA_CONFIG}")
+                        loading_dialog.update_legend(f"Aplicando configuración de resolución: {Props.RESOLUTION_CAMERA_CONFIG}")
 
                     
-                    loading_dialog.update_legend(f"Applied camera config properly!")
+                    loading_dialog.update_legend(f"Configuración aplicada correctamente!")
 
                     # Modify values on backend
                     Props.CURRENT_ROUTINE["stages"].append(
@@ -370,11 +370,11 @@ class RoutinesTab(ft.Tab):
 
                 case _:
                     # Unrecognized stage type
-                    loading_dialog.update_legend(f"Unrecognized stage type: {stage_type}")
-                    self.show_alert("Unrecognized stage type: " + stage_type)
+                    loading_dialog.update_legend(f"Tipo de etapa no reconocido: {stage_type}")
+                    self.show_alert("Tipo de etapa no reconocido: " + stage_type)
                     continue
             
-            loading_dialog.update_legend(f"Finish!")
+            loading_dialog.update_legend(f"Listo!")
             loading_dialog.hide()
 
             self.stages_list_container.content.controls.append(
@@ -383,7 +383,7 @@ class RoutinesTab(ft.Tab):
         
         print(Props.CURRENT_ROUTINE)
         self.stages_list_container.content.update()
-        self.show_alert("Applied routine: " + routine_name)
+        self.show_alert("Rutina aplicada: " + routine_name)
 
     def __add_new_routine_button_clicked(self, e):
 
@@ -394,20 +394,20 @@ class RoutinesTab(ft.Tab):
 
         # Validations
         if stages == []:
-            self.show_alert("Please add at least one stage to the routine.")
+            self.show_alert("Por favor, añade al menos una etapa a la rutina.")
             return
         if routine_name in ("", None, " "):
-            self.show_alert("Please enter a routine name to add.")
+            self.show_alert("Por favor, ingresa un nombre de rutina para añadir.")
             return
         if routine_name in Routines.get_available_routines():
-            self.show_alert("Routine already exists: " + routine_name)
+            self.show_alert("La rutina ya existe: " + routine_name)
             return
 
         Routines.add_routine(routine_name=routine_name, stages=stages)
 
         self.routine_loader_dropdown.options = self.__get_available_routines()
         self.routine_loader_dropdown.update()
-        self.show_alert("Added routine: " + routine_name)
+        self.show_alert("Rutina añadida: " + routine_name)
 
     def __update_routine_button_clicked(self, e):
 
@@ -415,25 +415,25 @@ class RoutinesTab(ft.Tab):
         stages = Props.CURRENT_ROUTINE["stages"]
 
         if routine_name in ("", None, " "):
-            self.show_alert("Please enter a routine name to update.")
+            self.show_alert("Por favor, introduce una rutina para actualizar.")
             return
         if routine_name not in Routines.get_available_routines():
-            self.show_alert("Routine does not exists: " + routine_name)
+            self.show_alert("La rutina no existe: " + routine_name)
             return
         # Update routine
 
         Routines.update_routine(routine_name=routine_name, stages=stages)
-        self.show_alert("Updated routine: " + routine_name)
+        self.show_alert("Rutina actualizada: " + routine_name)
     
     def __delete_routine_button_clicked(self, e):
         
         routine_name = self.routine_name_input.value
         if routine_name in ("", None, " "):
-            self.show_alert("Please enter a routine name to delete.")
+            self.show_alert("Por favor, introduce una rutina para borrar.")
             return
         
         if routine_name not in Routines.get_available_routines():
-            self.show_alert("Routine does not exists: " + routine_name)
+            self.show_alert("La rutina no existe: " + routine_name)
             return
         
         # Delete routine
@@ -442,9 +442,9 @@ class RoutinesTab(ft.Tab):
             self.routine_loader_dropdown.options = self.__get_available_routines()
             self.routine_loader_dropdown.update()
         except:
-            self.show_alert("Issue deleting routine or routine already deleted: " + routine_name)
+            self.show_alert("Hubo un problema al borrar la rutina o ya había sido borrada: " + routine_name)
 
-        self.show_alert("Deleted routine: " + routine_name)
+        self.show_alert("Rutina borrada: " + routine_name)
 
     def __get_available_routines(self) -> list[ft.DropdownOption]:
         routines_list = []
@@ -465,7 +465,7 @@ class RoutinesTab(ft.Tab):
     
     def __start_routine_button_clicked(self, e):
         if Props.CURRENT_ROUTINE["stages"] == []:
-            self.show_alert("Please add at least one stage.")
+            self.show_alert("Por favor, añade al menos una etapa.")
             return
         
         self.progress_bar.percentage.value = "0%"
@@ -480,9 +480,9 @@ class RoutinesTab(ft.Tab):
                 case "Scan":
                     Props.IS_SCANNING = True
 
-                    self.progress_bar.update_legend("Scan: loading...")
+                    self.progress_bar.update_legend("Scan: Cargando...")
                     self.__start_scan(stage=stage)
-                    self.progress_bar.update_legend("Scan: finish...")
+                    self.progress_bar.update_legend("Scan: Listo...")
                     self.progress_bar.update_value(new_value=(1/total_stages)*(current_stage_num))
 
                     current_stage_num += 1
@@ -492,10 +492,10 @@ class RoutinesTab(ft.Tab):
                 case "Filter":
                     Props.IS_FILTERING = True
 
-                    self.progress_bar.update_legend("Filter: loading...")
+                    self.progress_bar.update_legend("Filter: Cargando...")
                     self.__start_filter(stage=stage)
                     Props.APPEND_FILTER = True
-                    self.progress_bar.update_legend("Filter: finish...")
+                    self.progress_bar.update_legend("Filter: Listo...")
                     self.progress_bar.update_value(new_value=(1/total_stages)*(current_stage_num))
 
                     current_stage_num += 1
@@ -505,9 +505,9 @@ class RoutinesTab(ft.Tab):
                 case "Save":
                     Props.IS_SAVING = True
 
-                    self.progress_bar.update_legend("Save: loading...")
+                    self.progress_bar.update_legend("Save: Cargando...")
                     self.__start_save(stage=stage)
-                    self.progress_bar.update_legend("Save: finish...")
+                    self.progress_bar.update_legend("Save: Listo...")
                     self.progress_bar.update_value(new_value=(1/total_stages)*(current_stage_num))
 
                     
@@ -523,7 +523,7 @@ class RoutinesTab(ft.Tab):
                     pass
         
         self.progress_bar.update_value(new_value=(1))
-        self.progress_bar.update_legend(new_legend=f"Finish.")
+        self.progress_bar.update_legend(new_legend=f"Listo.")
         Props.APPEND_FILTER = False
     
     def __start_scan(self, stage):
@@ -583,7 +583,7 @@ class RoutinesTab(ft.Tab):
 
                     self.motor.move_degs(5)
                     self.trigger_capture(iteration_number = i)
-                    self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
+                    self.progress_bar.update_legend(new_legend=f"Scan: Serie actual: {i + 1}, restante {n - i - 1}")
 
             case "45 [DEG/SHOT]":
                 n = 8
@@ -606,7 +606,7 @@ class RoutinesTab(ft.Tab):
 
                     self.motor.move_degs(45)
                     self.trigger_capture(iteration_number = i)
-                    self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
+                    self.progress_bar.update_legend(new_legend=f"Scan: Serie actual: {i + 1}, restante {n - i - 1}")
 
             case "90 [DEG/SHOT]":
                 n = 4
@@ -627,7 +627,7 @@ class RoutinesTab(ft.Tab):
                     
                     self.motor.move_degs(90)
                     self.trigger_capture(iteration_number = i)
-                    self.progress_bar.update_legend(new_legend=f"Scan: Series: {i + 1}, remaining {n - i - 1}")
+                    self.progress_bar.update_legend(new_legend=f"Scan: Serie actual: {i + 1}, restante {n - i - 1}")
 
             case "360 [DEG/SHOT]":
                 self.motor.move_degs(360)
@@ -664,7 +664,7 @@ class RoutinesTab(ft.Tab):
 
         total_images = len(images_to_filter)
         filtered_images = 0
-        self.progress_bar.update_legend(new_legend=f"Filter: Found {total_images} images to filter.")
+        self.progress_bar.update_legend(new_legend=f"Filter: Se encontraron {total_images} imágenes para filtrar.")
 
         for image in images_to_filter:
             print(image)
@@ -672,11 +672,11 @@ class RoutinesTab(ft.Tab):
             print(file_name)
             file_path = Props.FILTERED_IMAGES_DIRECTORY + file_name
             filtered_images += 1
-            self.progress_bar.update_legend(new_legend=f"Filter: Applying filter to image {file_name}, remaining images {total_images - filtered_images}.")
+            self.progress_bar.update_legend(new_legend=f"Filter: Aplicando filtro a imagen {file_name}, imágenes restantes {total_images - filtered_images}.")
 
             match filter_to_apply:
                 case "Remove background":
-                    print("Applying filter to " + image)
+                    print("Aplicando filtro a " + image)
                     
                     Filter.remove_background(
                         image_path=image,
@@ -684,21 +684,21 @@ class RoutinesTab(ft.Tab):
                     )
 
                 case "Resize image":
-                    print("Applying filter to " + image)
+                    print("Aplicando filtro a " + image)
                     Filter.resize_image(
                         image_path=image,
                         output_path=file_path
                     )
                 
                 case "Fisheye correction":
-                    print("Applying filter to " + image)
+                    print("Aplicando filtro a " + image)
                     Filter.resize_image(
                         image_path=image,
                         output_path=file_path
                     )
 
                 case "CA Correction":
-                    print("Applying filter to " + image)
+                    print("Aplicando filtro a " + image)
                     Filter.ca_correction(
                         image_path=image,
                         output_path=file_path
@@ -709,7 +709,7 @@ class RoutinesTab(ft.Tab):
                     (width, height) = Props.CROP_RESLUTIONS.get(
                         stage["config"].get("resolution"))
 
-                    print("Applying filter to " + image)
+                    print("Aplicando filtro a " + image)
                     Filter.crop_center_object(
                         image_path=image,
                         output_path=file_path,
@@ -722,7 +722,7 @@ class RoutinesTab(ft.Tab):
 
     def __start_save(self, stage):
 
-        self.progress_bar.update_legend(new_legend=f"Save: Preparing to save files to remote {Props.USE_SERVER} server.")
+        self.progress_bar.update_legend(new_legend=f"Save: Preparando para guardar archivos en el servidor remoto {Props.USE_SERVER}.")
 
         # GET IMAGES TO TRANSFER
         images_to_transfer = []
@@ -771,7 +771,7 @@ class RoutinesTab(ft.Tab):
                 continue
 
             print(f"Sending image: {file_name}")
-            self.progress_bar.update_legend(new_legend=f"Save: Uploading image {file_name}, remaining {total_images}.")
+            self.progress_bar.update_legend(new_legend=f"Save: Guardando imagen {file_name}, restantes {total_images}.")
 
             if not Props.USE_PATH.endswith('/'):
                 Props.USE_PATH += '/'
@@ -783,7 +783,7 @@ class RoutinesTab(ft.Tab):
                 remote_file_path=Props.USE_PATH + '/' + Props.PRODUCT_ID + '/' + file_name
             )
 
-        self.progress_bar.update_legend(new_legend=f"Save: Image saving process complete.")
+        self.progress_bar.update_legend(new_legend=f"Save: Proceso de guardado de imagen completado.")
     
     def __load_presets(self):
         """

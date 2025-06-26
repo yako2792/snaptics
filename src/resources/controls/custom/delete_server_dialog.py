@@ -17,11 +17,11 @@ class DeleteServerDialog:
         )
 
         self.legend = ft.Text(
-            value=f"Are you sure you want to delete server '{Props.SELECTED_SERVER}' ?"
+            value=f"¿Estás seguro de que deseas borrar el servidor '{Props.SELECTED_SERVER}' ?"
         )
 
         self.cancel_button = ft.OutlinedButton(
-            text="Cancel",
+            text="Cancelar",
             disabled=False,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -30,7 +30,7 @@ class DeleteServerDialog:
             on_click=self.__close_button_clicked
         )
         self.delete_button = ft.ElevatedButton(
-            text="Delete",
+            text="Borrar",
             disabled=False,
             icon=ft.Icons.DELETE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -65,7 +65,7 @@ class DeleteServerDialog:
 
     def __delete_button_clicked(self, e):
         Servers.remove_server(display_name=Props.SELECTED_SERVER)
-        self.show_alert(f"Server deleted: {Props.SELECTED_SERVER}")
+        self.show_alert(f"Se borró el servidor correctamente: {Props.SELECTED_SERVER}")
         Props.SELECTED_SERVER = ""
         self.hide()
         self.update_server_options()

@@ -19,6 +19,6 @@ class ImageTextButton(ft.Container):
         )
     
     def __open_preview_tab(self, e):
-        print(f"Opening image: {self.file_path}")
+        print(f"Abriendo imagen: {self.file_path}")
         Props.WORKSPACE_TAB.go_to_index_tab(0)
         Props.WORKSPACE_TAB.update_image_in_tab(self.file_path)

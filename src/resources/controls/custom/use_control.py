@@ -30,7 +30,7 @@ class UseControl(ft.Container):
         # Other elements
         self.camera1_checkbox = ft.Container(
             content=ft.Checkbox(
-                label=Props.CAMERAS_LIST[0] or "Not available",
+                label=Props.CAMERAS_LIST[0] or "No disponible",
                 value=False,
                 on_change=self.__camera1_checkbox_changed
             ),
@@ -39,7 +39,7 @@ class UseControl(ft.Container):
         )
         self.camera2_checkbox = ft.Container(
             content=ft.Checkbox(
-                label=Props.CAMERAS_LIST[1] or "Not available",
+                label=Props.CAMERAS_LIST[1] or "No disponible",
                 value=False,
                 on_change=self.__camera2_checkbox_changed
             ),
@@ -48,7 +48,7 @@ class UseControl(ft.Container):
         )
         self.camera3_checkbox = ft.Container(
             content=ft.Checkbox(
-                label=Props.CAMERAS_LIST[2] or "Not available",
+                label=Props.CAMERAS_LIST[2] or "No disponible",
                 value=False,
                 on_change=self.__camera3_checkbox_changed
             ),

@@ -31,14 +31,14 @@ class ImageViewer(ft.Container):
         # CONTROLS
         self.camera_dropdown = ft.Dropdown(
             options=self.__get_cameras_options(),
-            label="Camera",
+            label="Camara",
             width=Props.DROPDOWN_WIDTH,
             border_radius=Props.BORDER_RADIUS,
             on_change=self.__camera_dropdown_changed
         )
 
         self.test_button = ft.ElevatedButton(
-            text="Test",
+            text="Probar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT, 
             width=Props.BUTTON_WIDTH,
@@ -110,12 +110,12 @@ class ImageViewer(ft.Container):
         # VALIDATE
         # Check if is testing
         if is_testing():
-            self.show_alert("Please wait, a test is already running.")
+            self.show_alert("Por favor espera, ya hay una prueba en curso.")
             return
 
         # Check if a camera is selected
         if test_camera_is_not_selected():
-            self.show_alert("Please, select a camera to test")
+            self.show_alert("Por favor, selecciona una cámara para probar.")
             return
         
         required_props = {
@@ -126,12 +126,12 @@ class ImageViewer(ft.Container):
 
         for name, value in required_props.items():
             if not value:
-                self.show_alert("Please select a " + name + " value.")
+                self.show_alert(f"Por favor, selecciona un valor para {name}")
                 return
 
         
         # START TESTING
-        self.show_alert("Testing camera " + self.camera_dropdown.value)
+        self.show_alert("Probando cámara " + self.camera_dropdown.value)
         Props.IS_TESTING = True
 
         __camera: str = Props.CAMERAS_DICT[Props.CURRENT_TEST_CAMERA]
@@ -146,7 +146,7 @@ class ImageViewer(ft.Container):
         self.view_image.content.update()
 
         Props.IS_TESTING = False
-        self.show_alert("Finished testing camera " + Props.CURRENT_TEST_CAMERA)
+        self.show_alert("Prueba de cámara finalizada " + Props.CURRENT_TEST_CAMERA)
     
     def show_alert(self, message: str):
         """

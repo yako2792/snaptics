@@ -17,11 +17,11 @@ class ResetDialog:
         )
 
         self.legend = ft.Text(
-            value=f"Are you sure you want to reboot the system? This action will restart the device and may cause unsaved changes to be lost.",
+            value=f"¿Estás seguro de que quieres reiniciar el sistema? Esta acción reiniciará el dispositivo y puede provocar la pérdida de cambios no guardados.",
         )
 
         self.cancel_button = ft.OutlinedButton(
-            text="Cancel",
+            text="Cancelar",
             disabled=False,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -30,7 +30,7 @@ class ResetDialog:
             on_click=self.__close_button_clicked
         )
         self.delete_button = ft.ElevatedButton(
-            text="Reboot",
+            text="Reiniciar",
             disabled=False,
             icon=ft.Icons.RESTART_ALT,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),

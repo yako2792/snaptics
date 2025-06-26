@@ -18,7 +18,7 @@ class PathDialog:
         )
 
         self.save_button = ft.ElevatedButton(
-            text="Save",
+            text="Guardar",
             disabled=False,
             icon=ft.Icons.SAVE_SHARP,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -27,7 +27,7 @@ class PathDialog:
             on_click=self.__save_button_clicked
         )
         self.cancel_button = ft.OutlinedButton(
-            text="Cancel",
+            text="Cancelar",
             disabled=False,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -71,11 +71,11 @@ class PathDialog:
 
     def __save_button_clicked(self, e):
         if self.path_input.value == None:
-            self.show_alert("Path should not be None.")
+            self.show_alert("El directorio no puede ser None.")
             return
 
         if self.path_input.value == "":
-            self.show_alert("Path should not be empty.")
+            self.show_alert("El directorio no puede estar vacío.")
             return
         
         Servers.add_path_to_server(server_display_name=Props.SELECTED_SERVER, path=self.path_input.value)

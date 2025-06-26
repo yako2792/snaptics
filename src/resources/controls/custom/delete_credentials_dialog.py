@@ -17,11 +17,11 @@ class DeleteCredentialsDialog:
         )
 
         self.legend = ft.Text(
-            value=f"Are you sure you want to delete credential '{Props.SELECTED_USER}' ?"
+            value=f"¿Estás seguro de borrar las credenciales de '{Props.SELECTED_USER}' ?"
         )
 
         self.cancel_button = ft.OutlinedButton(
-            text="Cancel",
+            text="Cancelar",
             disabled=False,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -30,7 +30,7 @@ class DeleteCredentialsDialog:
             on_click=self.__close_button_clicked
         )
         self.delete_button = ft.ElevatedButton(
-            text="Delete",
+            text="Borrar",
             disabled=False,
             icon=ft.Icons.DELETE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -65,7 +65,7 @@ class DeleteCredentialsDialog:
 
     def __delete_button_clicked(self, e):
         Credentials.remove_user(user_name=Props.SELECTED_USER)
-        self.show_alert(f"Credential deleted: {Props.SELECTED_USER}")
+        self.show_alert(f"Credenciales borradas: {Props.SELECTED_USER}")
         Props.SELECTED_USER = ""
         self.hide()
         self.update_credentials_options()

@@ -23,7 +23,7 @@ class UpdateServerDialog:
         )
 
         self.save_button = ft.ElevatedButton(
-            text="Save",
+            text="Guardar",
             disabled=False,
             icon=ft.Icons.SAVE_SHARP,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -32,7 +32,7 @@ class UpdateServerDialog:
             on_click=self.__save_button_clicked
         )
         self.cancel_button = ft.OutlinedButton(
-            text="Cancel",
+            text="Cancelar",
             disabled=False,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -42,26 +42,26 @@ class UpdateServerDialog:
         )
 
         self.display_name_input = ft.TextField(
-            label="Display Name",
+            label="Nombre para mostrar",
             value=Props.SELECTED_SERVER,
             width=Props.STAGE_CARD_WIDTH,
         )
 
         self.host_name_input = ft.TextField(
-            label="Host Name",
+            label="Nombre del host",
             value=Servers.get_server_ip(Props.SELECTED_SERVER),
             width=Props.STAGE_CARD_WIDTH
         )
 
         self.paths_dropdown = ft.Dropdown(
             options=self.__get_available_paths_in_server(),
-            label="PATHS",
+            label="Directorios",
             width=Props.DROPDOWN_WIDTH - 40, 
             on_change=self.__iso_dropdown_changed
         )
 
         self.add_path_button = ft.ElevatedButton(
-            text="Add",
+            text="Añadir",
             disabled=False,
             icon=ft.Icons.ADD,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -71,7 +71,7 @@ class UpdateServerDialog:
         )
 
         self.remove_path_button = ft.OutlinedButton(
-            text="Delete",
+            text="Borrar",
             disabled=False,
             icon=ft.Icons.DELETE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -81,7 +81,7 @@ class UpdateServerDialog:
         )
 
         self.update_path_button = ft.ElevatedButton(
-            text="Update",
+            text="Actualizar",
             disabled=False,
             icon=ft.Icons.UPDATE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -130,25 +130,25 @@ class UpdateServerDialog:
 
     def __add_path_button_clicked(self, e):
         self.hide()
-        add_path_dialog = PathDialog(page=self.page, title="Add", parent_page=self)
+        add_path_dialog = PathDialog(page=self.page, title="Añadir", parent_page=self)
         add_path_dialog.show()
     
     def __update_path_button_clicked(self, e):
         if Props.SELECTED_PATH == "":
-            self.show_alert("Please, first select a path.")
+            self.show_alert("Por favor, primero selecciona un directorio.")
             return
         
         self.hide()
-        update_path_dialog = UpdatePathDialog(page=self.page, title="Update", parent_page=self)
+        update_path_dialog = UpdatePathDialog(page=self.page, title="Actualizar", parent_page=self)
         update_path_dialog.show()
 
     def __delete_path_button_clicked(self, e):
         if Props.SELECTED_PATH == "":
-            self.show_alert("Please, first select a path.")
+            self.show_alert("Por favor, primero selecciona un directorio.")
             return
         
         self.hide()
-        update_path_dialog = DeletePathDialog(page=self.page, title="Update", parent_page=self)
+        update_path_dialog = DeletePathDialog(page=self.page, title="Borrar", parent_page=self)
         update_path_dialog.show()
 
     def __get_available_paths_in_server(self):
@@ -174,21 +174,21 @@ class UpdateServerDialog:
     def __save_button_clicked(self, e):
 
         if self.host_name_input.value == "":
-            self.show_alert("Hostname should not be empty.")
+            self.show_alert("El nombre del host no puede estar vacío.")
             return
 
-        if self.host_name_input.value == None:
-            self.show_alert("Hostname should not be None.")
+        if self.host_name_input.value is None:
+            self.show_alert("El nombre del host no puede ser nulo.")
             return
-        
+
         if self.display_name_input.value == "":
-            self.show_alert("Display Name should not be empty.")
+            self.show_alert("El nombre para mostrar no puede estar vacío.")
             return
 
-        if self.display_name_input.value == None:
-            self.show_alert("Display Name should not be None.")
+        if self.display_name_input.value is None:
+            self.show_alert("El nombre para mostrar no puede ser nulo.")
             return
-        
+
         Servers.update_server(
             display_name_old=Props.SELECTED_SERVER,
             display_name_new=self.display_name_input.value,

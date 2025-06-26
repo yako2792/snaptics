@@ -18,11 +18,11 @@ class DeletePathDialog:
         )
 
         self.legend = ft.Text(
-            value=f"Are you sure you want to delete path '{Props.SELECTED_PATH}' ?"
+            value=f"¿Estás seguro de borrar el directorio '{Props.SELECTED_PATH}' ?"
         )
 
         self.cancel_button = ft.OutlinedButton(
-            text="Cancel",
+            text="Cancelar",
             disabled=False,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -31,7 +31,7 @@ class DeletePathDialog:
             on_click=self.__close_button_clicked
         )
         self.delete_button = ft.ElevatedButton(
-            text="Delete",
+            text="Borrar",
             disabled=False,
             icon=ft.Icons.DELETE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -66,7 +66,7 @@ class DeletePathDialog:
 
     def __delete_button_clicked(self, e):
         Servers.remove_path_in_server(display_name=Props.SELECTED_SERVER, path = Props.SELECTED_PATH)
-        self.show_alert(f"Path deleted: {Props.SELECTED_PATH}")
+        self.show_alert(f"Se borró el directorio correctamente: {Props.SELECTED_PATH}")
         Props.SELECTED_PATH = ""
         self.hide()
         self.update_paths_options()

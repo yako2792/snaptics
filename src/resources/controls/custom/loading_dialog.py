@@ -19,7 +19,7 @@ class LoadingDialog:
         )
 
         self.legend = ft.Text(
-            value="Loading..."
+            value="Cargando..."
         )
 
         self.dialog = ft.AlertDialog(

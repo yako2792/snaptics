@@ -34,7 +34,7 @@ class ScanTab(ft.Tab):
             content=ft.Column(
                 [
                     # TOP
-                    HeaderControl("View"),
+                    HeaderControl("Ver"),
                     self.image_viewer,
 
                     # BOTTOM
@@ -43,7 +43,7 @@ class ScanTab(ft.Tab):
                             ft.Container(
                                 ft.Column(
                                     [
-                                        HeaderControl("Options"),
+                                        HeaderControl("Opciones"),
                                         self.options_control
                                     ],
                                     alignment=ft.alignment.top_left
@@ -54,7 +54,7 @@ class ScanTab(ft.Tab):
                             ft.Container(
                                 ft.Column(
                                     [
-                                        HeaderControl("Use"),
+                                        HeaderControl("Usar cámaras"),
                                         self.use_control
                                     ],
                                     alignment=ft.alignment.top_left

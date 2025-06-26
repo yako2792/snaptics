@@ -18,7 +18,7 @@ class CredentialsDialog:
         )
 
         self.save_button = ft.ElevatedButton(
-            text="Save",
+            text="Guardar",
             disabled=False,
             icon=ft.Icons.SAVE_SHARP,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -27,7 +27,7 @@ class CredentialsDialog:
             on_click=self.__save_button_clicked
         )
         self.cancel_button = ft.OutlinedButton(
-            text="Cancel",
+            text="Cancelar",
             disabled=False,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -35,8 +35,8 @@ class CredentialsDialog:
             width=Props.BUTTON_WIDTH,
             on_click=self.__close_button_clicked
         )
-        self.user_input = ft.TextField(label="User", hint_text="Input your username")
-        self.password_input = ft.TextField(label="Password", hint_text="Input your password", password=True, can_reveal_password=True)
+        self.user_input = ft.TextField(label="Usuario", hint_text="Introduce tu usuario")
+        self.password_input = ft.TextField(label="Contraseña", hint_text="Introduce tu contraseña", password=True, can_reveal_password=True)
 
 
         self.dialog = ft.AlertDialog(
@@ -76,10 +76,10 @@ class CredentialsDialog:
         password = self.password_input.value
 
         if user_name == None or user_name == "":
-            self.show_alert("Username should not be empty.")
+            self.show_alert("El nombre de usuario no debe estar vacío.")
 
         if password == None or password == "":
-            self.show_alert("Password should not be empty.")
+            self.show_alert("La contraseña no debe estar vacía.")
 
         Credentials.add_user_and_password(
             user_name=user_name,
@@ -88,7 +88,7 @@ class CredentialsDialog:
 
         self.hide()
         self.parent_object.reload_credentials()
-        self.show_alert("Added credentials for user: " + user_name)
+        self.show_alert("Credenciales añadidas para el usuario: " + user_name)
 
 
     def show(self):

@@ -64,13 +64,13 @@ class PresetControl(ft.Container):
         )
         
         self.preset_name_input = ft.TextField(
-            label="Name",
+            label="Nombre",
             width=Props.DROPDOWN_WIDTH,
             border_radius=Props.BORDER_RADIUS
         )
         # BUTTONS - LEFT
         self.apply_button = ft.ElevatedButton(
-            text="Apply",
+            text="Aplicar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -78,7 +78,7 @@ class PresetControl(ft.Container):
         )
 
         self.start_button = ft.ElevatedButton(
-            text="Start",
+            text="Comenzar",
             icon=ft.Icons.PLAY_ARROW,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
@@ -88,21 +88,21 @@ class PresetControl(ft.Container):
 
         # BUTTONS - RIGHT
         self.add_button = ft.ElevatedButton(
-            text="Add",
+            text="Añadir",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
             on_click=self.__add_preset
         )
         self.delete_button = ft.ElevatedButton(
-            text="Delete",
+            text="Borrar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
             on_click=self.__delete_preset
         )
         self.update_button = ft.ElevatedButton(
-            text="Update",
+            text="Actualizar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -204,7 +204,7 @@ class PresetControl(ft.Container):
 
         # CHECK IF PRESET EXISTS
         if __preset_name not in presets:
-            self.show_alert(f"No preset with name: {__preset_name}")
+            self.show_alert(f"No existe un preset con el nombre: {__preset_name}")
             return
 
         # DELETE PRESET
@@ -212,7 +212,7 @@ class PresetControl(ft.Container):
 
         # WRITE IN JSON FILE
         self.__write_presets(presets)
-        self.show_alert(f"Deleted preset: {__preset_name}")
+        self.show_alert(f"Se borró el preset correctamente: {__preset_name}")
 
         self.__reload_presets()
         self.preset_dropdown.update()
@@ -256,14 +256,14 @@ class PresetControl(ft.Container):
 
         # CHECK IF PRESET EXISTS
         if __preset_name in presets:
-            self.show_alert(f"Preset already exists: {__preset_name}")
+            self.show_alert(f"El preset ya existe: {__preset_name}")
             return
 
         presets[__preset_name] = preset_settings
 
         # ADD PRESET TO JSON
         self.__write_presets(presets)
-        self.show_alert(f"Added preset: {__preset_name}")
+        self.show_alert(f"Preset añadido: {__preset_name}")
 
         self.__reload_presets()
         self.preset_dropdown.update()
@@ -307,7 +307,7 @@ class PresetControl(ft.Container):
 
         # CHECK IF PRESET EXISTS
         if __preset_name not in presets:
-            self.show_alert(f"Preset does not exists: {__preset_name}")
+            self.show_alert(f"El preset no existe: {__preset_name}")
             return
 
         # UPDATING PRESET
@@ -315,7 +315,7 @@ class PresetControl(ft.Container):
 
         # ADD PRESET TO JSON
         self.__write_presets(presets)
-        self.show_alert(f"Updated preset: {__preset_name}")
+        self.show_alert(f"Se actualizó el preset correctamente: {__preset_name}")
 
         self.__reload_presets()
         self.preset_dropdown.update()
@@ -333,7 +333,7 @@ class PresetControl(ft.Container):
             - Displays a confirmation snackbar.
         """
         if self.preset_dropdown.value == None: 
-            self.show_alert("First select a preset")
+            self.show_alert("Primero selecciona un preset.")
             return
 
         __preset_name = self.preset_dropdown.value
@@ -365,7 +365,7 @@ class PresetControl(ft.Container):
         Props.CURRENT_USE_CAMERA2 = __use_camera2
         Props.CURRENT_USE_CAMERA3 = __use_camera3
 
-        self.show_alert(f"Applied preset: {__preset_name}")
+        self.show_alert(f"Se aplicó el preset correctamente: {__preset_name}")
 
         # UPDATE PAGE
         self.options.update()
@@ -398,7 +398,7 @@ class PresetControl(ft.Container):
             bool: True if valid, False if invalid.
         """
         if not name or not name.strip():
-            self.show_alert("Preset name is empty.")
+            self.show_alert("El nombre del preset está vacío.")
             return False
         return True
 
@@ -418,27 +418,27 @@ class PresetControl(ft.Container):
         # VALIDATIONS
         # Check if there is a scan runnign
         if is_scanning():
-            self.show_alert("Wait, a scan is being performed.")
+            self.show_alert("Espera, se está realizando un escaneo.")
             return
 
         if not Props.CAMERAS_DICT or all(k is None for k in Props.CAMERAS_DICT.keys()):
-            self.show_alert("No cameras connected. Please connect a camera first.")
+            self.show_alert("No hay cámaras conectadas. Por favor, conecta una cámara primero.")
             return
 
         # Check at least one camera is selected
         if no_camera_selected():
-            self.show_alert("At least one camera should be selected.")
+            self.show_alert("Debe seleccionarse al menos una cámara.")
             return
         # Check all capture options are selected
         if capture_options_missing():
-            self.show_alert("Some capture options are missing.")
+            self.show_alert("Hay opciones de captura que faltan.")
             return
         
         # START CAPTURE
-        self.show_alert("Started capture.")
+        self.show_alert("Captura iniciada.")
         Props.IS_SCANNING = True
 
-        progress_bar = ProgressBar(page=Props.PAGE, title="Scan")
+        progress_bar = ProgressBar(page=Props.PAGE, title="Escaneo")
         progress_bar.show()
 
         self.clean_directory()
@@ -451,7 +451,7 @@ class PresetControl(ft.Container):
                     self.trigger_capture(iteration_number = i)
 
                     progress_bar.update_value(new_value=(1/n)*(i+1))
-                    progress_bar.update_legend(new_legend=f"Series: {i + 1}, remaining {n - i - 1}")
+                    progress_bar.update_legend(new_legend=f"Serie actual: {i + 1}, restante {n - i - 1}.")
 
             case "45 [DEG/SHOT]":
                 n = 8
@@ -460,7 +460,7 @@ class PresetControl(ft.Container):
                     self.trigger_capture(iteration_number = i)
 
                     progress_bar.update_value(new_value=(1/n)*(i+1))
-                    progress_bar.update_legend(new_legend=f"Series: {i + 1}, remaining {n - i -1}")
+                    progress_bar.update_legend(new_legend=f"Serie actual: {i + 1}, restante {n - i -1}.")
 
             case "90 [DEG/SHOT]":
                 n = 4
@@ -469,7 +469,7 @@ class PresetControl(ft.Container):
                     self.trigger_capture(iteration_number = i)
 
                     progress_bar.update_value(new_value=(1/n)*(i+1))
-                    progress_bar.update_legend(new_legend=f"Series: {i + 1}, remaining {n - i - 1}")
+                    progress_bar.update_legend(new_legend=f"Serie actual: {i + 1}, restante {n - i - 1}.")
 
             case "360 [DEG/SHOT]":
                 self.motor.move_degs(360)
@@ -482,7 +482,7 @@ class PresetControl(ft.Container):
 
         Props.IS_SCANNING = False
         progress_bar.update_value(new_value=(1))
-        progress_bar.update_legend(new_legend=f"Finish.")
+        progress_bar.update_legend(new_legend=f"Listo!")
 
         self.show_images_under_cameras()
 

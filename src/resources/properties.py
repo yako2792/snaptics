@@ -40,14 +40,14 @@ class Properties:
     FRAME_PADDING: int = 3
 
     # TABS
-    PREVIEW_TAB_TITLE: str = "Preview"
-    SCAN_TAB_TITLE: str = "Scan"
-    ROUTINES_TAB_TITLE: str = "Routines"
+    PREVIEW_TAB_TITLE: str = "Vista previa"
+    SCAN_TAB_TITLE: str = "Capturar"
+    ROUTINES_TAB_TITLE: str = "Rutinas"
     PREVIEW_KEY: str = "Preview"
     SCAN_KEY: str = "Scan"
     ROUTINES_KEY: str = "Routines"
     EXPLORER_KEY: str = "Explorer"
-    PROPERTIES_TAB_TITLE: str = "Properties"
+    PROPERTIES_TAB_TITLE: str = "Propiedades"
     WORKSPACE_TAB: Container = None
 
     TAB_ICON_SIZE: int = 18
@@ -75,18 +75,18 @@ class Properties:
     LOADING_DIALOG_HEIGHT: int = 90
 
     # PROPERTIES TAB
-    EXPLORER_SETTINGS_TITLE: str = "Properties: Explorer"
-    EXPLORER_SETTINGS_SUBTITLE: str = "Customize some values from the Explorer frame."
-    SCAN_SETTINGS_TITLE: str = "Properties: Scan Tab"
-    SCAN_SETTINGS_SUBTITLE: str = "Customize some values from the Scan tab."
-    CAMERA_SETTINGS_TITLE: str = "Properties: Cameras"
-    CAMERA_SETTINGS_SUBTITLE: str = "Customize some camera properties."
-    SAVE_SETTINGS_TITLE: str = "Properties: Save"
-    SAVE_SETTINGS_SUBTITLE: str = "Modify available options in save stage."
-    SYSTEM_SETTINGS_TITLE: str = "Properties: System"
-    SYSTEM_SETTINGS_SUBTITLE: str = "Options that affect directly the system. Be careful with these!"
-    FILTERS_SETTINGS_TITLE: str = "Properties: Filters"
-    FILTERS_SETTINGS_SUBTITLE: str = "Customize some filter properties."
+    EXPLORER_SETTINGS_TITLE: str = "Propiedades: Explorador"
+    EXPLORER_SETTINGS_SUBTITLE: str = "Personaliza algunos valores del panel Explorador."
+    SCAN_SETTINGS_TITLE: str = "Propiedades: Pestaña Capturar"
+    SCAN_SETTINGS_SUBTITLE: str = "Personaliza algunos valores de la pestaña Escaneo."
+    CAMERA_SETTINGS_TITLE: str = "Propiedades: Cámaras"
+    CAMERA_SETTINGS_SUBTITLE: str = "Personaliza algunas propiedades de las cámaras."
+    SAVE_SETTINGS_TITLE: str = "Propiedades: Guardar"
+    SAVE_SETTINGS_SUBTITLE: str = "Modifica las opciones disponibles en la etapa de guardado."
+    SYSTEM_SETTINGS_TITLE: str = "Propiedades: Sistema"
+    SYSTEM_SETTINGS_SUBTITLE: str = "Opciones que afectan directamente al sistema. ¡Ten cuidado con ellas!"
+    FILTERS_SETTINGS_TITLE: str = "Propiedades: Filtros"
+    FILTERS_SETTINGS_SUBTITLE: str = "Personaliza algunas propiedades de los filtros."
     INITIALLY_EXPANDED_PROPERTIES: bool = False
 
     # SCAN TAB
@@ -111,8 +111,8 @@ class Properties:
     IS_SAVING: bool = False
 
     # GENERAL PORPOISE TEXTS
-    NO_IMAGE: str = "No image"
-    DEFAULT_HINT: str = "Empty"
+    NO_IMAGE: str = "Sin imagen"
+    DEFAULT_HINT: str = "Vacío"
 
     # CAMERAS TEST CLASS
     RAW_EXTENSION: str = ".ARW"

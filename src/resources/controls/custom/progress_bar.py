@@ -12,7 +12,7 @@ class ProgressBar:
             width=Props.STAGE_CARD_WIDTH
         )
         self.legend = ft.Text(
-            value="In progress..."
+            value="En curso..."
         )
 
         self.percentage = ft.Text(
@@ -20,7 +20,7 @@ class ProgressBar:
         )
 
         self.close_button = ft.OutlinedButton(
-            text="Close",
+            text="Cerrar",
             disabled=True,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -29,7 +29,7 @@ class ProgressBar:
             on_click=self.__close_button_clicked
         )
         self.cancel_button = ft.ElevatedButton(
-            text="Stop",
+            text="Detener",
             disabled=False,
             icon=ft.Icons.STOP,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),

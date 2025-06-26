@@ -67,7 +67,7 @@ class ExplorerControl(ft.Container):
         """
 
         super().__init__()
-        self.title = "Explorer"
+        self.title = "Explorador"
         self.page = page
         self.bgcolor = Props.CONTAINER_BGCOLOR
         self.alignment = ft.alignment.top_left
@@ -79,7 +79,7 @@ class ExplorerControl(ft.Container):
         self.content = ft.Container(
             content=ft.Column(
                 [
-                    HeaderControl("Cameras"),
+                    HeaderControl("Cámaras"),
                     self.cameras_list
                 ],
                 scroll=ft.ScrollMode.AUTO

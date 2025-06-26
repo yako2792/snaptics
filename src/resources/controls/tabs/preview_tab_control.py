@@ -32,7 +32,7 @@ class PreviewTab(ft.Tab):
             expand=True,
             content=ft.Column(
                 [
-                    HeaderControl("Image"),
+                    HeaderControl("Imagen"),
                     self.view_image
                 ],
                 scroll=ft.ScrollMode.AUTO,

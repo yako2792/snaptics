@@ -111,14 +111,14 @@ class PropertiesTab(ft.Tab):
                 ft.DropdownOption(text="240p"),
                 ft.DropdownOption(text="144p"),
             ],
-            label="RESOLUTION",
+            label="RESOLUCIÓN",
             width=Props.DROPDOWN_WIDTH, 
             on_change=self.__resolution_dropdown_changed
         )
 
         self.servers_dropdown = ft.Dropdown(
             options=self.__get_available_servers(),
-            label = "SERVERS",
+            label = "SERVIDORES",
             width = Props.DROPDOWN_WIDTH,
             on_change=self.__servers_dropdown_changed
         )
@@ -126,28 +126,28 @@ class PropertiesTab(ft.Tab):
 
         self.credentials_dropdown = ft.Dropdown(
             options=[ft.dropdown.Option(name) for name in self.__load_available_credentials()],
-            label = "CREDENTIALS",
+            label = "CREDENCIALES",
             width = Props.DROPDOWN_WIDTH,
             on_change=self.__credentials_dropdown_changed
         )
         Props.CREDENTIALS_DROPDOWN = self.credentials_dropdown
 
         self.add_server_button = ft.ElevatedButton(
-            text="Add",
+            text="Añadir",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
             on_click=self.__add_server
         )
         self.update_server_button = ft.ElevatedButton(
-            text="Update",
+            text="Actualizar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
             on_click=self.__udpate_server
         )
         self.delete_server_button = ft.OutlinedButton(
-            text="Delete",
+            text="Borrar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -155,14 +155,14 @@ class PropertiesTab(ft.Tab):
         )
 
         self.add_credentials_button = ft.ElevatedButton(
-            text="Add",
+            text="Añadir",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
             on_click=self.__add_credentials
         )
         self.delete_credentials_button = ft.OutlinedButton(
-            text="Delete",
+            text="Borrar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -170,7 +170,7 @@ class PropertiesTab(ft.Tab):
         )
 
         self.reboot_system_button = ft.ElevatedButton(
-            text="Reboot",
+            text="Reiniciar",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -178,7 +178,7 @@ class PropertiesTab(ft.Tab):
         )
 
         self.reset_system_button = ft.OutlinedButton(
-            text="Reset",
+            text="Restablecer",
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
             height=Props.BUTTON_HEIGHT,
             width=Props.BUTTON_WIDTH,
@@ -194,7 +194,7 @@ class PropertiesTab(ft.Tab):
             controls_padding=Props.TAB_PADDING,
             controls=[
                 ft.ListTile(
-                    title=ft.Text("Explorer width: "),
+                    title=ft.Text("Ancho del explorador: "),
                     subtitle=ft.Slider(min=20, max=60, divisions=4, label="{value}%", on_change=self.__explorer_width_slider_changed, value=Props.EXPLORER_SIZE*100)
                 )
             ]
@@ -209,7 +209,7 @@ class PropertiesTab(ft.Tab):
             controls_padding=Props.TAB_PADDING,
             controls=[
                 ft.ListTile(
-                    title=ft.Text("View test image size: "),
+                    title=ft.Text("Tamaño de imagen en el visor: "),
                     subtitle=ft.Slider(min=40, max=100, divisions=6, label="{value}%", on_change=self.__image_viewer_size_slider_changed, value=convert_percentage_to_width_height(Props.IMAGE_VIEW_WIDTH, Props.IMAGE_VIEW_HEIGHT))
                 )
             ]
@@ -224,7 +224,7 @@ class PropertiesTab(ft.Tab):
             controls_padding=Props.TAB_PADDING,
             controls=[
                 ft.ListTile(
-                    title=ft.Text("Resize image resolution: "),
+                    title=ft.Text("Resolución del redimensionamiento de imágenes: "),
                     subtitle=self.resolution_dropdown 
                 )
             ]
@@ -239,11 +239,11 @@ class PropertiesTab(ft.Tab):
             controls_padding=Props.TAB_PADDING,
             controls=[
                 ft.ListTile(
-                    title=ft.Text("Camera ISO: "),
+                    title=ft.Text("Cámara ISO: "),
                     subtitle=self.iso_dropdown 
                 ),
                 ft.ListTile(
-                    title=ft.Text("Camera SHUTTERSPEED: "),
+                    title=ft.Text("Cámara SHUTTERSPEED: "),
                     subtitle=self.shutterspeed_dropdown
                 ),
 
@@ -259,7 +259,7 @@ class PropertiesTab(ft.Tab):
             controls_padding=Props.TAB_PADDING,
             controls=[
                 ft.ListTile(
-                    title=ft.Text("Servers: "),
+                    title=ft.Text("Servidores: "),
                     subtitle=ft.Row(
                         [
                             self.servers_dropdown,
@@ -270,7 +270,7 @@ class PropertiesTab(ft.Tab):
                     ) 
                 ),
                 ft.ListTile(
-                    title=ft.Text("Credentials: "),
+                    title=ft.Text("Credenciales: "),
                     subtitle=ft.Row(
                         [
                             self.credentials_dropdown,
@@ -292,10 +292,10 @@ class PropertiesTab(ft.Tab):
             controls_padding=Props.TAB_PADDING,
             controls=[
                 ft.ListTile(
-                    title=ft.Text("Reboot: "),
+                    title=ft.Text("Reiniciar: "),
                     subtitle=ft.Column(
                         [
-                            ft.Text("This will reboot the system immediately. Please save your work before proceeding.", italic=True, color=ft.Colors.with_opacity(0.6, color=ft.Colors.WHITE)),
+                            ft.Text("Esto reiniciará el sistema inmediatamente. Por favor, guarda tu trabajo antes de continuar.", italic=True, color=ft.Colors.with_opacity(0.6, color=ft.Colors.WHITE)),
                             self.reboot_system_button,
                         ]
                     ) 
@@ -382,16 +382,16 @@ class PropertiesTab(ft.Tab):
         # Check if cameras are connected
         print(Props.CAMERAS_DICT.keys())
         if not Props.CAMERAS_DICT or all(k is None for k in Props.CAMERAS_DICT.keys()):
-            self.show_alert("No cameras connected. Please connect a camera first.")
+            self.show_alert("No hay cámaras conectadas. Por favor, conecta una cámara primero.")
             return
 
         loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
         loading_dialog.show()
-        loading_dialog.update_legend(f"Applying iso: {Props.CURRENT_ISO}")
+        loading_dialog.update_legend(f"Aplicando ISO: {Props.CURRENT_ISO}")
 
         for camera in Props.CAMERAS_LIST:
             
-            loading_dialog.update_legend(f"Applying iso to camera: {camera}")
+            loading_dialog.update_legend(f"Aplicando ISO a la cámara: {camera}")
 
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
@@ -399,9 +399,9 @@ class PropertiesTab(ft.Tab):
                 config_value=Props.ISOS_DICT[Props.CURRENT_ISO]
                 )
             
-            loading_dialog.update_legend(f"Iso applied to camera: {camera}")
+            loading_dialog.update_legend(f"ISO aplicado a la cámara: {camera}")
         
-        loading_dialog.update_legend(f"Finish!")
+        loading_dialog.update_legend(f"Listo!")
         loading_dialog.hide()
 
     def __shutterspeed_dropdown_changed(self, e):
@@ -413,16 +413,16 @@ class PropertiesTab(ft.Tab):
         # Check if cameras are connected
         print(Props.CAMERAS_DICT.keys())
         if not Props.CAMERAS_DICT or all(k is None for k in Props.CAMERAS_DICT.keys()):
-            self.show_alert("No cameras connected. Please connect a camera first.")
+            self.show_alert("No hay cámaras conectadas. Por favor, conecta una cámara primero.")
             return
 
         loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
         loading_dialog.show()
-        loading_dialog.update_legend(f"Applying shutterspeed: {Props.CURRENT_ISO}")
+        loading_dialog.update_legend(f"Aplicando SHUTTERSPEED: {Props.CURRENT_ISO}")
 
         for camera in Props.CAMERAS_LIST:
 
-            loading_dialog.update_legend(f"Applying shutterspeed to camera: {camera}")
+            loading_dialog.update_legend(f"Aplicando SHUTTERSPEED a la cámara: {camera}")
 
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
@@ -430,9 +430,9 @@ class PropertiesTab(ft.Tab):
                 config_value=Props.SHUTTERSPEEDS_DICT[Props.CURRENT_SHUTTERSPEED]
                 )
             
-            loading_dialog.update_legend(f"Shutterspeed applied to camera: {camera}")
+            loading_dialog.update_legend(f"SHUTTERSPEED aplicado a la cámara: {camera}")
         
-        loading_dialog.update_legend(f"Finish!")
+        loading_dialog.update_legend(f"Listo!")
         loading_dialog.hide()
 
 
@@ -473,7 +473,7 @@ class PropertiesTab(ft.Tab):
         """
         Callback for add server action.
         """
-        allert = ServerDialog(page = Props.PAGE, title="Add Server")
+        allert = ServerDialog(page = Props.PAGE, title="Añadir servidor")
         allert.show()
 
     def __udpate_server(self, e):
@@ -482,10 +482,10 @@ class PropertiesTab(ft.Tab):
         """
 
         if Props.SELECTED_SERVER == "":
-            self.show_alert("Please select a server first.")
+            self.show_alert("Por favor, selecciona un servidor primero.")
             return
 
-        allert = UpdateServerDialog(page = Props.PAGE, title="Server details")
+        allert = UpdateServerDialog(page = Props.PAGE, title="Detalles del servidor")
         allert.show()
 
     def __delete_server(self, e):
@@ -493,17 +493,17 @@ class PropertiesTab(ft.Tab):
         Callback for delete server action.
         """
         if Props.SELECTED_SERVER == "":
-            self.show_alert("Please, select a server first.")
+            self.show_alert("Por favor, selecciona un servidor primero.")
             return
 
-        allert = DeleteServerDialog(page = Props.PAGE, title="Wait!")
+        allert = DeleteServerDialog(page = Props.PAGE, title="Espera!")
         allert.show()
     
     def __add_credentials(self, e):
         """
         Callback for add credentials action.
         """
-        allert = CredentialsDialog(page = Props.PAGE, title="Add Credentials", parent = self)
+        allert = CredentialsDialog(page = Props.PAGE, title="Añadir Credenciales", parent = self)
         allert.show()
 
     def __load_available_credentials(self):
@@ -518,14 +518,14 @@ class PropertiesTab(ft.Tab):
         """
         Callback for delete credentials action.
         """
-        allert = DeleteCredentialsDialog(page = Props.PAGE, title="Wait!")
+        allert = DeleteCredentialsDialog(page = Props.PAGE, title="Espera!")
         allert.show()
 
     def __reboot_system_clicked(self, e):
         """
         Callback for reboot system button clicked.
         """
-        allert = ResetDialog(page = Props.PAGE, title="Reboot System")
+        allert = ResetDialog(page = Props.PAGE, title="Reiniciar Sistema")
         allert.show()
     
     def __reset_system_clicked(self, e):
@@ -548,7 +548,7 @@ class PropertiesTab(ft.Tab):
         """
         self.page.overlay.clear()
         self.page.update()
-        self.show_alert("Overlay cleared.")
+        self.show_alert("Superposición borrada.")
     
     def __clear_images(self):
         """
@@ -560,28 +560,28 @@ class PropertiesTab(ft.Tab):
                 continue
             path = os.path.join(Props.CAMERA1_DOWNLOAD_PATH, f)
             os.remove(path)
-        self.show_alert("Images in camera 1 cleared.")
+        self.show_alert("Imágenes en la cámara 1 borradas.")
         
         for f in os.listdir(Props.CAMERA2_DOWNLOAD_PATH):
             if f.endswith(".gitkeep"):
                 continue
             path = os.path.join(Props.CAMERA2_DOWNLOAD_PATH, f)
             os.remove(path)
-        self.show_alert("Images in camera 2 cleared.")
+        self.show_alert("Imágenes en la cámara 2 borradas.")
         
         for f in os.listdir(Props.CAMERA3_DOWNLOAD_PATH):
             if f.endswith(".gitkeep"):
                 continue
             path = os.path.join(Props.CAMERA3_DOWNLOAD_PATH, f)
             os.remove(path)
-        self.show_alert("Images in camera 3 cleared.")
+        self.show_alert("Imágenes en la cámara 3 borradas.")
 
         for f in os.listdir(Props.FILTERED_IMAGES_DIRECTORY):
             if f.endswith(".gitkeep"):
                 continue
             path = os.path.join(Props.FILTERED_IMAGES_DIRECTORY, f)
             os.remove(path)
-        self.show_alert("Images in camera 3 cleared.")
+        self.show_alert("Imágenes filtradas borradas.")
 
     def __clear_routines(self):
         """

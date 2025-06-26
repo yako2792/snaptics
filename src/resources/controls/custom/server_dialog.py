@@ -17,7 +17,7 @@ class ServerDialog:
         )
 
         self.save_button = ft.ElevatedButton(
-            text="Save",
+            text="Guardar",
             disabled=False,
             icon=ft.Icons.SAVE_SHARP,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -26,7 +26,7 @@ class ServerDialog:
             on_click=self.__save_button_clicked
         )
         self.cancel_button = ft.OutlinedButton(
-            text="Cancel",
+            text="Cancelar",
             disabled=False,
             icon=ft.Icons.CLOSE,
             style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=Props.BORDER_RADIUS)),
@@ -35,8 +35,8 @@ class ServerDialog:
             on_click=self.__close_button_clicked
         )
 
-        self.display_name_input = ft.TextField(label="Display Name", hint_text="Alias for this server")
-        self.host_name_input = ft.TextField(label="Server", hint_text="<host>:<port>")
+        self.display_name_input = ft.TextField(label="Nombre para mostrar", hint_text="Alias para el servidor")
+        self.host_name_input = ft.TextField(label="Servidor", hint_text="<host>:<puerto>")
 
         self.dialog = ft.AlertDialog(
             modal=True,
@@ -73,14 +73,14 @@ class ServerDialog:
             self.display_name_input.value == None or
             self.display_name_input.value == ""
             ):
-            self.show_alert("Input proper Display Name for host.")
+            self.show_alert("Introduce un nombre para mostrar válido para el host.")
             return
 
         if (
             self.host_name_input.value == None or
             self.host_name_input.value == ""
             ):
-            self.show_alert("Input proper Host.")
+            self.show_alert("Introduce un host válido.")
             return
 
         Servers.add_server(
@@ -89,7 +89,7 @@ class ServerDialog:
             paths=[]
         )
 
-        self.show_alert(f"Added server: {self.display_name_input.value}")
+        self.show_alert(f"Servidor añadido: {self.display_name_input.value}")
         self.hide()
         self.update_servers_dropdown()
 

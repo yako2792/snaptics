@@ -25,7 +25,7 @@ class   WorkspaceControl(ft.Container):
         """
         super().__init__()
         self.page = page
-        self.title = "Workspace"
+        self.title = "Espacio de trabajo"
         self.bgcolor = Props.CONTAINER_BGCOLOR
         self.alignment = ft.alignment.top_left
         self.expand = 1
