@@ -31,7 +31,7 @@ class ImageViewer(ft.Container):
         # CONTROLS
         self.camera_dropdown = ft.Dropdown(
             options=self.__get_cameras_options(),
-            label="Camara",
+            label="Cámara",
             width=Props.DROPDOWN_WIDTH,
             border_radius=Props.BORDER_RADIUS,
             on_change=self.__camera_dropdown_changed
