@@ -124,7 +124,10 @@ class Properties:
     RESOLUTION_CAMERA_CONFIG: str = "imagesize"
 
     CAMERAS_DICT: dict[str, str] = gp.get_cameras()
-    CAMERAS_LIST = (lambda keys: [None, None, None] if None in keys else list(keys))(CAMERAS_DICT.keys())
+    CAMERAS_LIST = [
+                       key if i < len(CAMERAS_DICT) else None
+                       for i, key in enumerate(list(CAMERAS_DICT.keys()) + [None, None, None])
+                   ][:3]
     DEFAULT_CAMERA_PORT: str = next(iter(CAMERAS_DICT.values()))
     ISOS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=ISO_CAMERA_CONFIG)
     SHUTTERSPEEDS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=SHUTTERSPEED_CAMERA_CONFIG)
