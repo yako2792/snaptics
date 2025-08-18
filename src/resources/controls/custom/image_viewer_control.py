@@ -98,6 +98,8 @@ class ImageViewer(ft.Container):
         Action for test button
         :return:
         """
+
+        print("Boton de probar en tab Capturar clickeado")
         
         __file_name: str = f"test_{datetime.now().strftime('%H-%M-%S')}.jpg"
 
@@ -111,11 +113,13 @@ class ImageViewer(ft.Container):
         # Check if is testing
         if is_testing():
             self.show_alert("Por favor espera, ya hay una prueba en curso.")
+            print("Por favor espera, ya hay una prueba en curso.")
             return
 
         # Check if a camera is selected
         if test_camera_is_not_selected():
             self.show_alert("Por favor, selecciona una cámara para probar.")
+            print("Por favor, selecciona una cámara para probar.")
             return
         
         required_props = {
@@ -127,11 +131,13 @@ class ImageViewer(ft.Container):
         for name, value in required_props.items():
             if not value:
                 self.show_alert(f"Por favor, selecciona un valor para {name}")
+                print(f"Por favor, selecciona un valor para {name}")
                 return
 
         
         # START TESTING
         self.show_alert("Probando cámara " + self.camera_dropdown.value)
+        print("Probando cámara " + self.camera_dropdown.value)
         Props.IS_TESTING = True
 
         __camera: str = Props.CAMERAS_DICT[Props.CURRENT_TEST_CAMERA]
@@ -147,6 +153,7 @@ class ImageViewer(ft.Container):
 
         Props.IS_TESTING = False
         self.show_alert("Prueba de cámara finalizada " + Props.CURRENT_TEST_CAMERA)
+        print("Prueba de cámara finalizada " + Props.CURRENT_TEST_CAMERA)
     
     def show_alert(self, message: str):
         """

@@ -189,8 +189,11 @@ class RoutinesTab(ft.Tab):
         stage_value = self.stage_type_dropdown.value
         Props.STAGES_NUMBER += 1
 
+        print("Boton de aniadir etapa clickeado")
+
         if (stage_value == None):
             self.show_alert("Selecciona una etapa para continuar.")
+            print("Selecciona una etapa para continuar.")
             return
         
         # Add stage
@@ -224,7 +227,10 @@ class RoutinesTab(ft.Tab):
 
             case _:
                 self.show_alert("Unrecognized stage type: " + stage_value)
+                print("Unrecognized stage type: " + stage_value)
                 return
+
+        print(f"Aniadido stage de tipo: {stage_value}")
         
         # Modify current routine json
         Props.CURRENT_ROUTINE["stages"] += [
@@ -233,6 +239,8 @@ class RoutinesTab(ft.Tab):
                 "config": {}
             }
         ]
+
+        print(f"Rutina actual: {Props.CURRENT_ROUTINE}")
 
     def __apply_routine_button_clicked(self, e):
         """ Applies the selected routine to the current stages list.
@@ -246,12 +254,16 @@ class RoutinesTab(ft.Tab):
         
         self.stages_list_container.content.controls = []
         routine_name = self.routine_loader_dropdown.value
+
+        print(f"Aplicando rutina: {routine_name}")
         
         if routine_name in ("", None, " "):
             self.show_alert("Por favor, selecciona una rutina para aplicar.")
+            print("Por favor, selecciona una rutina para aplicar.")
             return
         if routine_name not in Routines.get_available_routines():
             self.show_alert("La rutina no existe: " + routine_name)
+            print("La rutina no existe: " + routine_name)
             return
         # Load routine
 
@@ -259,6 +271,7 @@ class RoutinesTab(ft.Tab):
 
         if stages == []:
             self.show_alert("La rutina no tiene etapas: " + routine_name)
+            print("La rutina no tiene etapas: " + routine_name)
             return
         # Reset current routine
         Props.CURRENT_ROUTINE["name"] = routine_name
@@ -276,6 +289,7 @@ class RoutinesTab(ft.Tab):
             stage_type = Routines.get_stage_type(routine_name=routine_name, stage_number=Props.STAGES_NUMBER)
             
             loading_dialog.update_legend(f"Añadiendo etapa {Props.STAGES_NUMBER}: {stage_type}")
+            print(f"Añadiendo etapa {Props.STAGES_NUMBER}: {stage_type}")
 
             match stage_type:
                 case "Scan":
@@ -295,6 +309,7 @@ class RoutinesTab(ft.Tab):
                     preset = presets.get(stage_config.get("preset_name"))
                     if preset is None:
                         self.show_alert(f"Preset '{stage_config.get('preset_name')}' no encontrado. Por favor, verifica la configuración de tu rutina.")
+                        print(f"Preset '{stage_config.get('preset_name')}' no encontrado. Por favor, verifica la configuración de tu rutina.")
                     else:
                         Props.CURRENT_FREQUENCY = preset["frequency"]
                         Props.CURRENT_FORMAT = preset["format"]
@@ -308,12 +323,14 @@ class RoutinesTab(ft.Tab):
                             continue
                         
                         loading_dialog.update_legend(f"Aplicando configuración a la cámara: {camera}")
+                        print(f"Aplicando configuración a la cámara: {camera}")
                         gp.set_config(
                             camera_port=Props.CAMERAS_DICT[camera],
                             camera_config=Props.FORMAT_CAMERA_CONFIG,
                             config_value=Props.FORMATS_DICT[Props.CURRENT_FORMAT]
                         )
                         loading_dialog.update_legend(f"Aplicando configuración de formato: {Props.FORMAT_CAMERA_CONFIG}")
+                        print(f"Aplicando configuración de formato: {Props.FORMAT_CAMERA_CONFIG}")
 
                         gp.set_config(
                             camera_port=Props.CAMERAS_DICT[camera],
@@ -321,9 +338,11 @@ class RoutinesTab(ft.Tab):
                             config_value=Props.RESOLUTIONS_DICT[Props.CURRENT_RESOLUTION]
                         )
                         loading_dialog.update_legend(f"Aplicando configuración de resolución: {Props.RESOLUTION_CAMERA_CONFIG}")
+                        print(f"Aplicando configuración de resolución: {Props.RESOLUTION_CAMERA_CONFIG}")
 
                     
                     loading_dialog.update_legend(f"Configuración aplicada correctamente!")
+                    print(f"Configuración aplicada correctamente!")
 
                     # Modify values on backend
                     Props.CURRENT_ROUTINE["stages"].append(
@@ -464,8 +483,17 @@ class RoutinesTab(ft.Tab):
         Props.CURRENT_ROUTINE["name"] = self.routine_name_input.value
     
     def __start_routine_button_clicked(self, e):
+        
+        print("Boton de empezar rutina clickeado")
+
         if Props.CURRENT_ROUTINE["stages"] == []:
             self.show_alert("Por favor, añade al menos una etapa.")
+            print("Por favor, añade al menos una etapa.")
+            return
+
+        if Props.PRODUCT_ID == "":
+            self.show_alert("Por favor, agrega el ID de proudcto.")
+            print("Por favor, agrega el ID de proudcto.")
             return
         
         self.progress_bar.percentage.value = "0%"
@@ -506,7 +534,14 @@ class RoutinesTab(ft.Tab):
                     Props.IS_SAVING = True
 
                     self.progress_bar.update_legend("Save: Cargando...")
-                    self.__start_save(stage=stage)
+                    try: 
+                        self.__start_save(stage=stage)
+                    except Exception as e:
+                        Props.FAILED_TO_SAVE_IMAGE = True
+                        self.progress_bar.update_legend(new_legend=f"No se configuró correctamente la etapa de guardado. Verifica que la configuración de la rutina sea correcta.\nTipo: {type(e).__name__}, Mensaje: {str(e)[:100]}...")
+                        print(f"No se pudo guardar la imagen:\n{e}")
+                        break
+
                     self.progress_bar.update_legend("Save: Listo...")
                     self.progress_bar.update_value(new_value=(1/total_stages)*(current_stage_num))
 
@@ -523,12 +558,31 @@ class RoutinesTab(ft.Tab):
                     pass
         
         self.progress_bar.update_value(new_value=(1))
-        self.progress_bar.update_legend(new_legend=f"Listo.")
+        if Props.FAILED_TO_APPLY_FILTER:
+            self.progress_bar.update_legend(new_legend=f"No se configuró correctamente la etapa de filtro. Verifica que la configuración de la rutina sea correcta.")
+            Props.FAILED_TO_APPLY_FILTER = False
+        elif Props.FAILED_TO_SAVE_STAGE:
+            self.progress_bar.update_legend(new_legend=f"No se configuró correctamente la etapa de guardado. Verifica que la configuración de la rutina sea correcta.")
+            Props.FAILED_TO_SAVE_STAGE = False 
+        elif Props.FAILED_TO_APPLY_PRESET:
+            self.progress_bar.update_legend(new_legend=f"No se configuró correctamente la etapa de escaneo. Verifica que la configuración de la rutina sea correcta.")
+            Props.FAILED_TO_APPLY_PRESET = False 
+        elif Props.FAILED_TO_SAVE_IMAGE:
+            Props.FAILED_TO_APPLY_PRESET = False 
+        else:
+            self.progress_bar.update_legend(new_legend=f"Listo.")
+
         Props.APPEND_FILTER = False
     
     def __start_scan(self, stage):
         # Load preset
-        preset_name = stage["config"]["preset_name"]
+        preset_name = stage["config"].get("preset_name")
+        
+        if not(preset_name):
+            Props.FAILED_TO_APPLY_PRESET = True
+            print(f"No se selecciono ningun preset")
+            return
+
         presets = self.__load_presets()
         preset = presets.get(preset_name)
 
@@ -705,6 +759,14 @@ class RoutinesTab(ft.Tab):
                     )
                 
                 case "Crop Center":
+                    resolution = Props.CROP_RESLUTIONS.get(stage["config"].get("resolution"))
+                    print(f"Haciendo Crop Center: {resolution}")
+
+                    if stage["config"].get("resolution") == None:
+                        Props.FAILED_TO_APPLY_FILTER = True
+                        print(f"No se selecciono resolucion en Stage: {filter_to_apply}")
+                        return
+
 
                     (width, height) = Props.CROP_RESLUTIONS.get(
                         stage["config"].get("resolution"))
@@ -758,7 +820,14 @@ class RoutinesTab(ft.Tab):
 
         print(f"Images to transfer after: {images_to_transfer}")
 
-        Props.USE_PATH = stage["config"]["path"]
+        use_path = stage["config"].get("path")
+
+        if not(use_path and Props.USE_IP and Props.USE_USER and Props.USE_PASSWORD):
+            Props.FAILED_TO_SAVE_STAGE = True
+            print("No se configuró correctamente la etapa de guardado.")
+            return
+
+        Props.USE_PATH = use_path
 
         # TRANSFER IMAGES
         total_images = len(images_to_transfer)

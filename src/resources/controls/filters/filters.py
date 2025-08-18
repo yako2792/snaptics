@@ -1,8 +1,11 @@
 import cv2
 import numpy as np
-from rembg import remove
+from rembg import new_session, remove
 from PIL import Image
 from src.resources.properties import Properties as Props
+
+
+session = new_session("isnet-general-use")
 
 class Filter:
 
@@ -14,7 +17,7 @@ class Filter:
             print(f"Image could not be loaded: {image_path}")
             return
         
-        output = remove(input)
+        output = remove(input, session=session)
         output.save(output_path)
 
     @staticmethod
@@ -113,7 +116,7 @@ class Filter:
             raise ValueError(f"Could not open image: {e}")
 
         # Remove background using rembg
-        img_no_bg = remove(input_img)
+        img_no_bg = remove(input_img, session=session)
         img_np = np.array(img_no_bg)
 
         # Find non-transparent area (bounding box of the object)

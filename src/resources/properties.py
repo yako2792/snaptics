@@ -64,8 +64,8 @@ class Properties:
     IMAGE_VIEW_HEIGHT: int = 360
     CHECKBOX_WIDTH: int = 350
     CHECKBOX_HEIGHT: int = 49
-    DROPDOWN_WIDTH: int = 350
-    BUTTON_WIDTH: int = 100
+    DROPDOWN_WIDTH: int = 365
+    BUTTON_WIDTH: int = 115
     BUTTON_HEIGHT: int = 49
     BORDER_RADIUS: int = 0
     MARGIN_ALL: int = 15
@@ -124,7 +124,7 @@ class Properties:
     RESOLUTION_CAMERA_CONFIG: str = "imagesize"
 
     CAMERAS_DICT: dict[str, str] = gp.get_cameras()
-    CAMERAS_LIST = (lambda keys: [None, None, None] if None in keys else list(keys))(CAMERAS_DICT.keys())
+    CAMERAS_LIST = (lambda keys: list(keys)[:3] + [None] * (3 - len(list(keys))))(CAMERAS_DICT.keys())
     DEFAULT_CAMERA_PORT: str = next(iter(CAMERAS_DICT.values()))
     ISOS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=ISO_CAMERA_CONFIG)
     SHUTTERSPEEDS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=SHUTTERSPEED_CAMERA_CONFIG)
@@ -132,6 +132,10 @@ class Properties:
     RESOLUTIONS_DICT: dict[str, str] = gp.get_config(camera_port=DEFAULT_CAMERA_PORT,camera_config=RESOLUTION_CAMERA_CONFIG)
 
     # ROUTINES
+    FAILED_TO_APPLY_FILTER: bool = False
+    FAILED_TO_SAVE_STAGE: bool = False
+    FAILED_TO_APPLY_PRESET: bool = False
+    FAILED_TO_SAVE_IMAGE: bool = False
     STAGES_NUMBER: int = 0
     CURRENT_ROUTINE: dict = {
         "name": None,

@@ -127,12 +127,14 @@ class OptionsControl(ft.Container):
         loading_dialog = LoadingDialog(page=Props.PAGE, title="Espera")
         loading_dialog.show()
         loading_dialog.update_legend(f"Aplicando formato: {Props.CURRENT_FORMAT}")
+        print(f"Aplicando formato: {Props.CURRENT_FORMAT}")
 
         for camera in Props.CAMERAS_LIST:
             if camera == None:
                 continue
             
             loading_dialog.update_legend(f"Aplicando formato a la cámara: {camera}")
+            print(f"Aplicando formato a la cámara: {camera}")
 
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
@@ -141,6 +143,7 @@ class OptionsControl(ft.Container):
                 )
             
             loading_dialog.update_legend(f"Formato aplicado correctamente!")
+            print(f"Formato aplicado correctamente!")
         
         loading_dialog.update_legend(f"Listo!")
         loading_dialog.hide()
@@ -161,6 +164,7 @@ class OptionsControl(ft.Container):
         loading_dialog = LoadingDialog(page=Props.PAGE, title="Espera")
         loading_dialog.show()
         loading_dialog.update_legend(f"Aplicando resolución: {Props.CURRENT_RESOLUTION}")
+        print(f"Aplicando resolución: {Props.CURRENT_RESOLUTION}")
 
         if "RAW" in Props.CURRENT_FORMAT:
             Props.CURRENT_FILE_EXTENSION = Props.RAW_EXTENSION
@@ -172,6 +176,7 @@ class OptionsControl(ft.Container):
                 continue 
 
             loading_dialog.update_legend(f"Aplicando resolución a la cámara: {camera}")
+            print(f"Aplicando resolución a la cámara: {camera}")
 
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
@@ -180,6 +185,7 @@ class OptionsControl(ft.Container):
                 )
             
             loading_dialog.update_legend(f"Resolución aplicada correctamente!")
+            print("Resolucion aplicada correctamente.")
         
         loading_dialog.update_legend(f"Listo!")
         loading_dialog.hide()

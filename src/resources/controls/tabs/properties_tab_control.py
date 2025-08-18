@@ -299,6 +299,15 @@ class PropertiesTab(ft.Tab):
                             self.reboot_system_button,
                         ]
                     ) 
+                ),
+                ft.ListTile(
+                    title=ft.Text("Restablecer overlays: "),
+                    subtitle=ft.Column(
+                        [
+                            ft.Text("Vuelve todos los overlays a su configuración original, útil si no se muestran las pantallas de carga.", italic=True, color=ft.Colors.with_opacity(0.6, color=ft.Colors.WHITE)),
+                            self.reset_system_button,
+                        ]
+                    ) 
                 )
             ]
         )
@@ -380,7 +389,7 @@ class PropertiesTab(ft.Tab):
 
         Props.CURRENT_ISO = self.iso_dropdown.value
         # Check if cameras are connected
-        print(Props.CAMERAS_DICT.keys())
+        print(f"Aplicando cambios a camaras: {Props.CAMERAS_DICT.keys()}")
         if not Props.CAMERAS_DICT or all(k is None for k in Props.CAMERAS_DICT.keys()):
             self.show_alert("No hay cámaras conectadas. Por favor, conecta una cámara primero.")
             return
@@ -390,7 +399,12 @@ class PropertiesTab(ft.Tab):
         loading_dialog.update_legend(f"Aplicando ISO: {Props.CURRENT_ISO}")
 
         for camera in Props.CAMERAS_LIST:
+
+            if not camera:
+                print("Camera was None, skipping")
+                continue
             
+            print(f"Aplicando ISO a la camara {camera}")
             loading_dialog.update_legend(f"Aplicando ISO a la cámara: {camera}")
 
             gp.set_config(
@@ -398,7 +412,7 @@ class PropertiesTab(ft.Tab):
                 camera_config=Props.ISO_CAMERA_CONFIG,
                 config_value=Props.ISOS_DICT[Props.CURRENT_ISO]
                 )
-            
+            print(f"ISO aplicado con exito")
             loading_dialog.update_legend(f"ISO aplicado a la cámara: {camera}")
         
         loading_dialog.update_legend(f"Listo!")
@@ -419,10 +433,16 @@ class PropertiesTab(ft.Tab):
         loading_dialog = LoadingDialog(page=Props.PAGE, title="Wait")
         loading_dialog.show()
         loading_dialog.update_legend(f"Aplicando SHUTTERSPEED: {Props.CURRENT_ISO}")
+        print(f"Aplicando SHUTTERSPEED: {Props.CURRENT_ISO}")
 
         for camera in Props.CAMERAS_LIST:
 
+            if not camera:
+                print("Camera was None, skipping")
+                continue
+
             loading_dialog.update_legend(f"Aplicando SHUTTERSPEED a la cámara: {camera}")
+            print(f"Aplicando SHUTTERSPEED a la cámara: {camera}")
 
             gp.set_config(
                 camera_port=Props.CAMERAS_DICT[camera],
@@ -431,6 +451,7 @@ class PropertiesTab(ft.Tab):
                 )
             
             loading_dialog.update_legend(f"SHUTTERSPEED aplicado a la cámara: {camera}")
+            print(f"SHUTTERSPEED aplicado a la cámara: {camera}")
         
         loading_dialog.update_legend(f"Listo!")
         loading_dialog.hide()
@@ -441,6 +462,7 @@ class PropertiesTab(ft.Tab):
         Callback for the resolution dropdown menu.
         """
         Props.FILTER_RESOLUTION_OUTPUT = self.resolution_dropdown.value
+        print(f"Resolucion seleccionada para filtro: {Props.FILTER_RESOLUTION_OUTPUT}")
 
     def __get_available_servers(self):
         """
@@ -461,6 +483,7 @@ class PropertiesTab(ft.Tab):
         Callback for the servers dropdown changed.
         """
         Props.SELECTED_SERVER = self.servers_dropdown.value
+        print(f"Servidor seleccionado para su modificacion: {Props.SELECTED_SERVER}")
 
     def __credentials_dropdown_changed(self, e):
         """
@@ -537,7 +560,7 @@ class PropertiesTab(ft.Tab):
         # self.__clear_servers()
         # self.__clear_presets()
         # self.__clear_routines()
-        self.__clear_images()
+        # self.__clear_images()
 
 
     
@@ -549,6 +572,7 @@ class PropertiesTab(ft.Tab):
         self.page.overlay.clear()
         self.page.update()
         self.show_alert("Superposición borrada.")
+        print("Reset overlays clicked")
     
     def __clear_images(self):
         """

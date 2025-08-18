@@ -42,8 +42,10 @@ class PreviewTab(ft.Tab):
 
     # Methods
     def update_image_preview(self, file_path: str):
+        print(f"Imagen seleccionada: {file_path}")
         relative_path = file_path.split("images", 1)[1]
         relative_path = "images" + relative_path
-        
+        print(f"Abriendo imagen: {relative_path}")
         self.source_image.src = relative_path
         self.source_image.update()
+        print(f"Imagen abierta con exito")

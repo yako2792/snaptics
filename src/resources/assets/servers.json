@@ -1,10 +1,25 @@
 {
     "servers": [
         {
-            "displayName": "TestServer",
-            "hostName": "0.0.0.0:22",
+            "displayName": "PNG Server",
+            "hostName": "192.168.3.65",
             "paths": [
-                "/test/test"
+                "/Multimedia y Dise\u00f1o/MartinPSD1/ActualizaciondeFotos/04_PNGTODOS",
+                "/Multimedia y Dise\u00f1o/MartinPSD1/360"
+            ]
+        },
+        {
+            "displayName": "Fotos Speed 07",
+            "hostName": "192.168.0.221",
+            "paths": [
+                "/Resources/FotosSpeed"
+            ]
+        },
+        {
+            "displayName": "MARCO",
+            "hostName": "192.198.3.65",
+            "paths": [
+                "/Multimedia y Dise\u00f1o/MartinPSD1/360"
             ]
         }
     ]

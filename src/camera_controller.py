@@ -1,4 +1,5 @@
 import os
+import time
 import subprocess
 
 class GPhoto2:
@@ -15,7 +16,8 @@ class GPhoto2:
             bool: `True` if the process was successfully killed, `False` if an error occurred or the process was not found.
         """
         try:
-            subprocess.run(['killall', 'gvfsd-gphoto2'])
+            subprocess.run(["killall", "-q", "gvfsd-gphoto2"], check=False)
+            subprocess.run(["killall", "-q", "gphoto2"], check=False)
             return True
         except:
             return False
@@ -70,6 +72,7 @@ class GPhoto2:
         if camera_port == None:
             return {None:None}
 
+        print(f"Getting iso from camera: {camera_port}")
         lines = GPhoto2.__run_command("--port " + camera_port + " --get-config " + camera_config, capture_output=True, capture_text=True)
 
         configs = {}
@@ -184,8 +187,13 @@ class GPhoto2:
         """
         file_path: str = os.path.join(download_path, file_name)
 
-        try:
-            GPhoto2.__run_command("--port " + camera_port + " --capture-image-and-download --filename=" + file_path)
-            return True
-        except:
-            return False
+        time.sleep(0.3)
+        print(f"Capturando con camara: {camera_port}")
+
+        for attempt in range(1, 4):
+            print(f"Intento numero: {attempt}")
+            try:
+                GPhoto2.__run_command(command="--port " + camera_port + " --capture-image-and-download --filename=" + file_path, capture_output=True, capture_text=True)
+                return True
+            except:
+                print(f"Intento fallido, restantes: {3-attempt}")

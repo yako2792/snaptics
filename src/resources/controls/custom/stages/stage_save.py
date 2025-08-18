@@ -130,7 +130,11 @@ class StageSave(ft.Container):
         address = Servers.get_server_ip(display_name=Props.USE_SERVER)
         address_split = address.split(':')
         Props.USE_IP = address_split[0]
-        Props.USE_PORT = address_split[1]
+        try:
+            Props.USE_PORT = address_split[1]
+        except:
+            Props.USE_PORT = "22"
+            print(f"No se identifico puerto, agregando un puerto default: 22")
 
         # Update the current routine configuration
         Props.CURRENT_ROUTINE["stages"][self.stage_number - 1]["config"] = {

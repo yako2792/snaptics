@@ -1,24 +1,62 @@
 {
     "routines": [
         {
-            "name": "TEST1",
+            "name": "ZATO",
             "stages": [
                 {
                     "type": "Scan",
                     "config": {
-                        "preset_name": "PRODUCT"
+                        "preset_name": "preset_test"
                     }
-                },
+                }
+            ]
+        },
+        {
+            "name": "ZATO1",
+            "stages": [
                 {
-                    "type": "Filter",
+                    "type": "Scan",
                     "config": {
-                        "filter_name": "Resize image"
+                        "preset_name": "preset_test"
                     }
                 },
                 {
                     "type": "Filter",
                     "config": {
                         "filter_name": "Remove background"
+                    }
+                },
+                {
+                    "type": "Save",
+                    "config": {
+                        "server_name": "MARCO",
+                        "server_ip": "192.198.3.65",
+                        "server_port": "22",
+                        "path": "/Multimedia y Dise\u00f1o/MartinPSD1/360",
+                        "credentials": {
+                            "user": "marco.delatorre",
+                            "password": "gAAAAABolM8CP-UXZfgYc5BJSsTcV-cTd9ZiBB5wyFFgfpsM5bkYaUZ9CUANdPWfawxSmJ-bZOEoqzA61Gnk8UIWcspsI57LAw=="
+                        }
+                    }
+                },
+                {
+                    "type": "Filter",
+                    "config": {
+                        "filter_name": "Crop Center",
+                        "resolution": "Large"
+                    }
+                },
+                {
+                    "type": "Save",
+                    "config": {
+                        "server_name": "MARCO",
+                        "server_ip": "192.198.3.65",
+                        "server_port": "22",
+                        "path": "/Multimedia y Dise\u00f1o/MartinPSD1/360",
+                        "credentials": {
+                            "user": "marco.delatorre",
+                            "password": "gAAAAABolM8CP-UXZfgYc5BJSsTcV-cTd9ZiBB5wyFFgfpsM5bkYaUZ9CUANdPWfawxSmJ-bZOEoqzA61Gnk8UIWcspsI57LAw=="
+                        }
                     }
                 }
             ]

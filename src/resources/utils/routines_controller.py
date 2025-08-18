@@ -35,6 +35,15 @@ class Routines:
         Lists avaialble routines.
         """
         data = Routines._load_json()
+
+        try:
+            data["routines"]
+        except KeyError:
+            data["routines"] = []
+            Routines._save_json(data)
+            data = Routines._load_json()
+            
+
         return [routine["name"] for routine in data["routines"]]
     
     @staticmethod

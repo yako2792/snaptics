@@ -13,6 +13,7 @@ def main(page: ft.Page) -> None:
         page.window.min_width = Props.MIN_WINDOW_SIZE[0]
         page.window.min_height = Props.MIN_WINDOW_SIZE[1]
         page.theme = ft.Theme(divider_color=ft.Colors.TRANSPARENT)
+        page.theme_mode = ft.ThemeMode.DARK
         Props.PAGE = page
 
         # PAGE: Application
@@ -26,5 +27,6 @@ if __name__=="__main__":
     ft.app(
             target=main,
             view=ft.WEB_BROWSER, 
-            assets_dir="resources/assets"
+            assets_dir="resources/assets",
+	    port=8000
     )
