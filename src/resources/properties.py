@@ -171,5 +171,11 @@ class Properties:
     USE_PASSWORD: str = ""
 
     # MOTOR
+    # Naranja   -> dir          -> 10 pin
     DIR_PIN: int = 10
+
+    # Verde     -> pull/step    -> 8 pin 
     STEP_PIN: int = 8
+    
+    # Amarillo  -> ena          -> 12 pin
+    # ENA_PIN: int = 12 # Not used

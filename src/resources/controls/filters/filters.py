@@ -5,7 +5,7 @@ from PIL import Image
 from src.resources.properties import Properties as Props
 
 
-session = new_session("isnet-general-use")
+session = new_session("birefnet-general")
 
 class Filter:
 
