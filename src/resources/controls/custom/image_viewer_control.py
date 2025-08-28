@@ -123,8 +123,8 @@ class ImageViewer(ft.Container):
             return
         
         required_props = {
-            "ISO": Props.CURRENT_ISO,
-            "SHUTTERSPEED": Props.CURRENT_SHUTTERSPEED,
+            # "ISO": Props.CURRENT_ISO,
+            # "SHUTTERSPEED": Props.CURRENT_SHUTTERSPEED,
             "FORMAT": Props.CURRENT_FORMAT
         }
 
