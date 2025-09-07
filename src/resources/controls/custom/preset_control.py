@@ -510,6 +510,8 @@ class PresetControl(ft.Container):
                 download_path = Props.CAMERA1_DOWNLOAD_PATH,
                 file_name = "A000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
+        
+            time.sleep(0.25)
 
         if Props.CURRENT_USE_CAMERA2:
             gphoto2.capture_image(
@@ -518,12 +520,16 @@ class PresetControl(ft.Container):
                 file_name = "B000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
 
+            time.sleep(0.25)
+
         if Props.CURRENT_USE_CAMERA3:
             gphoto2.capture_image(
                 camera_port = Props.CAMERAS_DICT[Props.CAMERAS_LIST[2]],
                 download_path = Props.CAMERA3_DOWNLOAD_PATH,
                 file_name = "C000" + str(iteration_number) + Props.CURRENT_FILE_EXTENSION
             )
+
+            time.sleep(0.25)
 
     
     def show_images_under_cameras(self):

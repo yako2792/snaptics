@@ -57,8 +57,11 @@ class StepperMotorController:
 
     def motor_init(self) -> bool:
         try:
+            print("Seteando pineas a modo board")
             GPIO.setmode(GPIO.BOARD)
+            print("Seteando dir pin como GPIO out")
             GPIO.setup(self.dir_pin, GPIO.OUT)
+            print("Seteando step pin como GPIO out")
             GPIO.setup(self.step_pin, GPIO.OUT)
             if self.enable_pin is not None:
                 GPIO.setup(self.enable_pin, GPIO.OUT)
@@ -66,7 +69,8 @@ class StepperMotorController:
             
             return True
         
-        except:
+        except Exception as e:
+            print(f"Setear los pines fallo con {e}")
             self.cleanup()
             return False
 

@@ -1,199 +1,193 @@
 import os
+import re
+import shlex
 import time
 import subprocess
+from typing import List, Dict, Optional, Tuple
 
 class GPhoto2:
+    ENV = {"LANG": "C", "LC_ALL": "C"}  # salidas estables para parseo
 
+    # ---------- Helpers de proceso ----------
     @staticmethod
-    def kill_initial_process() -> bool:
-        """
-        Terminates the initial gphoto2 process (gvfsd-gphoto2) if it's running.
-
-        This method attempts to kill the 'gvfsd-gphoto2' process using the 'killall' command. 
-        If the process is successfully terminated, it returns `True`; otherwise, it returns `False`.
-
-        Returns:
-            bool: `True` if the process was successfully killed, `False` if an error occurred or the process was not found.
-        """
-        try:
-            subprocess.run(["killall", "-q", "gvfsd-gphoto2"], check=False)
-            subprocess.run(["killall", "-q", "gphoto2"], check=False)
-            return True
-        except:
-            return False
-        
-    @staticmethod
-    def __run_command(command: str, capture_output: bool = False, capture_text: bool = False) -> list[str]:
-        """
-        Runs a gphoto2 shell command and returns the output as a list of lines.
-
-        Args:
-            command (str): The full gphoto2 command as a single string.
-
-        Returns:
-            list[str]: The stdout output split by line.
-
-        Raises:
-            RuntimeError: If the gphoto2 command fails.
-        """
-        command: list[str] = command.split(' ')
-
-        result = subprocess.run(
-            ['gphoto2'] + command,
+    def _run(args: List[str], *, timeout: Optional[float] = None,
+             capture_output: bool = True, check: bool = False) -> subprocess.CompletedProcess:
+        # Ejecuta 'gphoto2' con args como lista (sin shell), respetando locale estable
+        return subprocess.run(
+            ["gphoto2"] + args,
             capture_output=capture_output,
-            text=capture_text
+            text=True,
+            timeout=timeout,
+            check=check,
+            env={**os.environ, **GPhoto2.ENV}
         )
 
-        if capture_output:
-            if result.returncode != 0:
-                raise RuntimeError(f"Error running command: {command}: {result.stderr.strip()}")
-            
-            return result.stdout.strip().split('\n')
-        else:
-            return
-    
     @staticmethod
-    def get_config(camera_port: str, camera_config: str) -> dict[str, str]:
-        """
-        Gets camera configuration options as a dictionary.
+    def _run_cmdline(cmdline: str, *, timeout: Optional[float] = None,
+                     capture_output: bool = True, check: bool = False) -> subprocess.CompletedProcess:
+        # Igual que _run, pero aceptando string (usa shlex.split para espacios seguros)
+        args = shlex.split(cmdline)
+        return GPhoto2._run(args, timeout=timeout, capture_output=capture_output, check=check)
 
-        Args:
-            camera_port (str): The port of the camera.
-            config_name (str): The configuration to query (e.g., "iso").
-
-        Returns:
-            dict[str, str]: A mapping from option values to their corresponding index, 
-                            e.g., {"Auto": "0", "100": "1", ...}.
-            
-        Raises:
-            RuntimeError: If the gphoto2 command fails.
-        """
-
-        if camera_port == None:
-            return {None:None}
-
-        print(f"Getting iso from camera: {camera_port}")
-        lines = GPhoto2.__run_command("--port " + camera_port + " --get-config " + camera_config, capture_output=True, capture_text=True)
-
-        configs = {}
-
-        for line in lines:
-            line = line.strip()
-            if line.startswith("Choice:"):
-                parts = line.split(' ', 2)
-                if len(parts) == 3:
-                    index = int(parts[1])
-                    value = parts[2].strip()
-                    configs[value] = str(index)
-
-        return configs
-    
+    # ---------- Gestión de procesos que estorban ----------
     @staticmethod
-    def get_cameras() -> dict[str, str]:
+    def kill_initial_process() -> bool:
+        try:
+            for proc in ("gvfsd-gphoto2", "gphoto2", "gvfs-mtp-volume-monitor"):
+                subprocess.run(["killall", "-q", proc], check=False)
+            return True
+        except Exception:
+            return False
+
+    # ---------- Descubrimiento de cámaras ----------
+    @staticmethod
+    def get_cameras() -> Dict[str, str]:
         """
-        Retrieves all available cameras and their corresponding ports using the gphoto2 command.
-
-        This method runs the `gphoto2 --auto-detect` command to detect cameras connected to the system,
-        and returns a dictionary of models and their corresponding ports. If multiple cameras with the same
-        model are found, they will be numbered to differentiate them.
-
-        Returns:
-            dict[str, str]: A dictionary where the keys are camera model names and the values are the corresponding ports.
-
-        Example:
-            {
-                "Canon EOS 80D": "usb:001,023",
-                "Canon EOS 80D(1)": "usb:001,024"
-            }
-
-        Raises:
-            RuntimeError: If the gphoto2 command fails to execute or returns an error.
+        Devuelve dict {modelo_o_modelo(n): puerto}, p.ej. {"Sony ILCE-6400": "usb:002,006", "Sony ILCE-6400(1)": "usb:004,003"}
         """
         try:
-            # Run the command using the private __run_command method
-            lines = GPhoto2.__run_command("--auto-detect", capture_output=True, capture_text=True)
-            cameras: dict[str, str] = {}
+            cp = GPhoto2._run(["--auto-detect"], timeout=10, capture_output=True, check=False)
+            lines = cp.stdout.strip().splitlines()
+            cams: Dict[str, str] = {}
 
-            # Skip the first two lines, as they are headers
+            # Saltar encabezados, parsear con regex robusta (modelo + >=2 espacios + puerto)
+            rx = re.compile(r"^(?P<model>.+?)\s{2,}(?P<port>(usb:\d{3},\d+|ptpip:.*|serial:.*))$")
             for line in lines[2:]:
-                if line.strip():
-                    # Split by double spaces to separate model and port
-                    parts = line.strip().rsplit('  ', 1)
+                line = line.strip()
+                if not line:
+                    continue
+                m = rx.match(line)
+                if not m:
+                    continue
+                model = m.group("model").strip()
+                port = m.group("port").strip()
 
-                    if len(parts) == 2:
-                        model, port = parts
-                        model = model.strip()
-                        port = port.strip()
+                # desambiguar nombres duplicados
+                base = model
+                idx = 0
+                while model in cams:
+                    idx += 1
+                    model = f"{base}({idx})"
+                cams[model] = port
 
-                        # Handle duplicate model names by appending a number to them
-                        if model in cameras:
-                            count = 1
-                            new_model = f"{model}({count})"
+            return cams or {None: None}
+        except Exception as e:
+            raise RuntimeError(f"Failed to retrieve cameras: {e}")
 
-                            while new_model in cameras:
-                                count += 1
-                                new_model = f"{model}({count})"
-                            model = new_model
+    @staticmethod
+    def get_serial_for_port(camera_port: str, timeout: float = 8.0) -> Optional[str]:
+        """
+        Lee el serial mediante --summary (línea 'Serial Number').
+        """
+        try:
+            cp = GPhoto2._run(["--port", camera_port, "--summary"], timeout=timeout, capture_output=True, check=False)
+            if cp.returncode != 0:
+                return None
+            m = re.search(r"Serial Number\s*:\s*(.+)", cp.stdout)
+            return m.group(1).strip() if m else None
+        except Exception:
+            return None
 
-                        # Add the model and port to the dictionary
-                        cameras[model] = port
-            
-            if not cameras:
-                cameras = {None: None}
+    @staticmethod
+    def get_speed_for_port(camera_port: str) -> Optional[str]:
+        """
+        Intenta detectar 12M/480M consultando 'lsusb -t' y mapeando el Bus/Device del puerto.
+        (Best effort; puede devolver None si no se logra mapear.)
+        """
+        try:
+            # puerto usb:BBB,DDD
+            m = re.match(r"usb:(\d{3}),(\d+)$", camera_port)
+            if not m:
+                return None
+            bus, dev = m.group(1), m.group(2)
 
-            return cameras
+            # Buscar en lsusb -t una línea con 'Bus BBB' no existe directo; se mapea por topología.
+            # Best effort: devolver la primera velocidad listada.
+            out = subprocess.run(["lsusb", "-t"], capture_output=True, text=True).stdout
+            ms = re.findall(r"(\d+)(?:-[-\d\.]+)?\s+:\s+.*?(\d+M)", out)  # pares (bus?, velocidad)
+            # Simple: si hay 480M en la salida, asumimos High-Speed disponible.
+            return "480M" if "480M" in out else ("12M" if "12M" in out else None)
+        except Exception:
+            return None
 
-        except RuntimeError as e:
-            # If an error occurs during the command execution, raise an exception
-            raise RuntimeError(f"Failed to retrieve cameras: {str(e)}")
+    # ---------- Config ----------
+    @staticmethod
+    def get_config(camera_port: Optional[str], camera_config: str) -> Dict[str, str]:
+        if not camera_port:
+            return {}
+        cp = GPhoto2._run(["--port", camera_port, "--get-config", camera_config],
+                          timeout=10, capture_output=True, check=False)
+        if cp.returncode != 0:
+            raise RuntimeError(cp.stderr.strip() or "get-config failed")
+        configs: Dict[str, str] = {}
+        for line in cp.stdout.splitlines():
+            line = line.strip()
+            if line.startswith("Choice:"):
+                # "Choice: 0 Auto" → idx, valor
+                parts = line.split(" ", 2)
+                if len(parts) == 3:
+                    idx = parts[1].strip()
+                    val = parts[2].strip()
+                    configs[val] = idx
+        return configs
 
     @staticmethod
     def set_config(camera_port: str, camera_config: str, config_value: str) -> bool:
-        """
-        Sets a configuration value for the specified camera and returns the status of the operation.
-
-        Args:
-            camera_port (str): The port identifier of the camera (e.g., "usb:001,024").
-            camera_config (str): The configuration name to set (e.g., "iso", "shutterspeed").
-            config_value (str): The value to assign to the configuration.
-
-        Returns:
-            bool: True if the configuration was set successfully, False otherwise.
-        """
         try:
-            GPhoto2.__run_command("--port " + camera_port + " --set-config " + camera_config + "=" + config_value)
-            return True
-        except:
+            cp = GPhoto2._run(["--port", camera_port, "--set-config", f"{camera_config}={config_value}"],
+                              timeout=15, capture_output=True, check=False)
+            return cp.returncode == 0
+        except Exception:
             return False
-    
+
+    # ---------- Captura ----------
+    @staticmethod
+    def _ping(camera_port: str, timeout: float = 8.0) -> None:
+        try:
+            GPhoto2._run(["--port", camera_port, "--summary"], timeout=timeout, capture_output=True, check=False)
+        except Exception:
+            pass  # best effort
+
     @staticmethod
     def capture_image(camera_port: str, download_path: str, file_name: str) -> bool:
-        """
-        Captures an image from the camera and downloads it to the specified path.
+        os.makedirs(download_path, exist_ok=True)
+        file_path = os.path.join(download_path, file_name)
 
-        This method uses the `gphoto2` command-line utility to capture an image from a camera 
-        connected to the specified port and save it to the given file path.
+        print(f"[GPhoto2] Preparando captura en {camera_port} → {file_path}")
+        GPhoto2._ping(camera_port)
 
-        Args:
-            camera_port (str): The camera port identifier, e.g., "usb:001,024".
-            download_path (str): The directory path where the captured image will be saved.
-            file_name (str): The name of the file to save the captured image as.
-
-        Returns:
-            bool: `True` if the image was successfully captured and downloaded, `False` otherwise.
-
-        Raises:
-            RuntimeError: If the `gphoto2` command fails or there is an error in execution.
-        """
-        file_path: str = os.path.join(download_path, file_name)
-
-        time.sleep(0.3)
-        print(f"Capturando con camara: {camera_port}")
-
+        # Retries con backoff
         for attempt in range(1, 4):
-            print(f"Intento numero: {attempt}")
             try:
-                GPhoto2.__run_command(command="--port " + camera_port + " --capture-image-and-download --filename=" + file_path, capture_output=True, capture_text=True)
-                return True
-            except:
-                print(f"Intento fallido, restantes: {3-attempt}")
+                print(f"[GPhoto2] Intento {attempt}/3")
+                cp = GPhoto2._run(
+                    ["--port", camera_port, "--capture-image-and-download", "--filename", file_path],
+                    timeout=40, capture_output=True, check=False
+                )
+                if cp.returncode == 0 and os.path.exists(file_path):
+                    time.sleep(0.2)
+                    return True
+                else:
+                    err = (cp.stderr or "").strip()
+                    out = (cp.stdout or "").strip()
+                    print(f"[GPhoto2] Falló intento {attempt}: {err or out}")
+            except subprocess.TimeoutExpired:
+                print(f"[GPhoto2] Timeout en intento {attempt}")
+            time.sleep(0.7 * attempt)  # backoff
+        return False
+
+    # ---------- Utilidades de alto nivel ----------
+    @staticmethod
+    def inventory() -> List[Tuple[str, str, Optional[str], Optional[str]]]:
+        """
+        Devuelve lista de (modelo, puerto, serial, velocidad_aprox).
+        """
+        cams = GPhoto2.get_cameras()
+        inv = []
+        for model, port in cams.items():
+            if not model or not port:
+                continue
+            serial = GPhoto2.get_serial_for_port(port)
+            speed = GPhoto2.get_speed_for_port(port)
+            inv.append((model, port, serial, speed))
+        return inv

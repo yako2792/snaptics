@@ -1,8 +1,8 @@
 {
-  "preset_test": {
-    "frequency": "45 [DEG/SHOT]",
-    "format": "Standard",
-    "resolution": "Large",
+  "CONFIG1": {
+    "frequency": "90 [DEG/SHOT]",
+    "format": "Fine",
+    "resolution": "Small",
     "use_camera1": true,
     "use_camera2": true,
     "use_camera3": true

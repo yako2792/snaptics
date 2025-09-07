@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import gc
 from rembg import new_session, remove
 from PIL import Image
 from src.resources.properties import Properties as Props
@@ -163,3 +164,32 @@ class Filter:
         # Save final image
         background.save(output_path)
         print(f"Centered and cropped product image saved to: {output_path}")
+
+        # --- LIBERACIÓN ESTRICTA ---
+        print("Liberando basura por filtro")
+        try:
+            if img_no_bg is not None and hasattr(img_no_bg, "close"):
+                img_no_bg.close()
+        except Exception:
+            pass
+        try:
+            if object_img is not None:
+                object_img.close()
+        except Exception:
+            pass
+        try:
+            if resized_object is not None:
+                resized_object.close()
+        except Exception:
+            pass
+        try:
+            if background is not None:
+                background.close()
+        except Exception:
+            pass
+
+        # romper referencias
+        print("Limpiando collector y referencias")
+        gc.collect()
+        input_img = img_no_bg = object_img = resized_object = background = None
+        alpha = None

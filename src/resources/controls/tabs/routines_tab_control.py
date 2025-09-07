@@ -898,6 +898,8 @@ class RoutinesTab(ft.Tab):
                 file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
 
+            time.sleep(0.25)
+
         if Props.CURRENT_USE_CAMERA2:
             local_prefix = "A" if Props.LETTER_PREFIX == "A" else ""
             gphoto2.capture_image(
@@ -906,6 +908,8 @@ class RoutinesTab(ft.Tab):
                 file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
 
+            time.sleep(0.25)
+
         if Props.CURRENT_USE_CAMERA3:
             local_prefix = "F" if Props.LETTER_PREFIX == "C" else ""
             gphoto2.capture_image(
@@ -913,6 +917,8 @@ class RoutinesTab(ft.Tab):
                 download_path = Props.CAMERA3_DOWNLOAD_PATH,
                 file_name = Props.PRODUCT_ID + str(iteration_number) + local_prefix + Props.CURRENT_FILE_EXTENSION
             )
+
+            time.sleep(0.25)
 
     def show_alert(self, message: str):
         """

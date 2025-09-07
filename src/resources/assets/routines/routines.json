@@ -60,6 +60,37 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "ExampleRutina",
+            "stages": [
+                {
+                    "type": "Scan",
+                    "config": {
+                        "preset_name": "CONFIG1"
+                    }
+                },
+                {
+                    "type": "Filter",
+                    "config": {
+                        "filter_name": "Crop Center",
+                        "resolution": "Large"
+                    }
+                },
+                {
+                    "type": "Save",
+                    "config": {
+                        "server_name": "Fotos Speed 07",
+                        "server_ip": "192.168.0.221",
+                        "server_port": "22",
+                        "path": "/Resources/360",
+                        "credentials": {
+                            "user": "pign2",
+                            "password": "gAAAAABoXeVOsVbQkbGW2jScgLU2Y01yNZCCxizp3iJKebU_M6LyVmkYM5JRutPBiNX46wQOaQMo4ODaelCWTsJKHha4FvqiqA=="
+                        }
+                    }
+                }
+            ]
         }
     ]
 }
